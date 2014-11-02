@@ -20,17 +20,44 @@ String data;
 final static int serverPort = 8080;
 final static String serverAddress = "127.0.0.1";
 
-void sendMsg(String targetDevice, String msg) {
+public enum HttpMethod{
+  GET("GET"),
+  POST("POST"),
+  PUT("PUT");
+
+  private final String name;
+
+  private HttpMethod(String s) {
+    name = s;
+  }
+
+  public boolean equalsName(String otherName){
+    return (otherName == null)? false:name.equals(otherName);
+  }
+
+  public String toString(){
+    return name;
+  }
+}
+
+void sendMsg(String targetDevice, String msg, HttpMethod method) throws Exception{
   c = new Client(this, serverAddress, serverPort);
-  c.write("POST " + targetDevice + msg + " HTTP/1.0\r\n"); // Use the HTTP "POST" command to ask for a Web page
+  c.write(method.toString() + " " + targetDevice + msg + " HTTP/1.0\r\n"); // Use the HTTP "POST" command to ask for a Web page
   c.write("\r\n");
+  //c.clear();
   c.stop();
 }
 
 void setup() {
+  
   String targetDevice = "/glass/";
   String msg = "swipeLeft";
-  sendMsg(targetDevice, msg);
+  try {
+    sendMsg(targetDevice, msg, HttpMethod.POST);
+  }
+  catch(Exception e) {
+    println(e.getMessage());
+  }
 }
 
 void draw() {

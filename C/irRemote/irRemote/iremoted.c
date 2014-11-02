@@ -56,11 +56,11 @@ static struct option
 long_options[] = {
     { "help",    no_argument, 0, 'h' },
     { "keynote", no_argument, 0, 'k' },
-    { "fake demo",    no_argument, 0, 'f' },
+    { "raw data output", no_argument, 0, 'r' },
     { 0, 0, 0, 0 },
 };
 
-static const char *options = "hkf";
+static const char *options = "hkr";
 
 IOHIDElementCookie buttonNextID = 0;
 IOHIDElementCookie buttonPreviousID = 0;
@@ -84,7 +84,7 @@ enum {
 
 static const char *keynoteID = "com.apple.iWork.Keynote";
 static int driveKeynote = 0;
-static int driveFakeDemo = 0;
+static int driveRawData = 0;
 
 void            usage(void);
 OSStatus        KeynoteChangeSlide(AEEventID eventID);
@@ -111,6 +111,7 @@ usage(void)
     printf("Usage: %s [OPTIONS...]\n\nOptions:\n", PROGNAME);
     printf("  -h, --help    print this help message and exit\n");
     printf("  -k, --keynote use forward/backward button presses for Keynote slide transition\n\n");
+    printf("  -r, simply output raw data");
     printf("Please report bugs using the following contact information:\n"
            "<URL:http://www.osxbook.com/software/bugs/>\n");
 }
@@ -194,18 +195,26 @@ QueueCallbackFunction(void *target, IOReturn result, void *refcon, void *sender)
         hqi = (IOHIDQueueInterface **)sender;
         ret = (*hqi)->getNextEvent(hqi, &event, zeroTime, 0);
         if (!ret) {
+            /*
             printf("%#lx %s\n", (unsigned long)event.elementCookie,
                    (event.value == 0) ? "depressed" : "pressed");
+            */
             if (event.value) { 
-                if(driveKeynote) {
+                if(driveRawData) {
+                    //currently,I dont know why Java program can only read message from stderr
+                    //so temporary use this channel for communication.
+                    fprintf(stderr,"#%#x\n",event.elementCookie); 
+                }
+                else if(driveKeynote) {
                     if (event.elementCookie == buttonNextID)
                         KeynoteChangeSlide(slideForward);
                     else if (event.elementCookie == buttonPreviousID)
                         KeynoteChangeSlide(slideBackward);
                 }
-                else if(driveFakeDemo) {
+                /*
+                else if(driveExecShellScript) {
                     //an example for executing shell script;
-                    /*
+                    
                     FILE* fp = popen("ls -a", "r");
                     if(fp == NULL) {
                         printf("popen failed");
@@ -221,8 +230,9 @@ QueueCallbackFunction(void *target, IOReturn result, void *refcon, void *sender)
                     if(rc == -1) {
                         printf("pclose failed");
                     }
-                    */
+                    
                 }
+                */
             }
         }
     }
@@ -480,7 +490,7 @@ int
 main (int argc, char **argv)
 {
     int c, option_index = 0;
-
+    //fprintf(stderr,"hello world\n");
     while ((c = getopt_long(argc, argv, options, long_options, &option_index))
          != -1) {
         switch (c) {
@@ -491,9 +501,8 @@ main (int argc, char **argv)
         case 'k':
             driveKeynote = 1;
             break;
-        case 'f':
-            driveFakeDemo = 1;
-            printf("start to fake demo,haha\n");
+        case 'r':
+            driveRawData = 1;
             break;
         default:
             usage();

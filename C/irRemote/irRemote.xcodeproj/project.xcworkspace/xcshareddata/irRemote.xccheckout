@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>EC757E30-7823-4B88-BA99-28CF403B77A9</string>
+	<key>IDESourceControlProjectName</key>
+	<string>irRemote</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>DC43876253B21A00DEABDE7A879BC3DF8B41157D</key>
+		<string>github.com:gary9716/HandTie.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>C/irRemote/irRemote.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>DC43876253B21A00DEABDE7A879BC3DF8B41157D</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:gary9716/HandTie.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>DC43876253B21A00DEABDE7A879BC3DF8B41157D</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>DC43876253B21A00DEABDE7A879BC3DF8B41157D</string>
+			<key>IDESourceControlWCCName</key>
+			<string>HandTie</string>
+		</dict>
+	</array>
+</dict>
+</plist>
