@@ -8,7 +8,7 @@ var server = http.createServer(app);
 
 app.post('/glass/:ctrlMsg', function (req, res){ //for glass
     console.log(req.params.ctrlMsg);
-    res.end();
+    //res.end();
 });
 
 

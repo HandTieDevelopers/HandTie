@@ -1,13 +1,31 @@
 import java.util.*;
 import java.io.*;
 import java.lang.ProcessBuilder.*;
+import processing.net.*;
+Client client;
+String data;
+
+final static int serverPort = 8080;
+final static String serverAddress = "127.0.0.1";
 
 Process pForShellCmd;
 BufferedReader errBuffReader = null;
-BufferedReader outBuffReader = null;
+//BufferedReader outBuffReader = null;
 
 String currentSketchPath;
 final static String irDaemonName = "irRemote"; 
+
+void sendMsg(String targetDevice, String msg) throws Exception{
+  while(true) {
+      try {
+        client.write(targetDevice + ',' + msg);
+        break;
+      }
+      catch(Exception e) {
+        client = new Client(this, serverAddress, serverPort);
+      }
+  }
+}
 
 void setup() {
 	try {       
@@ -23,13 +41,27 @@ void setup() {
         */
         
         String line = null;
-        
+        String targetDevice = "glass";
+        try {
+            client = new Client(this, serverAddress, serverPort);
+        }
+        catch(Exception e) {
+            println(e.getMessage());
+        }
+
         errBuffReader = new BufferedReader(new InputStreamReader(pForShellCmd.getErrorStream()));
         //println ("<error>");
         while ( (line = errBuffReader.readLine ()) != null) {
-            println(line);
+            try {
+                sendMsg(targetDevice, line);
+            }
+            catch(Exception e) {
+                println(e.getMessage());
+            }
         }
         errBuffReader.close();
+        client.stop();
+
         //println ("</error>");
         
         /*
