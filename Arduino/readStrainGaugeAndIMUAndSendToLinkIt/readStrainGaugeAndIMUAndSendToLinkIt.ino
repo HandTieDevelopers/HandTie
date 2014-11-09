@@ -26,7 +26,7 @@ uint16_t analogVals[numStrainGauges] = {0};
 int16_t accel[numDims] = {0};
 
 const uint32_t baud_rate = 57600;
-char commBuff[100];
+char commBuff[200];
 
 #ifdef USING_SEN10724
 
@@ -130,7 +130,7 @@ void Read_Accel()
   else
   {
     if(DEBUG) {
-      Serial.println("!ERR: reading accelerometer");
+      Serial.write("!ERR: reading accelerometer");
     }
   }
 }
@@ -159,14 +159,12 @@ void loop() {
 		analogVals[i] = analogRead(strainGaugePins[i]);
 	}
 	Read_Accel();
-  sprintf(commBuff," %d %d %d %d %d %d %d %d ",analogVals[0],analogVals[1],analogVals[2],analogVals[3],analogVals[4],accel[0],accel[1],accel[2]);
-	
+  char mode = 'n';
   if(digitalRead(buttonPin[0]) == LOW) {	//do calibration
-		Serial.print("c");
+    mode = 'c'; 
 	}
-	else {
-		Serial.print("n");
-	}
-	Serial.println(commBuff);
+  sprintf(commBuff,"%c %d %d %d %d %d %d %d %d \n",mode,analogVals[0],analogVals[1],analogVals[2],analogVals[3],analogVals[4],accel[0],accel[1],accel[2]);
+  
+	Serial.print(commBuff);
 	
 }

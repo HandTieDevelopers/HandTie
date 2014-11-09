@@ -1,0 +1,4 @@
+1.to query BT address in a Mac,type below command on terminal:
+system_profiler SPBluetoothDataType | sed -n "/Apple Bluetooth Software Version\:/,/Manufacturer\:/p" | egrep -o '([[:xdigit:]]{1,2}-){5}[[:xdigit:]]{1,2}'
+
+2. bluetooth's baudrate seems equaling to 57600
