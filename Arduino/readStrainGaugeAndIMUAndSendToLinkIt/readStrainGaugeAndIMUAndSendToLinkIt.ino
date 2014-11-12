@@ -25,7 +25,7 @@ uint16_t analogVals[numStrainGauges] = {0};
 #define numDims 3
 int16_t accel[numDims] = {0};
 
-const uint32_t baud_rate = 57600;
+const uint32_t baud_rate = 115200;
 char commBuff[200];
 
 #ifdef USING_SEN10724

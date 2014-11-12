@@ -3,11 +3,14 @@ import processing.serial.Serial;
 final static int lf = 10; //newline ASCII
 final static int NUM_OF_GAUGE = 5;
 final static int ACCEL_DIM = 3;
+int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
+//int[] analogTempVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
+int[] strainCaliVals = new int[NUM_OF_GAUGE];
+
 final static String[] btSerialPortNames = new String[]{"/dev/tty.ARD_SPP-"};
 Serial btSerialPort = null;
 int btDefaultBaudRate = 57600; //seems right after testing
-int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
-int[] strainCaliVals = new int[NUM_OF_GAUGE];
+
 void setup() {
   
   while(true) {
@@ -50,7 +53,6 @@ void copyCalibrationData() throws Exception{
 }
 
 void serialEvent(Serial port) {
-  
   try {
     String buf = port.readString();
     char identifer = buf.charAt(0);
