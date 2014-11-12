@@ -13,7 +13,7 @@
 #include <LBTServer.h>
 #define SPP_SVR "LinkItBTServer" // it is the server's visible name
 #define Specific_Client_Addr "7C:D1:C3:8C:70:33"
-#define WRITE_BUFF_SIZE ((int)4096)
+#define WRITE_BUFF_SIZE ((int)40)
 #define ENDDING_CHAR 0
 #define NEWLINE_CHAR '\n'
 #define Serial1BaudRate 115200
@@ -34,7 +34,7 @@ void checkOrWaitForConnection() {
   if(!LBTServer.connected()) {
     Serial.println("no connection right now");
     int waitTimes = 0;
-    while(!LBTServer.accept(5000,Specific_Client_Addr)) {
+    while(!LBTServer.accept(10000,Specific_Client_Addr)) {
       waitTimes++;
       if(waitTimes == 5) { //reinit BT module
         LBTServer.end();

@@ -3,11 +3,12 @@ import processing.serial.Serial;
 final static int lf = 10; //newline ASCII
 final static int NUM_OF_GAUGE = 5;
 final static int ACCEL_DIM = 3;
+final static int TOTAL_SENSOR_VALUES = NUM_OF_GAUGE + ACCEL_DIM;
 int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
 //int[] analogTempVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
 int[] strainCaliVals = new int[NUM_OF_GAUGE];
 
-final static String[] btSerialPortNames = new String[]{"/dev/tty.ARD_SPP-"};
+final static String[] btSerialPortNames = new String[]{"/dev/tty.ARD_SPP-","/dev/tty.LinkItBTServer-"};
 Serial btSerialPort = null;
 int btDefaultBaudRate = 57600; //seems right after testing
 
@@ -39,10 +40,11 @@ void setup() {
 void readSensorRawData(String str) throws Exception{
   String[] rawDataStrArr = str.split(" ");
   int numSplitedStrs = rawDataStrArr.length;
-  for (int i = 1; i < numSplitedStrs-1; ++i) {
-    analogVals[i-1] = Integer.parseInt(rawDataStrArr[i]);
+  if(numSplitedStrs == TOTAL_SENSOR_VALUES + 2) {
+    for (int i = 1; i < numSplitedStrs-1; ++i) {
+      analogVals[i-1] = Integer.parseInt(rawDataStrArr[i]);
+    }
   }
-  
   return;
 }
 

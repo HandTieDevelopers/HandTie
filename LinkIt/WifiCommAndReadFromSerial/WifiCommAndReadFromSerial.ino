@@ -21,7 +21,7 @@
 #define WIFI_PASSWORD "androidiphone"
 #define WIFI_AUTH LWIFI_WEP  // choose from LWIFI_OPEN, LWIFI_WPA, or LWIFI_WEP.
 
-#define WRITE_BUFF_SIZE ((int)4096)
+#define WRITE_BUFF_SIZE ((int)40)
 #define ENDDING_CHAR 0
 #define NEWLINE_CHAR '\n'
 #define Serial1BaudRate 115200

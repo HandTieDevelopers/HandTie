@@ -58,7 +58,7 @@ Thread dataReceiver = new Thread(new Runnable() {
 		                                    bufferSize);
 			    while(true) {
 			        String line = reader.readLine();
-			        char identifer = line.charAt(0);
+                                char identifer = line.charAt(0);
 			        if(identifer != 'n' && identifer != 'c') {
 			        	continue;
 			        }
