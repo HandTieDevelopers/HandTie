@@ -1,0 +1,533 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58140DA1D0A300B32029 /* MainMenu.xib */; };
+		89E156951A17D1E600BE9935 /* mainForDemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E156941A17D1E600BE9935 /* mainForDemoController.m */; };
+		89E156971A17D23900BE9935 /* HIDRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC1AC8107E3066001813E3 /* HIDRemote.m */; };
+		89E1569F1A17DCFC00BE9935 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E1569E1A17DCFC00BE9935 /* main.m */; };
+		89E156A31A17DDD200BE9935 /* MainDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E1566A1A17B5F200BE9935 /* MainDelegate.m */; };
+		89E156A41A17DDD700BE9935 /* HIDRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC1AC8107E3066001813E3 /* HIDRemote.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
+		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
+		DC6DA2A010A9E205004B0DCF /* remoteButtonPlay.png in Resources */ = {isa = PBXBuildFile; fileRef = DC6DA29F10A9E205004B0DCF /* remoteButtonPlay.png */; };
+		DC74BB28107E2D7600616791 /* remoteButtonLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB21107E2D7600616791 /* remoteButtonLeft.png */; };
+		DC74BB29107E2D7600616791 /* remoteButtonMenu.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB22107E2D7600616791 /* remoteButtonMenu.png */; };
+		DC74BB2A107E2D7600616791 /* remoteButtonDown.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB23107E2D7600616791 /* remoteButtonDown.png */; };
+		DC74BB2B107E2D7600616791 /* remoteButtonNone.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB24107E2D7600616791 /* remoteButtonNone.png */; };
+		DC74BB2C107E2D7600616791 /* remoteButtonSelect.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB25107E2D7600616791 /* remoteButtonSelect.png */; };
+		DC74BB2D107E2D7600616791 /* remoteButtonUp.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB26107E2D7600616791 /* remoteButtonUp.png */; };
+		DC74BB2E107E2D7600616791 /* remoteButtonRight.png in Resources */ = {isa = PBXBuildFile; fileRef = DC74BB27107E2D7600616791 /* remoteButtonRight.png */; };
+		DC77207B10876E1A00FC8000 /* DemoController.m in Sources */ = {isa = PBXBuildFile; fileRef = DC77207810876E1A00FC8000 /* DemoController.m */; };
+		DCDC1ACE107E3075001813E3 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDC1ACD107E3075001813E3 /* IOKit.framework */; };
+		DCDC22EF1080AB18001813E3 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCDC22EE1080AB18001813E3 /* Carbon.framework */; };
+		DCDC24A11080AE97001813E3 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = DCDC24A01080AE97001813E3 /* LICENSE.txt */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		89E1569A1A17DCFC00BE9935 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		13E42FB307B3F0F600E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
+		1DDD58150DA1D0A300B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
+		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		89E1566A1A17B5F200BE9935 /* MainDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainDelegate.m; path = ../MainDelegate.m; sourceTree = "<group>"; };
+		89E1566C1A17B6BB00BE9935 /* MainDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MainDelegate.h; path = ../MainDelegate.h; sourceTree = "<group>"; };
+		89E156941A17D1E600BE9935 /* mainForDemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mainForDemoController.m; sourceTree = "<group>"; };
+		89E1569C1A17DCFC00BE9935 /* irRemoteDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = irRemoteDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		89E1569E1A17DCFC00BE9935 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8D1107310486CEB800E47090 /* HIDRemoteExample-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HIDRemoteExample-Info.plist"; sourceTree = "<group>"; };
+		8D1107320486CEB800E47090 /* HID Remote Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HID Remote Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DC19ED3A1084BA16004E647D /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README.txt; path = ../README.txt; sourceTree = "<group>"; };
+		DC6DA29F10A9E205004B0DCF /* remoteButtonPlay.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonPlay.png; path = Artwork/remoteButtonPlay.png; sourceTree = "<group>"; };
+		DC74BB21107E2D7600616791 /* remoteButtonLeft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonLeft.png; path = Artwork/remoteButtonLeft.png; sourceTree = "<group>"; };
+		DC74BB22107E2D7600616791 /* remoteButtonMenu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonMenu.png; path = Artwork/remoteButtonMenu.png; sourceTree = "<group>"; };
+		DC74BB23107E2D7600616791 /* remoteButtonDown.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonDown.png; path = Artwork/remoteButtonDown.png; sourceTree = "<group>"; };
+		DC74BB24107E2D7600616791 /* remoteButtonNone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonNone.png; path = Artwork/remoteButtonNone.png; sourceTree = "<group>"; };
+		DC74BB25107E2D7600616791 /* remoteButtonSelect.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonSelect.png; path = Artwork/remoteButtonSelect.png; sourceTree = "<group>"; };
+		DC74BB26107E2D7600616791 /* remoteButtonUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonUp.png; path = Artwork/remoteButtonUp.png; sourceTree = "<group>"; };
+		DC74BB27107E2D7600616791 /* remoteButtonRight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = remoteButtonRight.png; path = Artwork/remoteButtonRight.png; sourceTree = "<group>"; };
+		DC77207710876E1A00FC8000 /* DemoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoController.h; sourceTree = "<group>"; };
+		DC77207810876E1A00FC8000 /* DemoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoController.m; sourceTree = "<group>"; };
+		DC77207910876E1A00FC8000 /* HIDRemoteExample_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HIDRemoteExample_Prefix.pch; sourceTree = "<group>"; };
+		DCDC1AC7107E3066001813E3 /* HIDRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HIDRemote.h; path = ../HIDRemote/HIDRemote.h; sourceTree = "<group>"; };
+		DCDC1AC8107E3066001813E3 /* HIDRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HIDRemote.m; path = ../HIDRemote/HIDRemote.m; sourceTree = "<group>"; };
+		DCDC1ACD107E3075001813E3 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		DCDC22EE1080AB18001813E3 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		DCDC24A01080AE97001813E3 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE.txt; path = ../LICENSE.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		89E156991A17DCFC00BE9935 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D11072E0486CEB800E47090 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */,
+				DCDC1ACE107E3075001813E3 /* IOKit.framework in Frameworks */,
+				DCDC22EF1080AB18001813E3 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		080E96DDFE201D6D7F000001 /* Sample Application */ = {
+			isa = PBXGroup;
+			children = (
+				89E156941A17D1E600BE9935 /* mainForDemoController.m */,
+				DC77207810876E1A00FC8000 /* DemoController.m */,
+				DC77207710876E1A00FC8000 /* DemoController.h */,
+				DC77207910876E1A00FC8000 /* HIDRemoteExample_Prefix.pch */,
+				29B97317FDCFA39411CA2CEA /* Resources */,
+			);
+			name = "Sample Application";
+			sourceTree = "<group>";
+		};
+		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC1ACD107E3075001813E3 /* IOKit.framework */,
+				1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */,
+				DCDC22EE1080AB18001813E3 /* Carbon.framework */,
+			);
+			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		1058C7A2FEA54F0111CA2CBB /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				29B97324FDCFA39411CA2CEA /* AppKit.framework */,
+				13E42FB307B3F0F600E4EEF1 /* CoreData.framework */,
+				29B97325FDCFA39411CA2CEA /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		19C28FACFE9D520D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D1107320486CEB800E47090 /* HID Remote Example.app */,
+				89E1569C1A17DCFC00BE9935 /* irRemoteDaemon */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		29B97314FDCFA39411CA2CEA /* HIDRemoteSample */ = {
+			isa = PBXGroup;
+			children = (
+				DC19E3231080B666004E647D /* License */,
+				DC19E3131080B2C8004E647D /* HID Remote Class */,
+				080E96DDFE201D6D7F000001 /* Sample Application */,
+				89E1569D1A17DCFC00BE9935 /* irRemoteDaemon */,
+				29B97323FDCFA39411CA2CEA /* Frameworks */,
+				19C28FACFE9D520D11CA2CBB /* Products */,
+			);
+			name = HIDRemoteSample;
+			sourceTree = "<group>";
+		};
+		29B97317FDCFA39411CA2CEA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				DC19E3401080B7E5004E647D /* Artwork */,
+				8D1107310486CEB800E47090 /* HIDRemoteExample-Info.plist */,
+				089C165CFE840E0CC02AAC07 /* InfoPlist.strings */,
+				1DDD58140DA1D0A300B32029 /* MainMenu.xib */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */,
+				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		89E1569D1A17DCFC00BE9935 /* irRemoteDaemon */ = {
+			isa = PBXGroup;
+			children = (
+				89E1566A1A17B5F200BE9935 /* MainDelegate.m */,
+				89E1566C1A17B6BB00BE9935 /* MainDelegate.h */,
+				89E1569E1A17DCFC00BE9935 /* main.m */,
+			);
+			path = irRemoteDaemon;
+			sourceTree = "<group>";
+		};
+		DC19E3131080B2C8004E647D /* HID Remote Class */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC1AC8107E3066001813E3 /* HIDRemote.m */,
+				DCDC1AC7107E3066001813E3 /* HIDRemote.h */,
+				DC19ED3A1084BA16004E647D /* README.txt */,
+			);
+			name = "HID Remote Class";
+			sourceTree = "<group>";
+		};
+		DC19E3231080B666004E647D /* License */ = {
+			isa = PBXGroup;
+			children = (
+				DCDC24A01080AE97001813E3 /* LICENSE.txt */,
+			);
+			name = License;
+			sourceTree = "<group>";
+		};
+		DC19E3401080B7E5004E647D /* Artwork */ = {
+			isa = PBXGroup;
+			children = (
+				DC74BB21107E2D7600616791 /* remoteButtonLeft.png */,
+				DC74BB22107E2D7600616791 /* remoteButtonMenu.png */,
+				DC74BB23107E2D7600616791 /* remoteButtonDown.png */,
+				DC74BB24107E2D7600616791 /* remoteButtonNone.png */,
+				DC74BB25107E2D7600616791 /* remoteButtonSelect.png */,
+				DC74BB26107E2D7600616791 /* remoteButtonUp.png */,
+				DC74BB27107E2D7600616791 /* remoteButtonRight.png */,
+				DC6DA29F10A9E205004B0DCF /* remoteButtonPlay.png */,
+			);
+			name = Artwork;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		89E1569B1A17DCFC00BE9935 /* irRemoteDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89E156A01A17DCFC00BE9935 /* Build configuration list for PBXNativeTarget "irRemoteDaemon" */;
+			buildPhases = (
+				89E156981A17DCFC00BE9935 /* Sources */,
+				89E156991A17DCFC00BE9935 /* Frameworks */,
+				89E1569A1A17DCFC00BE9935 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = irRemoteDaemon;
+			productName = irRemoteDaemon;
+			productReference = 89E1569C1A17DCFC00BE9935 /* irRemoteDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
+		8D1107260486CEB800E47090 /* HIDRemoteExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HIDRemoteExample" */;
+			buildPhases = (
+				8D1107290486CEB800E47090 /* Resources */,
+				8D11072C0486CEB800E47090 /* Sources */,
+				8D11072E0486CEB800E47090 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HIDRemoteExample;
+			productInstallPath = "$(HOME)/Applications";
+			productName = HIDRemoteSample;
+			productReference = 8D1107320486CEB800E47090 /* HID Remote Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		29B97313FDCFA39411CA2CEA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				TargetAttributes = {
+					89E1569B1A17DCFC00BE9935 = {
+						CreatedOnToolsVersion = 6.1;
+					};
+				};
+			};
+			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "HIDRemoteExample" */;
+			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+				Base,
+			);
+			mainGroup = 29B97314FDCFA39411CA2CEA /* HIDRemoteSample */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8D1107260486CEB800E47090 /* HIDRemoteExample */,
+				89E1569B1A17DCFC00BE9935 /* irRemoteDaemon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D1107290486CEB800E47090 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */,
+				1DDD58160DA1D0A300B32029 /* MainMenu.xib in Resources */,
+				DC74BB28107E2D7600616791 /* remoteButtonLeft.png in Resources */,
+				DC74BB29107E2D7600616791 /* remoteButtonMenu.png in Resources */,
+				DC74BB2A107E2D7600616791 /* remoteButtonDown.png in Resources */,
+				DC74BB2B107E2D7600616791 /* remoteButtonNone.png in Resources */,
+				DC74BB2C107E2D7600616791 /* remoteButtonSelect.png in Resources */,
+				DC74BB2D107E2D7600616791 /* remoteButtonUp.png in Resources */,
+				DC74BB2E107E2D7600616791 /* remoteButtonRight.png in Resources */,
+				DCDC24A11080AE97001813E3 /* LICENSE.txt in Resources */,
+				DC6DA2A010A9E205004B0DCF /* remoteButtonPlay.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		89E156981A17DCFC00BE9935 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89E1569F1A17DCFC00BE9935 /* main.m in Sources */,
+				89E156A31A17DDD200BE9935 /* MainDelegate.m in Sources */,
+				89E156A41A17DDD700BE9935 /* HIDRemote.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8D11072C0486CEB800E47090 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DC77207B10876E1A00FC8000 /* DemoController.m in Sources */,
+				89E156951A17D1E600BE9935 /* mainForDemoController.m in Sources */,
+				89E156971A17D23900BE9935 /* HIDRemote.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C165CFE840E0CC02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C165DFE840E0CC02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		1DDD58140DA1D0A300B32029 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1DDD58150DA1D0A300B32029 /* English */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		89E156A11A17DCFC00BE9935 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		89E156A21A17DCFC00BE9935 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		C01FCF4B08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = HIDRemoteExample_Prefix.pch;
+				INFOPLIST_FILE = "HIDRemoteExample-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "HID Remote Example";
+			};
+			name = Debug;
+		};
+		C01FCF4C08A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = HIDRemoteExample_Prefix.pch;
+				INFOPLIST_FILE = "HIDRemoteExample-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				PRODUCT_NAME = "HID Remote Example";
+			};
+			name = Release;
+		};
+		C01FCF4F08A954540054247B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_VERSION = "";
+				"GCC_VERSION[sdk=macosx10.4][arch=*]" = "";
+				"GCC_VERSION[sdk=macosx10.5][arch=*]" = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=macosx10.4][arch=*]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=macosx10.5][arch=*]" = 10.5;
+				ONLY_ACTIVE_ARCH = NO;
+				PREBINDING = NO;
+				SDKROOT = macosx10.10;
+				"SDKROOT[arch=i386]" = macosx10.10;
+				"SDKROOT[arch=ppc]" = macosx10.10;
+				"SDKROOT[arch=x86_64]" = macosx10.10;
+			};
+			name = Debug;
+		};
+		C01FCF5008A954540054247B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = "";
+				"GCC_VERSION[sdk=macosx10.4][arch=*]" = "";
+				"GCC_VERSION[sdk=macosx10.5][arch=*]" = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_MISSING_PARENTHESES = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=macosx10.4][arch=*]" = 10.4;
+				"MACOSX_DEPLOYMENT_TARGET[sdk=macosx10.5][arch=*]" = 10.5;
+				ONLY_ACTIVE_ARCH = NO;
+				PREBINDING = NO;
+				SDKROOT = macosx10.10;
+				"SDKROOT[arch=i386]" = macosx10.10;
+				"SDKROOT[arch=ppc]" = macosx10.10;
+				"SDKROOT[arch=x86_64]" = macosx10.10;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		89E156A01A17DCFC00BE9935 /* Build configuration list for PBXNativeTarget "irRemoteDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89E156A11A17DCFC00BE9935 /* Debug */,
+				89E156A21A17DCFC00BE9935 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		C01FCF4A08A954540054247B /* Build configuration list for PBXNativeTarget "HIDRemoteExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4B08A954540054247B /* Debug */,
+				C01FCF4C08A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C01FCF4E08A954540054247B /* Build configuration list for PBXProject "HIDRemoteExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C01FCF4F08A954540054247B /* Debug */,
+				C01FCF5008A954540054247B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 29B97313FDCFA39411CA2CEA /* Project object */;
+}

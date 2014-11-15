@@ -297,15 +297,17 @@ processQueue(IOHIDDeviceInterface **hidDeviceInterface, cookie_struct_t cookies)
     (void)(*queue)->addElement(queue,
                                0x3, 0); //circle button in the middle
 
-/*    
+/*
     for(int i = 0;i < 256;i++) {
         (void)(*queue)->addElement(queue,
                                i, 0);    
     }
-*/  
+*/
 
     addQueueCallbacks(queue);
 
+    //(*hidDeviceInterface)->stopAllQueues(hidDeviceInterface);
+    
     result = (*queue)->start(queue);
     
     CFRunLoopRun();
@@ -458,14 +460,14 @@ setupAndRun(void)
     hidMatchDictionary = IOServiceNameMatching("AppleIRController");
     hidService = IOServiceGetMatchingService(kIOMasterPortDefault,
                                              hidMatchDictionary);
-
+    
     if (!hidService) {
         fprintf(stderr, "Apple Infrared Remote not found.\n");
         exit(1);
     }
 
     hidDevice = (io_object_t)hidService;
-
+    
     createHIDDeviceInterface(hidDevice, &hidDeviceInterface);
     cookies = getHIDCookies((IOHIDDeviceInterface122 **)hidDeviceInterface);
     ioReturnValue = IOObjectRelease(hidDevice);
@@ -477,13 +479,14 @@ setupAndRun(void)
     }
 
     ioReturnValue = (*hidDeviceInterface)->open(hidDeviceInterface, 0);
-
+    //printf("start to do run\n");
     doRun(hidDeviceInterface, cookies);
 
     if (ioReturnValue == KERN_SUCCESS)
         ioReturnValue = (*hidDeviceInterface)->close(hidDeviceInterface);
 
     (*hidDeviceInterface)->Release(hidDeviceInterface);
+    printf("finish setup\n");
 }
 
 int
