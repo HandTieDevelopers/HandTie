@@ -79,7 +79,7 @@ void Do_Calibrarion() {
   MPU6050_SetDLPF(6); // Setting the DLPF to lowest Bandwidth
 }
 
-float accel_cali[numDims] = {0};
+//float accel_cali[numDims] = {0};
 
 #endif
 
