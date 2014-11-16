@@ -13,7 +13,7 @@ BufferedReader errBuffReader = null;
 //BufferedReader outBuffReader = null;
 
 String currentSketchPath;
-final static String irDaemonName = "irRemote"; 
+final static String irDaemonName = "irRemoteExculsive"; 
 
 void sendMsg(String targetDevice, String msg) throws Exception{
   while(true) {
