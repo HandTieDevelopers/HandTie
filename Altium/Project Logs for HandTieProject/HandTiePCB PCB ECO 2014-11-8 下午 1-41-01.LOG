@@ -1,0 +1,4 @@
+Added Pin To Net: NetName=GND2 Pin=Linkit_One-1
+Added Pin To Net: NetName=GND2 Pin=Linkit_One-32
+Added Net: Name=GND2
+Added Room: Name=HandTieSchematic

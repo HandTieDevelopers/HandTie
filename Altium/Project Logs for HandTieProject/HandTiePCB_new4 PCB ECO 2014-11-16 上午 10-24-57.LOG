@@ -1,0 +1,5 @@
+Removed Pin From Net: NetName=NetARDNANO_2 Pin=Linkit_One-15
+Removed Pin From Net: NetName=NetARDNANO_1 Pin=Linkit_One-16
+Added Pin To Net: NetName=NetARDNANO_1 Pin=Linkit_One-15
+Added Pin To Net: NetName=NetARDNANO_2 Pin=Linkit_One-16
+Added Room: Name=HandTieSchematic

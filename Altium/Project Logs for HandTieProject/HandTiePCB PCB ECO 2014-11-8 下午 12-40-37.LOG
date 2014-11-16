@@ -1,0 +1,10 @@
+Change Component DesignItemId : Designator=P1 Old DesignItemId=Header 10 New DesignItemId=Header 12
+Change Component Footprint: Designator=P1 Old Footprint=HDR1X10 New Footprint=HDR1X12
+Change Component Comment : Designator=P1 Old Comment=Header 10 New Comment=Header 12
+Added Pin To Net: NetName=NetARDNANO_6 Pin=ARDNANO-6
+Added Pin To Net: NetName=NetARDNANO_6 Pin=P1-12
+Added Net: Name=NetARDNANO_6
+Added Pin To Net: NetName=NetARDNANO_7 Pin=ARDNANO-7
+Added Pin To Net: NetName=NetARDNANO_7 Pin=P1-11
+Added Net: Name=NetARDNANO_7
+Added Room: Name=HandTieSchematic

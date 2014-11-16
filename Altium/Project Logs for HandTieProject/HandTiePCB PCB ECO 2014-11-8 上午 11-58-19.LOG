@@ -1,0 +1,5 @@
+Added Component: Designator=Button_4Pin?(Button_4Pin)
+Added Pin To Net: NetName=NetARDNANO_5 Pin=Button_4Pin?-1
+Added Pin To Net: NetName=VCC Pin=Button_4Pin?-4
+Added Member To Class: ClassName=HandTieSchematic Member=Component Button_4Pin? Button_4Pin
+Added Room: Name=HandTieSchematic
