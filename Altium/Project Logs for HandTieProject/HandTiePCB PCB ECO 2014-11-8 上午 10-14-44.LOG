@@ -1,0 +1,6 @@
+Added Component: Designator=Linkit_One(Linkit_One)
+Added Pin To Net: NetName=NetARDNANO_30 Pin=Linkit_One-5
+Added Pin To Net: NetName=GND Pin=Linkit_One-6
+Added Pin To Net: NetName=NetARDNANO_2 Pin=Linkit_One-15
+Added Pin To Net: NetName=NetARDNANO_1 Pin=Linkit_One-16
+Added Member To Class: ClassName=HandTieSchematic Member=Component Linkit_One

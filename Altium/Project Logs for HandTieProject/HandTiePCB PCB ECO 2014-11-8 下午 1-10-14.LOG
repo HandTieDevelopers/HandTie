@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=VCC Pin=P1-11
+Removed Pin From Net: NetName=GND Pin=P1-12
+Removed Pin From Net: NetName=NetARDNANO_7 Pin=P1-13
+Removed Pin From Net: NetName=NetARDNANO_6 Pin=P1-14
+Change Component DesignItemId : Designator=P1 Old DesignItemId=Header 14 New DesignItemId=Header 5X2
+Change Component Footprint: Designator=P1 Old Footprint=HDR1X14 New Footprint=HDR2X5
+Change Component Comment : Designator=P1 Old Comment=Header 14 New Comment=Header 5X2
+Added Component: Designator=P2(HDR1X4)
+Added Pin To Net: NetName=VCC Pin=P2-1
+Added Pin To Net: NetName=GND Pin=P2-2
+Added Pin To Net: NetName=NetARDNANO_7 Pin=P2-3
+Added Pin To Net: NetName=NetARDNANO_6 Pin=P2-4
+Added Member To Class: ClassName=HandTieSchematic Member=Component P2 Header 4
+Added Room: Name=HandTieSchematic

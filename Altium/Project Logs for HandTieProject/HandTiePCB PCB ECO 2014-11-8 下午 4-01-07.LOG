@@ -1,0 +1,14 @@
+Removed Pin From Net: NetName=GND Pin=Linkit_One-29
+Removed Pin From Net: NetName=GND Pin=VR1-101-2
+Removed Pin From Net: NetName=GND Pin=VR2-101-2
+Removed Pin From Net: NetName=GND Pin=VR3-101-2
+Removed Pin From Net: NetName=GND Pin=VR4-101-2
+Removed Pin From Net: NetName=GND Pin=VR5-101-2
+Added Pin To Net: NetName=GND2 Pin=Linkit_One-29
+Added Pin To Net: NetName=GND2 Pin=VR1-101-2
+Added Pin To Net: NetName=GND2 Pin=VR2-101-2
+Added Pin To Net: NetName=GND2 Pin=VR3-101-2
+Added Pin To Net: NetName=GND2 Pin=VR4-101-2
+Added Pin To Net: NetName=GND2 Pin=VR5-101-2
+Added Net: Name=GND2
+Added Room: Name=HandTieSchematic

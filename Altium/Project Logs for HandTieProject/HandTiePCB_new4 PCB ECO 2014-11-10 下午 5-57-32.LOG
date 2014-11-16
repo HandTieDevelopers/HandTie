@@ -1,0 +1,15 @@
+Removed Pin From Net: NetName=NetARDNANO_7 Pin=ARDNANO-7
+Removed Pin From Net: NetName=NetARDNANO_8 Pin=ARDNANO-8
+Removed Pin From Net: NetName=NetARDNANO_23 Pin=C1-1
+Removed Pin From Net: NetName=NetARDNANO_8 Pin=P2-3
+Removed Pin From Net: NetName=NetARDNANO_7 Pin=P2-4
+Removed Pin From Net: NetName=NetARDNANO_23 Pin=R1-4-1
+Added Pin To Net: NetName=NetARDNANO_7 Pin=ARDNANO-24
+Added Pin To Net: NetName=NetARDNANO_8 Pin=ARDNANO-25
+Added Pin To Net: NetName=NetARDNANO_8 Pin=C1-1
+Added Pin To Net: NetName=NetARDNANO_7 Pin=P2-3
+Added Pin To Net: NetName=NetARDNANO_23 Pin=P2-4
+Added Pin To Net: NetName=NetARDNANO_8 Pin=R1-4-1
+Change Net Name : Old Net Name=NetARDNANO_7 New Net Name=NetARDNANO_24
+Change Net Name : Old Net Name=NetARDNANO_8 New Net Name=NetARDNANO_25
+Added Room: Name=HandTieSchematic
