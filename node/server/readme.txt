@@ -4,3 +4,7 @@ installing method: sudo npm install -g [package name]
 and generating symbolic link by: npm link [package name]
 or 
 installing locally: npm install [package name]
+
+ex:
+npm install -g shelljs
+npm link shelljs
