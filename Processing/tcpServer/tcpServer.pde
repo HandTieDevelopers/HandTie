@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
 final static int lf = 10; //newline ASCII
 final static int NUM_OF_GAUGE = 5;
@@ -58,7 +57,7 @@ Thread dataReceiver = new Thread(new Runnable() {
 		                                    bufferSize);
 			    while(true) {
 			        String line = reader.readLine();
-                                char identifer = line.charAt(0);
+                    char identifer = line.charAt(0);
 			        if(identifer != 'n' && identifer != 'c') {
 			        	continue;
 			        }
