@@ -1,6 +1,6 @@
-var Promise = require('bluebird')
-var adb = require('adbkit')
-var client = adb.createClient()
+var Promise = require('bluebird');
+var adb = require('adbkit');
+var client = adb.createClient();
 var keypress = require('keypress');
 var fs = require('fs');
 var MyPort = 6670;
@@ -57,8 +57,8 @@ client.listDevicesWithPaths()
     })
   })
   .then(function() {
-    console.log('Done.')
+    console.log('Done.');
   })
   .catch(function(err) {
-    console.error('Something went wrong:', err.stack)
-  })
+    console.error('Something went wrong:', err.stack);
+  });

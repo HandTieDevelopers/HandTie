@@ -32,9 +32,6 @@ float mul = 1;
 
 //-- GRT --
 
-final static int BUFF_SIZE = 40;
-final static int serverPort = 8080;
-
 final static int lf = 10; //newline ASCII
 final static int NUM_OF_GAUGE = 5;
 final static int ACCEL_DIM = 3;
@@ -43,6 +40,8 @@ int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
 int[] strainCaliVals = new int[NUM_OF_GAUGE];
 double[] elongRatios = new double[NUM_OF_GAUGE];
 
+final static int BUFF_SIZE = 40;
+final static int serverPort = 8080;
 final static char[] identifer = new char[]{'c','s','a','\n'};
 int[] lookUpTable = new int[256];
 

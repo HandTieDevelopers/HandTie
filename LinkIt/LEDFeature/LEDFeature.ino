@@ -69,7 +69,7 @@ void updateVarianceUsingAnalogVals() {
 }
 
 #define numLEDPins 3
-int LEDPin[numLEDPins] = {3,4,9}; //G,R,B
+int LEDPin[numLEDPins] = {3,8,9}; //G,R,B
 #define bLEDIndex 2
 #define gLEDIndex 0
 #define rLEDIndex 1

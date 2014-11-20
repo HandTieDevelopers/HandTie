@@ -1,10 +1,20 @@
+var shell = require('shelljs');
 var net = require('net');
-//var StringDecoder = require('string_decoder').StringDecoder;
-//var decoder = new StringDecoder('utf8');
 var portNum = 8080;
-// var buff = new Buffer(1024);
+var relativePath = '../../C/binary/';
 
-var server = net.createServer(function(client) { //'connection' listener
+var child = shell.exec(relativePath + 'irRemoteExculsive', {silent:true,async:true}, function(code,output) {
+  console.log('ir program terminated');
+  console.log('Exit code:', code);
+  console.log('Program output:', output);
+});
+
+child.stderr.on('data', function(data) {
+  data = data.slice(0, data.length - 1); //remove newline char
+  console.log('data:' + data);
+});
+
+var tcpServerForCommWithProcessing = net.createServer(function(client) { //'connection' listener
   console.log('server connected');
   client.on('data',function(data) {
     console.log( data.toString() );
@@ -15,11 +25,11 @@ var server = net.createServer(function(client) { //'connection' listener
   });
   
   client.on('end', function() {
-    console.log('server disconnected');
+    console.log('client disconnected');
   });
   
 });
 
-server.listen(portNum, function() { //'listening' listener
+tcpServerForCommWithProcessing.listen(portNum, function() { //'listening' listener
   console.log('server bound on port:' + portNum);
 });
