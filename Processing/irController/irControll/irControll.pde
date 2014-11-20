@@ -14,6 +14,7 @@ BufferedReader errBuffReader = null;
 
 String currentSketchPath;
 final static String irDaemonName = "irRemoteExculsive"; 
+final static String relativePath = "../../../C/binary/";
 
 void sendMsg(String targetDevice, String msg) throws Exception{
   while(true) {
@@ -31,7 +32,7 @@ void setup() {
 	try {       
         //println("sketch path:" + sketchPath(""));     
         currentSketchPath = sketchPath("");
-        ProcessBuilder pb = new ProcessBuilder(currentSketchPath + irDaemonName,"-r");
+        ProcessBuilder pb = new ProcessBuilder(currentSketchPath + relativePath + irDaemonName,"-r");
         //pb.directory(new File(currentSketchPath));
         //pb.redirectErrorStream(true);
         pForShellCmd = pb.start();

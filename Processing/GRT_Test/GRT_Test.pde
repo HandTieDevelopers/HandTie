@@ -30,15 +30,9 @@ color ColorIdle = color(200, 200, 200);
 int Width = 800;
 int Height = 600;
 float mul = 1;
+double[] elongRatios = new double[NUM_OF_GAUGE];
 int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
 int[] strainCaliVals = new int[NUM_OF_GAUGE];
-int[] accelMax = new int[ACCEL_DIM];
-int[] accelMin = new int[ACCEL_DIM];
-float[] accel = new float[ACCEL_DIM];
-double[] elongRatios = new double[NUM_OF_GAUGE];
-
-int[] x = new int[0];
-int[] y = new int[0];
 
 final static int SERIAL_PORT_NUM = 5;
 
