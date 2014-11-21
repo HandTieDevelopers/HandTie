@@ -86,7 +86,7 @@
         return;
     }
     
-    [hidRemote startRemoteControl:kHIDRemoteModeExclusive];
+    [hidRemote startRemoteControl:kHIDRemoteModeExclusiveAuto];
     return;
 }
 

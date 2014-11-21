@@ -17,6 +17,12 @@
 #include <time.h>
 #include "Wire.h"
 
+//tuning parameters
+#define numSamplesForVarianceTest 10
+#define thresholdForStateTransition 20
+#define numGaugesForStateTransition 2
+
+
 #define DEBUG 0
 #define USING_SEN10724
 
@@ -163,7 +169,7 @@ LWiFiUDP udpClient;
 
 void connectToAP() {
   while (0 == LWiFi.connect(WIFI_AP, APConnectingInfo)) {
-    Serial.println("connecting Wifi AP failed");
+    //Serial.println("connecting Wifi AP failed");
     delay(retryIntervalInMilliSec);
   }
 }
@@ -174,39 +180,6 @@ void checkAPConnection() {
     connectToAP();
     udpClient.begin(udpLocalPort);
   }
-}
-
-//strain gauge 
-#define numStrainGauges 5
-#define numButtons 1
-
-const uint16_t strainGaugePins[numStrainGauges] = {0,1,2,3,6};
-const uint16_t buttonPin[numButtons] = {2};
-uint16_t analogVals[numStrainGauges] = {0};
-
-void setup() {
-  
-  for(int i = 0;i < numButtons;i++) {
-    pinMode(buttonPin[i], INPUT);
-  }
-
-  //IMU I2C
-  I2C_Init();
-#ifdef USING_SEN10724
-  Accel_Init();
-#elif defined(USING_MPU9150) || defined(USING_MPU6050)
-  Do_Calibrarion();
-#endif
-
-  Serial.begin(9600);
-  Serial.println("init wifi client");
-  
-  LWiFi.begin();
-  connectToAP();  
-  
-  Serial.println("Wifi AP connected successfully");
-  
-  udpClient.begin(udpLocalPort);
 }
 
 void transmitUDPPacket() {
@@ -225,7 +198,197 @@ void transmitUDPPacket() {
   udpClient.endPacket();
 }
 
+//strain gauge 
+#define NUM_OF_GAUGE 5
+#define numButtons 1
+#define NUM_OF_MULT_PINS 3
+
+#define GAUGE_PIN A0
+#define MULT_MIN_PIN 4
+const uint16_t buttonPin[numButtons] = {2};
+uint16_t analogVals[NUM_OF_GAUGE] = {0};
+
+uint16_t numAnalogValsAccumulated = 0;
+uint32_t analogValsSum[NUM_OF_GAUGE] = {0};
+uint32_t analogValsSquareSum[NUM_OF_GAUGE] = {0};
+
+
+bool varianceExceedThreshold(uint16_t threshold, uint8_t numValsToTriger) {
+  float numAnalogValsAccumulatedInFloat = numAnalogValsAccumulated;
+  numAnalogValsAccumulated = 0; //init
+
+  for(int i = 0;i < NUM_OF_GAUGE;i++) {
+    float analogValsAvg = analogValsSum[i]/numAnalogValsAccumulatedInFloat;
+    float variance = analogValsSquareSum[i]/numAnalogValsAccumulatedInFloat - analogValsAvg * analogValsAvg; //E[x^2] - E[x]^2
+    
+    //for tuning parameters
+    Serial.print(i);
+    Serial.print(":");
+    Serial.println(variance);
+    
+    //init variables
+    analogValsSum[i] = 0;
+    analogValsSquareSum[i] = 0;   
+
+    if(variance > threshold) {
+      numValsToTriger--;
+      if(numValsToTriger <= 0) {
+        return true;
+      }
+    }
+  }
+  
+  return false;
+}
+
+
+void updateVarianceUsingAnalogVals() {
+  for(int i = 0;i < NUM_OF_GAUGE;i++) {
+    analogValsSum[i] += analogVals[i];  
+    analogValsSquareSum[i] += analogVals[i]*analogVals[i];
+  }
+  numAnalogValsAccumulated++;
+
+}
+
+#define numLEDPins 3
+int LEDPin[numLEDPins] = {8,9,3}; //G,R,B
+#define bLEDIndex 2
+#define gLEDIndex 0
+#define rLEDIndex 1
+
+#define LEDBlinkingPeriodInMilliSec 1000 //3s
+#define LEDToSleepDurationInMilliSec 30000 //30s
+#define LEDToActiveDurationInMilliSec 3000 //3s
+
+enum LEDState {
+  Sleep = 0,
+  Active,
+  Triggered
+};
+
+LEDState ledState = Sleep;
+
+uint32_t timerForLEDBlinking = 0;
+uint8_t LEDSleepBlinkingState = LOW;
+
+void initLEDSleepVars() {
+  timerForLEDBlinking = millis();
+  LEDSleepBlinkingState = LOW;
+  ledState = Sleep;
+}
+
+uint32_t timerForLEDActive = 0;
+bool toLightLEDBlue = false;
+
+void initLEDActiveVars() {
+  timerForLEDActive = millis();
+  toLightLEDBlue = true;
+  ledState = Active;
+}
+
+void lightLEDBlue() {
+  if(toLightLEDBlue) {
+    digitalWrite(LEDPin[bLEDIndex], HIGH);
+    digitalWrite(LEDPin[rLEDIndex], LOW);
+    digitalWrite(LEDPin[gLEDIndex], LOW);
+    toLightLEDBlue = false;
+  }
+}
+
+uint32_t timerForLEDTriggered = 0;
+bool toLightLEDGreen = false;
+
+void initLEDTriggeredVars() {
+  timerForLEDTriggered = millis();
+  toLightLEDGreen = true;
+  ledState = Triggered;
+}
+
+void lightLEDGreen() {
+  if(toLightLEDGreen) {
+    digitalWrite(LEDPin[gLEDIndex], HIGH);
+    digitalWrite(LEDPin[rLEDIndex], LOW);
+    digitalWrite(LEDPin[bLEDIndex], LOW);
+    toLightLEDGreen = false;
+  }
+}
+
+void decideLEDLighting() {
+  if(ledState == Sleep) {
+    //Blinking every 3 secs with white color
+    if(millis() - timerForLEDBlinking >= LEDBlinkingPeriodInMilliSec) {
+      for(int i = 0;i < numLEDPins;i++) {
+        digitalWrite(LEDPin[i], LEDSleepBlinkingState);
+      }
+      LEDSleepBlinkingState = !LEDSleepBlinkingState;
+      timerForLEDBlinking = millis();
+    }
+  }
+  else if(ledState == Active) {
+    //light in Blue and set timer for sleeping event
+    lightLEDBlue();
+
+    if(millis() - timerForLEDActive >= LEDToSleepDurationInMilliSec) {
+      //transit to sleep state
+      initLEDSleepVars();
+    }
+
+  }
+  else if(ledState == Triggered){
+    //light in green and turned into led active state in 3 secs
+    lightLEDGreen();
+
+    if(millis() - timerForLEDTriggered >= LEDToActiveDurationInMilliSec) {
+      //transit to active state
+      initLEDActiveVars();
+    }
+
+  }
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  for(int i = 0;i < numLEDPins;i++) {
+    pinMode(LEDPin[i],OUTPUT);  
+    digitalWrite(LEDPin[i], LOW);
+  }
+  
+  initLEDSleepVars();
+  
+//-- strain gauge
+  for(int i = 0;i < numButtons;i++) {
+    pinMode(buttonPin[i], INPUT);
+  }
+
+  for(int i=MULT_MIN_PIN; i<MULT_MIN_PIN+NUM_OF_MULT_PINS; i++){
+    pinMode(i, OUTPUT);
+  }
+
+  //IMU I2C
+  I2C_Init();
+#ifdef USING_SEN10724
+  Accel_Init();
+#elif defined(USING_MPU9150) || defined(USING_MPU6050)
+  Do_Calibrarion();
+#endif
+
+  
+  //Serial.println("init wifi client");
+  
+  LWiFi.begin();
+  connectToAP();  
+  
+  //Serial.println("Wifi AP connected successfully");
+  
+  udpClient.begin(udpLocalPort);
+}
+
 void loop() {
+
+//-- accelerometer
+
   Read_Accel();
   sprintf(buff_w,"a %d %d %d \n",accel[0],accel[1],accel[2]);
   transmitUDPPacket();
@@ -235,15 +398,36 @@ void loop() {
     mode = 'c'; 
   }
 
-  //simulating the result of reading from arduino's serial
-  
-  analogVals[0] = 100;
-  analogVals[1] = 133;
-  analogVals[2] = 10;
-  analogVals[3] = 5;
-  analogVals[4] = 60;
+//-- strain gauges
+
+  for(int i=0; i<NUM_OF_GAUGE; i++){
+    digitalWrite(MULT_MIN_PIN, i & 1);
+    digitalWrite(MULT_MIN_PIN+1, (i >> 1) & 1);
+    digitalWrite(MULT_MIN_PIN+2, (i >> 2) & 1);
+    analogVals[i] = analogRead(GAUGE_PIN);
+  }
   
   sprintf(buff_w,"%c %d %d %d %d %d \n",mode,analogVals[0],analogVals[1],analogVals[2],analogVals[3],analogVals[4]);
   transmitUDPPacket();
+
+//-- LED --
+
+  //after you get analogVals of strain gauges
+  updateVarianceUsingAnalogVals();
+
+  if(numAnalogValsAccumulated == numSamplesForVarianceTest) {
+    if(varianceExceedThreshold(thresholdForStateTransition,numGaugesForStateTransition)) {
+      if(ledState == Sleep) {
+        //transit to active
+        initLEDActiveVars();
+      }
+      else if(ledState == Active) {
+        //transit to triggered
+        initLEDTriggeredVars();
+      }
+    }
+  }
+
+  decideLEDLighting();
 
 }
