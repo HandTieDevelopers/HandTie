@@ -1,5 +1,5 @@
 var shell = require('shelljs');
-var keypress = require('keypress');
+//var keypress = require('keypress');
 var net = require('net');
 var fs = require('fs');
 var Promise = require('bluebird');
@@ -38,10 +38,10 @@ function execKeynoteCmd(keynoteCmd) {
 }
 
 function controlKeynote(cmd) {
-  if(cmd === 'U') {
+  if(cmd === 'L') {
     execKeynoteCmd(KeynoteCmds[2]);
   }
-  else if(cmd === 'D'){
+  else if(cmd === 'R'){
     execKeynoteCmd(KeynoteCmds[3]);
   }
 }
@@ -254,7 +254,7 @@ var tcpServerForCommWithProcessing = net.createServer(function(client) { //'conn
       return;
     }
 
-    if(segments[0] === 'glass') {
+    if(segments[0] === 'g') { //glass
       if(currentGlass === null) {
         tryToFindNewGlass();
       }
@@ -262,7 +262,7 @@ var tcpServerForCommWithProcessing = net.createServer(function(client) { //'conn
         controlGlass(segments[1]);
       }
     }
-    else if(segments[0] === 'wear') {
+    else if(segments[0] === 'w') { //wear
       if(currentWear === null) {
         tryToFindNewWear();
       }
@@ -270,7 +270,7 @@ var tcpServerForCommWithProcessing = net.createServer(function(client) { //'conn
         controlWear(segments[1]);
       }
     }
-    else if(segments[0] === 'keynote') {
+    else if(segments[0] === 'k') { //keynote
       controlKeynote(segments[1]);
     }
     else {

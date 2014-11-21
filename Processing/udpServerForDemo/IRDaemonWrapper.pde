@@ -10,7 +10,7 @@ interface IREventListener {
 class IRDaemonWrapper {
   private Process pForShellCmd = null;
   private String currentSketchPath = null;
-  private final static String irDaemonName = "irRemoteExculsiveAuto"; 
+  private final static String irDaemonName = "irRemoteExculsiveAutoMPHold"; 
   private final static String relativePath = "../../C/binary/";
   private IREventListener mListener = null;
   private Thread dataReceiver = null;

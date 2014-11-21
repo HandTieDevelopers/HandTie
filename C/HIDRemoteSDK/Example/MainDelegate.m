@@ -50,8 +50,9 @@
 - (void)setUnusedButtonCodes
 {
     [hidRemote setUnusedButtonCodes:[NSArray arrayWithObjects:
-                                                       [NSNumber numberWithInt:(int)kHIDRemoteButtonCodeMenuHold],
+                                                      /* [NSNumber numberWithInt:(int)kHIDRemoteButtonCodeMenuHold],
                                                     [NSNumber numberWithInt:(int)kHIDRemoteButtonCodePlayHold],
+                                                       */
                                                     [NSNumber numberWithInt:(int)kHIDRemoteButtonCodeCenterHold],
                                      [NSNumber numberWithInt:(int)kHIDRemoteButtonCodeUpHold],
                                      [NSNumber numberWithInt:(int)kHIDRemoteButtonCodeDownHold],
@@ -139,15 +140,15 @@
         case kHIDRemoteButtonCodeCenterHold:
             buttonName = @"Center (hold)";
             break;
+        */
         case kHIDRemoteButtonCodeMenuHold:
-            buttonName = @"Menu (hold)";
+            buttonName = "N";
             break;
         case kHIDRemoteButtonCodePlayHold:
-            buttonName = @"Play (Alu Remote!) (hold)";
+            buttonName = "O";
             break;
-        */
         default:
-            buttonName = "Unknown";
+            buttonName = "O";
             break;
     }
     
