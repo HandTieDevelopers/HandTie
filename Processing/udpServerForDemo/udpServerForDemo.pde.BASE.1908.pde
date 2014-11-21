@@ -39,33 +39,23 @@ int ACCEL_DIM;
 int[] analogVals;
 int[] strainCaliVals;
 double[] elongRatios;
-Gesture gesture = Gesture.NO_GESTURE;
+
+//customized class 
+UdpServerForLinkItApp udpServer;
+IRDaemonWrapper irDaemon;
+TcpClientWithMsgQueue tcpClient;
 
 IREventListener listener = new IREventListener() {
 	void onEvent(String IRMsg) {
-		//println("ir msg:" + IRMsg); //show this info on the Visualization panel
+		println("ir msg:" + IRMsg);
 		try {
-			tcpClient.sendMsg(mode + "," + IRMsg);
+			tcpClient.sendMsg(IRMsg);
 		}
 		catch(Exception e) {
 			println(e.getMessage());
 		}
 	}
 };
-
-Thread terminateHook = new Thread(new Runnable() {
-	public void run() {
-		println("start to terminate this process");
-		if(irDaemon != null) {
-			irDaemon.terminateProcessForExecCmd();
-		}
-	}
-});
-
-//customized class 
-UdpServerForLinkItApp udpServer;
-IRDaemonWrapper irDaemon;
-TcpClientWithMsgQueue tcpClient;
 
 void setup() {
     //init udp server(Comm with LinkIt)
@@ -78,8 +68,6 @@ void setup() {
 
     //init tcp client(Comm with node server on localhost)
     tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-
-    Runtime.getRuntime().addShutdownHook(terminateHook);
 
     //init ir daemon
     while(true) {
@@ -99,7 +87,7 @@ void setup() {
 	font = loadFont("SansSerif-48.vlw");
 }
 
-// grt.getPredictedClassLabel(); //can get predicted result
+//grt.getPredictedClassLabel(); //can get predicted result
 
 void draw() {
     
@@ -163,47 +151,4 @@ void draw() {
 	fill(0,0,0);
 	grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5));
         
-}
-
-String mode = "keynote";
-
-void keyPressed() {
-	if(key == 'z') {
-		mode = "glass";
-	}
-	else if(key == 'x'){
-		mode = "wear";
-	}
-	else if(key == 'c') {
-		mode = "keynote";
-	}
-	else {
-		println("unknown hot keys");
-	}
-
-	println("current mode:" + mode);
-
-}
-
-String gestureRecognition(){
-	int classLabel = grt.getPredictedClassLabel();
-	double likelihood = grt.getMaximumLikelihood();
-
-	Gesture nextGesture = gesture.getGestureByLabel(classLabel);
-
-	if (likelihood < 0.7) {
-		gesture = gesture.NO_GESTURE;
-		return gesture.toString();
-	}
-
-	if (nextGesture.getLastState() != null){
-		if (nextGesture.getLastState().equals(gesture)) {
-			gesture = nextGesture;
-		} else{
-			gesture = gesture.NO_GESTURE;
-		}
-	} else{
-		gesture = nextGesture;
-	}
-	return gesture.toString();
 }

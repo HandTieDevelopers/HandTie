@@ -21,13 +21,13 @@ class TcpClientWithMsgQueue {
     
     workerThread = new Thread(new Runnable() {
     	private Socket client = null;
-    	private DataOutputStream dataTransmitter = null;
+    	private OutputStreamWriter dataTransmitter = null;
 
     	private void connectToTcpServer() {
     		while(true) {
 			    try {
 			        client = new Socket(mServerIP, mServerPort);
-			        dataTransmitter = new DataOutputStream(client.getOutputStream());
+			        dataTransmitter = new OutputStreamWriter(client.getOutputStream());
                     return;
 			    }
 			    catch(Exception e) {
@@ -47,7 +47,8 @@ class TcpClientWithMsgQueue {
 							connectToTcpServer();
 						}
 						String msg = mMsgQueue.remove();
-						dataTransmitter.writeUTF(msg);
+						dataTransmitter.write(msg,0,msg.length());
+                                                dataTransmitter.flush();
 					}
 					else {
 						Thread.sleep(10000); //sleep 10 secs
@@ -57,7 +58,13 @@ class TcpClientWithMsgQueue {
 					//do nothing
 				}
 				catch(Exception e) {
-					println(e.getMessage());
+					//println(e.getMessage());
+					try {
+						client.close();
+					}
+					catch(Exception e2) {
+					}
+					connectToTcpServer();
 				}
 			}
     	}

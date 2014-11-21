@@ -35,7 +35,7 @@ client.listDevicesWithPaths()
               return client.shell(device.id, "input swipe 5 150 300 150")  //left
             }
             else if(key.name == 'return'){
-              return client.shell(device.id, "input tap 150 150")  //left
+              return client.shell(device.id, "input tap 150 150")  //return
             }
             else if(key.name == 'p'){
               return client.shell(device.id, "input keyevent 26")   //Power

@@ -1,7 +1,7 @@
 var shell = require('shelljs');
-var relativePath = '../../C/binary/';
+var relativePathOfIRProgram = '../C/binary/';
 
-var child = shell.exec(relativePath + 'irRemoteExculsive', {silent:true,async:true}, function(code,output) {
+var child = shell.exec(relativePathOfIRProgram + 'irRemoteExculsive', {silent:true,async:true}, function(code,output) {
 	console.log('ir program terminated');
 	console.log('Exit code:', code);
   	console.log('Program output:', output);

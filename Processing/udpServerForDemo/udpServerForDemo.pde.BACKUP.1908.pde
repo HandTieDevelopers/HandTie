@@ -165,26 +165,7 @@ void draw() {
         
 }
 
-String mode = "keynote";
-
-void keyPressed() {
-	if(key == 'z') {
-		mode = "glass";
-	}
-	else if(key == 'x'){
-		mode = "wear";
-	}
-	else if(key == 'c') {
-		mode = "keynote";
-	}
-	else {
-		println("unknown hot keys");
-	}
-
-	println("current mode:" + mode);
-
-}
-
+<<<<<<< HEAD
 String gestureRecognition(){
 	int classLabel = grt.getPredictedClassLabel();
 	double likelihood = grt.getMaximumLikelihood();
@@ -207,3 +188,24 @@ String gestureRecognition(){
 	}
 	return gesture.toString();
 }
+=======
+String mode = "keynote";
+
+void keyPressed() {
+	if(key == 'z') {
+		mode = "glass";
+	}
+	else if(key == 'x'){
+		mode = "wear";
+	}
+	else if(key == 'c') {
+		mode = "keynote";
+	}
+	else {
+		println("unknown hot keys");
+	}
+
+	println("current mode:" + mode);
+
+}
+>>>>>>> 8fecf87a73dccf61593d9a6f465374c3c0c1c7dd

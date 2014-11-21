@@ -39,7 +39,6 @@ int ACCEL_DIM;
 int[] analogVals;
 int[] strainCaliVals;
 double[] elongRatios;
-Gesture gesture = Gesture.NO_GESTURE;
 
 IREventListener listener = new IREventListener() {
 	void onEvent(String IRMsg) {
@@ -99,7 +98,7 @@ void setup() {
 	font = loadFont("SansSerif-48.vlw");
 }
 
-// grt.getPredictedClassLabel(); //can get predicted result
+//grt.getPredictedClassLabel(); //can get predicted result
 
 void draw() {
     
@@ -183,27 +182,4 @@ void keyPressed() {
 
 	println("current mode:" + mode);
 
-}
-
-String gestureRecognition(){
-	int classLabel = grt.getPredictedClassLabel();
-	double likelihood = grt.getMaximumLikelihood();
-
-	Gesture nextGesture = gesture.getGestureByLabel(classLabel);
-
-	if (likelihood < 0.7) {
-		gesture = gesture.NO_GESTURE;
-		return gesture.toString();
-	}
-
-	if (nextGesture.getLastState() != null){
-		if (nextGesture.getLastState().equals(gesture)) {
-			gesture = nextGesture;
-		} else{
-			gesture = gesture.NO_GESTURE;
-		}
-	} else{
-		gesture = nextGesture;
-	}
-	return gesture.toString();
 }

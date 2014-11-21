@@ -12,7 +12,10 @@ client.listDevicesWithPaths()
       console.log("[Device] "+device.id);
 
         process.stdin.on('keypress', function (ch, key) {
-          console.log('got "keypress"'+key.name);
+          if(key) {
+            console.log('got "keypress"'+key.name);
+          }
+          
           if (key && key.ctrl && key.name == 'c') {
             process.exit();
           }
