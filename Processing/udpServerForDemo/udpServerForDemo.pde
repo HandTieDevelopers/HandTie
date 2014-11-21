@@ -204,6 +204,8 @@ String gestureRecognition(){
 		}
 	} else{
 		gesture = nextGesture;
+		// if (gesture.isReadyState())
+		// 	return gesture.NO_GESTURE.toString();
 	}
 	return gesture.toString();
 }
