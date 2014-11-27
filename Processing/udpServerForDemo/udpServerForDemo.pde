@@ -40,7 +40,7 @@ int[] analogVals;
 int[] strainCaliVals;
 double[] elongRatios;
 
-boolean isReal = false; //ML
+boolean isReal = false;
 int IRMode = 0;
 
 IREventListener listener = new IREventListener() {
@@ -66,7 +66,7 @@ IREventListener listener = new IREventListener() {
                         }
                         else if(IRMsg.equals("D")) {
                           predictedResult = "Down";
-                          if(mode.equals("g")) {
+                          if(mode.equals("g") && IRMode == 1) {
                             predictedResult = "camera";
                           }
                         }
@@ -126,7 +126,8 @@ void setup() {
 
     //init tcp client(Comm with node server on localhost)
     tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-
+    //tcpClient = null;
+    
     Runtime.getRuntime().addShutdownHook(terminateHook);
 
     //init ir daemon
@@ -251,6 +252,9 @@ void keyPressed() {
 	else if(key == 'g') {
 		showGRTFlag = !showGRTFlag;
 	}
+        else if(key == 'v') { //for hue
+        
+        }
 
         /*	
 	else if(key == 'w') {
