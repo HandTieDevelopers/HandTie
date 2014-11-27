@@ -15,12 +15,19 @@ public enum Gesture{
 
    OK(0,"Ok",null,false),
 
-   TAKE_PHOTO(0, "Take Photo",null,false);
+   TAKE_PHOTO(0, "Take Photo",null,false),
+
+   RED(0,"Red",null,false),
+   GREEN(0,"Green",null,false),
+   BLUE(0,"Blue",null,false);
    
    private int label;
    private String gestureName;
    private Gesture lastState; //this gesture requires a previous gesture
    private boolean isReady;
+
+   // for gesture recognition
+   private static Gesture gesture;
 
    Gesture(final int label, final String gestureName, Gesture lastState, boolean isReady){
       this.label = label;
@@ -65,5 +72,28 @@ public enum Gesture{
          }
       }
       return null;
+   }
+
+   public static Gesture gestureRecognition(int classLabel, double likelihood){
+      Gesture nextGesture = Gesture.getGestureByLabel(classLabel);
+
+      if (likelihood < 0.7) {
+         gesture = gesture.NO_GESTURE;
+         return gesture;
+      }
+
+      if (nextGesture.getLastState() != null){ //2-step action
+         if (nextGesture.getLastState().equals(gesture)) { 
+            gesture = nextGesture;
+         } else{
+            gesture = gesture.NO_GESTURE;
+         }
+      } else{  //1-step action
+         gesture = nextGesture;
+         // if (gesture.isReadyState())
+         //    return gesture.NO_GESTURE;
+      }
+      System.out.println("gesture is " + gesture.toString());
+      return gesture;
    }
 }

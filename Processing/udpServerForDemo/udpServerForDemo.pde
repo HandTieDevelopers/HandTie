@@ -39,7 +39,6 @@ int ACCEL_DIM;
 int[] analogVals;
 int[] strainCaliVals;
 double[] elongRatios;
-Gesture gesture = Gesture.NO_GESTURE;
 
 IREventListener listener = new IREventListener() {
 	void onEvent(String IRMsg) {
@@ -61,6 +60,9 @@ Thread terminateHook = new Thread(new Runnable() {
 		}
 	}
 });
+
+//-- Philip Hue --
+PhilipHue philipHue = new PhilipHue(0);
 
 //customized class 
 UdpServerForLinkItApp udpServer;
@@ -95,6 +97,7 @@ void setup() {
     //GRT
 	size(Width, Height);
   	frameRate(30);
+
   	//Load the font
 	font = loadFont("SansSerif-48.vlw");
 }
@@ -162,7 +165,8 @@ void draw() {
 	//Draw the info text
 	fill(0,0,0);
 	grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5));
-        
+   
+   performGestureAction();
 }
 
 String mode = "keynote";
@@ -185,27 +189,24 @@ void keyPressed() {
 
 }
 
-String gestureRecognition(){
-	int classLabel = grt.getPredictedClassLabel();
-	double likelihood = grt.getMaximumLikelihood();
-
-	Gesture nextGesture = gesture.getGestureByLabel(classLabel);
-
-	if (likelihood < 0.7) {
-		gesture = gesture.NO_GESTURE;
-		return gesture.toString();
-	}
-
-	if (nextGesture.getLastState() != null){
-		if (nextGesture.getLastState().equals(gesture)) {
-			gesture = nextGesture;
-		} else{
-			gesture = gesture.NO_GESTURE;
-		}
-	} else{
-		gesture = nextGesture;
-		// if (gesture.isReadyState())
-		// 	return gesture.NO_GESTURE.toString();
-	}
-	return gesture.toString();
+void performGestureAction(){
+   switch (Gesture.gestureRecognition(grt.getPredictedClassLabel(),
+   											  grt.getMaximumLikelihood())){
+      case RED:
+      	philipHue.accelToHue(PhilipHue.HueColor.RED,
+      								analogVals[NUM_OF_GAUGE + 1]);
+      	break;
+      case GREEN:
+      	philipHue.accelToHue(PhilipHue.HueColor.GREEN,
+      								analogVals[NUM_OF_GAUGE + 1]);
+      	break;
+      case BLUE:
+      	philipHue.accelToHue(PhilipHue.HueColor.BLUE,
+      								analogVals[NUM_OF_GAUGE + 1]);
+         break;
+      default:
+      	philipHue.reset();
+         break;
+   }
 }
+
