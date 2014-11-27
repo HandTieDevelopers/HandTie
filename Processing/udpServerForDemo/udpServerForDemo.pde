@@ -110,6 +110,9 @@ Thread terminateHook = new Thread(new Runnable() {
 	}
 });
 
+//-- Philip Hue --
+PhilipHue philipHue = new PhilipHue();
+
 //customized class 
 UdpServerForLinkItApp udpServer;
 IRDaemonWrapper irDaemon;
@@ -125,8 +128,8 @@ void setup() {
     elongRatios = udpServer.elongRatios;
 
     //init tcp client(Comm with node server on localhost)
-    tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-    //tcpClient = null;
+    //tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
+    tcpClient = null;
     
     Runtime.getRuntime().addShutdownHook(terminateHook);
 
@@ -144,6 +147,7 @@ void setup() {
     //GRT
 	size(Width, Height);
   	frameRate(30);
+
   	//Load the font
 	font = loadFont("SansSerif-48.vlw");
 }
@@ -229,6 +233,8 @@ void draw() {
 	if(showGRTFlag) {
 		grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5) + heightOffSet);
     }
+
+   	performGestureAction();
 }
 
 String mode = "k";
@@ -252,9 +258,9 @@ void keyPressed() {
 	else if(key == 'g') {
 		showGRTFlag = !showGRTFlag;
 	}
-        else if(key == 'v') { //for hue
-        
-        }
+    else if(key == 'v') { //for hue
+    	mode = "l";
+    }
 
         /*	
 	else if(key == 'w') {
@@ -286,32 +292,19 @@ void keyPressed() {
 
 }
 
-Gesture gesture = Gesture.NO_GESTURE;
+void performGestureAction(){
+   Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),grt.getMaximumLikelihood());
+   if(gesture == Gesture.RED) {
+     philipHue.accelToHue(HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
+   }
+   else if(gesture == Gesture.GREEN){
+     philipHue.accelToHue(HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
+   }
+   else if(gesture == Gesture.BLUE){
+   	 philipHue.accelToHue(HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
+   }
+   else {
+     philipHue.reset();
+   }
 
-//grt.getClassLikelihoods(); //an array of classes' likelihood
-//grt.getPredictedClassLabel(); //can get predicted result
-
-String gestureRecognition(){
-	int classLabel = grt.getPredictedClassLabel();
-	double likelihood = grt.getMaximumLikelihood();
-
-	Gesture nextGesture = Gesture.getGestureByLabel(classLabel);
-
-	if (likelihood < 0.7) {
-		gesture = Gesture.NO_GESTURE;
-		return gesture.toString();
-	}
-
-	if (nextGesture.getLastState() != null){
-		if (nextGesture.getLastState().equals(gesture)) {
-			gesture = nextGesture;
-		} else{
-			gesture = Gesture.NO_GESTURE;
-		}
-	} else{
-		gesture = nextGesture;
-		// if (gesture.isReadyState())
-		// 	return gesture.NO_GESTURE.toString();
-	}
-	return gesture.toString();
 }
