@@ -8,13 +8,13 @@ class UdpServerForLinkItApp {
 	private final int[] lookUpTable = new int[256];
 	
     public final static int ACCEL_DIM = 3;
+    public final static int NUM_OF_IMU_VALS = ACCEL_DIM;
     public final static int NUM_OF_GAUGE = 5;
-	public final static int TOTAL_SENSOR_VALUES = NUM_OF_GAUGE + ACCEL_DIM;
+	public final static int TOTAL_SENSOR_VALUES = NUM_OF_GAUGE + NUM_OF_IMU_VALS;
 
 	public int[] analogVals = new int[TOTAL_SENSOR_VALUES];
 	public int[] strainCaliVals = new int[NUM_OF_GAUGE];
-	public double[]	elongRatios = new double[NUM_OF_GAUGE];
-
+	
 	public UdpServerForLinkItApp() {
 		//network communication
 		int numIdentifers = identifer.length;
@@ -46,35 +46,24 @@ class UdpServerForLinkItApp {
 			while (true) {
 				try {
 				    while(true) {
-				        serverSocket.receive(receivePacket);              
-			    		String[] parsedData = (new String( receivePacket.getData() )).split(" ");
+				        serverSocket.receive(receivePacket);   
+				        String unparsedStr = new String( receivePacket.getData() );           
+			    		String[] parsedData = (unparsedStr).split(" ");
 				        int numSegments = parsedData.length;
-				        numSegments--; //always drop last one. because last segment either is a newline char or an incomplete numeric data 
-				        for(int i = 0;i < numSegments;) {
-				        	char potentialIdentifer = parsedData[i].charAt(0);
-				        	if(lookUpTable[(int)(potentialIdentifer)] == 1) { //find identifer
-				        		int j = i + 1;
-				        		for(;j < numSegments;j++) {
-				        			if(lookUpTable[(int)(parsedData[j].charAt(0))] == 1) { //find next identifer
-				        				break;
-				        			}
-				        			int kthAnalogVal = j - i - 1;
-				        			if(potentialIdentifer == 'a') {
-				        				kthAnalogVal += NUM_OF_GAUGE;
-				        			}
-				        			analogVals[kthAnalogVal] = Integer.parseInt(parsedData[j]);
-				        			if(potentialIdentifer == 'c') {
-				        				strainCaliVals[kthAnalogVal] = analogVals[kthAnalogVal];
-				        			}
+				        char potentialIdentifer = parsedData[0].charAt(0);
+				        if((potentialIdentifer == 'c' || potentialIdentifer == 's') && numSegments >= NUM_OF_GAUGE + 2) {
+				        	for(int i = 1;i < NUM_OF_GAUGE + 1;i++) {
+				        		analogVals[i - 1] = Integer.parseInt(parsedData[i]);
+				        		if(potentialIdentifer == 'c') {
+				        			strainCaliVals[i - 1] = analogVals[i - 1];
 				        		}
-				        		i = j;
-				        	}
-				        	else {
-				        		i++;
 				        	}
 				        }
-				        
-				        
+				        else if(potentialIdentifer == 'a' && numSegments >= NUM_OF_IMU_VALS + 2) {
+				        	for(int i = 1;i < NUM_OF_IMU_VALS + 1;i++) {
+				        		analogVals[i - 1 + NUM_OF_GAUGE] = Integer.parseInt(parsedData[i]);
+				        	}
+				        }
 				    }
 			    }
 			    catch(Exception e) {

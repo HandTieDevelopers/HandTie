@@ -14,8 +14,7 @@ class UdpServerForLinkItApp {
 
 	public int[] analogVals = new int[TOTAL_SENSOR_VALUES];
 	public int[] strainCaliVals = new int[NUM_OF_GAUGE];
-	public double[]	elongRatios = new double[NUM_OF_GAUGE];
-
+	
 	public UdpServerForLinkItApp() {
 		//network communication
 		int numIdentifers = identifer.length;
