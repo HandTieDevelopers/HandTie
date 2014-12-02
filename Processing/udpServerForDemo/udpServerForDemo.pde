@@ -109,40 +109,8 @@ Thread terminateHook = new Thread(new Runnable() {
 	}
 });
 
-Thread mlThread = new Thread(new Runnable() {
-	public void run() {
-		if( !grt.getInitialized() ){
-			background(255,0,0);  
-			println("WARNING: GRT Not Initalized. You need to call the setup function!");
-			return;
-		}
-
-		while(true) {
-			for(int i = 0;i < NUM_OF_GAUGE;i++) {
-				data[i] = ((float)analogVals[i])/strainCaliVals[i];
-			}
-
-			//Grab the mouse data and send it to the GRT backend via OSC
-			// data[NUM_OF_GAUGE] = analogVals[NUM_OF_GAUGE];
-			// data[NUM_OF_GAUGE+1] = analogVals[NUM_OF_GAUGE+1];
-			// data[NUM_OF_GAUGE+2] = analogVals[NUM_OF_GAUGE+2];
-
-			grt.sendData( data );
-
-			if(showGRTFlag) {
-				//Draw the info text
-				fill(0,0,0);
-				grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5) + heightOffSet);
-			}
-
-			performGestureAction();
-		}
-
-	}
-});
-
 //-- Philip Hue --
-PhilipHue philipHue = new PhilipHue();
+PhilipHue philipHue = null;
 
 //customized class 
 UdpServerForLinkItApp udpServer;
@@ -155,7 +123,14 @@ int WaveBufferIndexCounter = 0;
 int WaveBufferIndexTmp = 0;
 float[][] WaveBuffer;
 
+String currentDirPath = null;
+
 void setup() {
+
+	currentDirPath = sketchPath("");
+	println(currentDirPath);
+
+	philipHue = new PhilipHue(currentDirPath);
 	//init udp server(Comm with LinkIt)
 	udpServer = new UdpServerForLinkItApp();
 	NUM_OF_GAUGE = UdpServerForLinkItApp.NUM_OF_GAUGE;
@@ -165,8 +140,8 @@ void setup() {
 	elongRatios = new float[NUM_OF_GAUGE];
 
 	//init tcp client(Comm with node server on localhost)
-	//tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-	tcpClient = null;
+	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
+	//tcpClient = null;
 
 	Runtime.getRuntime().addShutdownHook(terminateHook);
 
@@ -191,7 +166,6 @@ void setup() {
 	//Load the font
 	font = loadFont("SansSerif-48.vlw");
 
-	mlThread.start();
 }
 
 final int heightOffSet = 110;
@@ -202,6 +176,25 @@ final int numCurrentExistedUIVersion = 2;
 int UINumToShow = 0;
 
 void draw() {
+
+	if( !grt.getInitialized() ){
+		background(255,0,0);  
+		println("WARNING: GRT Not Initalized. You need to call the setup function!");
+		return;
+	}
+
+	for(int i = 0;i < NUM_OF_GAUGE;i++) {
+		data[i] = ((float)analogVals[i])/strainCaliVals[i];
+	}
+
+	//Grab the mouse data and send it to the GRT backend via OSC
+	// data[NUM_OF_GAUGE] = analogVals[NUM_OF_GAUGE];
+	// data[NUM_OF_GAUGE+1] = analogVals[NUM_OF_GAUGE+1];
+	// data[NUM_OF_GAUGE+2] = analogVals[NUM_OF_GAUGE+2];
+
+	grt.sendData( data );
+
+	performGestureAction();
 
 	background(ColorIdle);
 
@@ -307,6 +300,21 @@ void draw() {
 		}
 
 	}
+
+	if (showRGB && gesture != null) {
+      textSize(30);
+      text("Red :       \t" + philipHue.getR(), Width*0.5, Height*0.05);
+      text("Green :    \t" + philipHue.getG(), Width*0.5, Height*0.10);
+      text("Blue :      \t" + philipHue.getB(), Width*0.5, Height*0.15);
+      text("Gesture : \t " + gesture.toString(), Width*0.5, Height*0.20);
+      text("Likelihood : \t" + String.format("%02d",(int)(likelihood*100)) + "%", Width*0.5, Height*0.25);
+   }
+
+   if(showGRTFlag) {
+		//Draw the info text
+		fill(0,0,0);
+		grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5) + heightOffSet);
+	}
 }
 
 String mode = "l";
@@ -326,9 +334,9 @@ void keyPressed() {
 	else if(key == 'g') {
 		showGRTFlag = !showGRTFlag;
 	}
-   } else if(key == 'r') {
-      showRGB = !showRGB;
-   }
+	else if(key == 'r') {
+   	showRGB = !showRGB;
+	}
 	else if(key == 'v') { //for hue
 		mode = "l";
 	}
@@ -372,11 +380,13 @@ boolean showRGB = true;
 int predictedLabelX = 30;
 int predictedLabelY = 50;
 final int posStep = 5;
+Gesture gesture = null;
+double likelihood = 0;
 
 void performGestureAction(){
 
-   double likelihood = grt.getMaximumLikelihood();
-   Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),likelihood);
+   likelihood = grt.getMaximumLikelihood();
+   gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),likelihood);
    if(mode == "l") {
 	   if(gesture == Gesture.RED) {
 	     philipHue.accelToHue(PhilipHue.HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
@@ -391,12 +401,4 @@ void performGestureAction(){
 	   }
 	}
 
-   if (showRGB) {
-      textSize(30);
-      text("Red :       \t" + philipHue.getR(), Width*0.5, Height*0.05);
-      text("Green :    \t" + philipHue.getG(), Width*0.5, Height*0.10);
-      text("Blue :      \t" + philipHue.getB(), Width*0.5, Height*0.15);
-      text("Gesture : \t " + gesture.toString(), Width*0.5, Height*0.20);
-      text("Likelihood : \t" + String.format("%02d",(int)(likelihood*100)) + "%", Width*0.5, Height*0.25);
-   }
 }

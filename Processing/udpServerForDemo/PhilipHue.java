@@ -15,8 +15,11 @@ public class PhilipHue{
    private int b = 255;
 
    private int firstY = 0;
-
-   public PhilipHue(){
+   private String mCurrentDirPath = null;
+   private String mScriptFilePath = null;
+   public PhilipHue(String currentDirPath){
+      mCurrentDirPath = currentDirPath;
+      mScriptFilePath = mCurrentDirPath + "AmbiHue.sh";
       convertToHue();
       sendToHue();
    }
@@ -78,8 +81,8 @@ public class PhilipHue{
          String[] cmdArray = new String[4];
 
          // first argument is the program we want to open, in this case I put it within the App I created later
-         cmdArray[0] = "/Users/TimothyWang/Tim File Sync/work/HandTie/HandTieCode/Processing/udpServerForDemo/AmbiHue.sh";
-         // cmdArray[0] = "./AmbiHue.sh";
+         // cmdArray[0] = "/Users/TimothyWang/Tim File Sync/work/HandTie/HandTieCode/Processing/udpServerForDemo/AmbiHue.sh";
+         cmdArray[0] = mScriptFilePath;
 
          // the following arguments are HSV values
          cmdArray[1] = String.valueOf(Math.round(HUE));
