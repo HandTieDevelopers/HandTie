@@ -22,7 +22,6 @@ GRT grt = new GRT( pipelineMode, numInputs, numOutputs, "127.0.0.1", 5000, 5001,
 
 //Create some global variables to hold our data
 float[] data = new float[ numInputs ];
-float[] targetVector = new float[ numOutputs ];
 PFont font;
 
 color stretch = color(4, 79, 111);
@@ -92,8 +91,6 @@ IREventListener listener = new IREventListener() {
 				IRMode = 1;
 				predictedResult = "No Gesture";
 			}
-
-
 		}
 		catch(Exception e) {
 			println(e.getMessage());
@@ -131,6 +128,8 @@ Thread mlThread = new Thread(new Runnable() {
 			grt.sendData( data );
 
 			if(showGRTFlag) {
+				//Draw the info text
+				fill(0,0,0);
 				grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5) + heightOffSet);
 			}
 
@@ -307,16 +306,9 @@ void draw() {
 
 	}
 
-	//Draw the info text
-	fill(0,0,0);
-	
 }
 
-String mode = "k";
-
-int predictedLabelX = 30;
-int predictedLabelY = 50;
-final int posStep = 5;
+String mode = "l";
 
 boolean showGRTFlag = false;
 
@@ -373,19 +365,26 @@ void keyPressed() {
 
 }
 
+int predictedLabelX = 30;
+int predictedLabelY = 50;
+final int posStep = 5;
+
 void performGestureAction(){
 	Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),grt.getMaximumLikelihood());
-	if(gesture == Gesture.RED) {
-		philipHue.accelToHue(HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
-	}
-	else if(gesture == Gesture.GREEN){
-		philipHue.accelToHue(HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
-	}
-	else if(gesture == Gesture.BLUE){
-		philipHue.accelToHue(HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
-	}
-	else {
-		philipHue.reset();
-	}
+	
+	if(mode == "l") {
+	    if(gesture == Gesture.RED) {
+			philipHue.accelToHue(HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
+		}
+		else if(gesture == Gesture.GREEN){
+			philipHue.accelToHue(HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
+		}
+		else if(gesture == Gesture.BLUE){
+			philipHue.accelToHue(HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
+		}
+		else {
+			philipHue.reset();
+		}
+    }
 
 }
