@@ -56,7 +56,7 @@ IREventListener listener = new IREventListener() {
 			}
 			else {
 				if(!isReal) {
-					tcpClient.sendMsg(mode + "," + IRMsg);
+					tcpClient.sendMsg(mode + "," + IRMsg); //if this failed, maybe you forgot to comment tcpClient = null in setup
 				}
 			}
 
@@ -163,8 +163,8 @@ void setup() {
 	elongRatios = new float[NUM_OF_GAUGE];
 
 	//init tcp client(Comm with node server on localhost)
-	//tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-	tcpClient = null;
+	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
+	//tcpClient = null;
 
 	Runtime.getRuntime().addShutdownHook(terminateHook);
 
@@ -202,10 +202,11 @@ int UINumToShow = 0;
 void draw() {
 
 	background(ColorIdle);
-
+        
 	textSize(35);
-	text(predictedResult,440,70); //recognition result
-
+	fill(0,0,0);
+        text(predictedResult,440,70); //recognition result
+        
 	if(isReal) {
 		triangle(7, 8, 8, 7, 3, 4);
 	}
