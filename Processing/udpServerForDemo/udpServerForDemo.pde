@@ -43,6 +43,8 @@ double[] elongRatios;
 boolean isReal = false;
 int IRMode = 0;
 
+
+
 IREventListener listener = new IREventListener() {
 	void onEvent(String IRMsg) {
 		println("msg:" + IRMsg); //show this info on the Visualization panel
@@ -233,8 +235,8 @@ void draw() {
 	if(showGRTFlag) {
 		grt.drawInfoText((int)(Width*(0.6)),(int)(Height*0.5) + heightOffSet);
     }
-
-   	performGestureAction();
+  
+   performGestureAction();
 }
 
 String mode = "k";
@@ -260,7 +262,9 @@ void keyPressed() {
 	}
     else if(key == 'v') { //for hue
     	mode = "l";
-    }
+   } else if(key == 'r') {
+      showRGB = !showRGB;
+   }
 
         /*	
 	else if(key == 'w') {
@@ -292,19 +296,29 @@ void keyPressed() {
 
 }
 
+boolean showRGB = true;
+
 void performGestureAction(){
-   Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),grt.getMaximumLikelihood());
+   double likelihood = grt.getMaximumLikelihood();
+   Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),likelihood);
    if(gesture == Gesture.RED) {
      philipHue.accelToHue(PhilipHue.HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
-   }
-   else if(gesture == Gesture.GREEN){
+   } else if(gesture == Gesture.GREEN){
      philipHue.accelToHue(PhilipHue.HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
-   }
-   else if(gesture == Gesture.BLUE){
-   	 philipHue.accelToHue(PhilipHue.HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
-   }
-   else {
+   } else if(gesture == Gesture.BLUE){
+     philipHue.accelToHue(PhilipHue.HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
+   } else if(gesture == Gesture.ALL){
+     philipHue.accelToHue(PhilipHue.HueColor.ALL, analogVals[NUM_OF_GAUGE + 1]);
+   } else {
      philipHue.reset();
    }
 
+   if (showRGB) {
+      textSize(30);
+      text("Red :       \t" + philipHue.getR(), Width*0.5, Height*0.05);
+      text("Green :    \t" + philipHue.getG(), Width*0.5, Height*0.10);
+      text("Blue :      \t" + philipHue.getB(), Width*0.5, Height*0.15);
+      text("Gesture : \t " + gesture.toString(), Width*0.5, Height*0.20);
+      text("Likelihood : \t" + String.format("%02d",(int)(likelihood*100)) + "%", Width*0.5, Height*0.25);
+   }
 }
