@@ -1,5 +1,5 @@
 public enum Gesture{
-   NO_GESTURE(0,"Gesture Pending",null,false),
+   NO_GESTURE(0,"No Gesture",null,false),
 
    UP_READY(0,"Up Ready",null,true),
    UP_DONE(0,"Up",UP_READY,false),
@@ -78,7 +78,7 @@ public enum Gesture{
    public static Gesture gestureRecognition(int classLabel, double likelihood){
       Gesture nextGesture = Gesture.getGestureByLabel(classLabel);
 
-      if (likelihood < 0.95) {
+      if (likelihood < 0.80) {
          gesture = Gesture.NO_GESTURE;
          return gesture;
       }
@@ -95,7 +95,7 @@ public enum Gesture{
          // if (gesture.isReadyState())
          //    return gesture.NO_GESTURE;
       // }
-      System.out.println("gesture is " + gesture.toString());
+//      System.out.println("gesture is " + gesture.toString());
       return gesture;
    }
 };
