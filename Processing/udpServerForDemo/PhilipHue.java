@@ -1,7 +1,8 @@
 import java.awt.Color;
-public enum HueColor{RED, GREEN, BLUE};
+
 
 public class PhilipHue{
+   public enum HueColor{RED, GREEN, BLUE, ALL};
    
    // private int lightNum;
 
@@ -29,26 +30,31 @@ public class PhilipHue{
    public void accelToHue(HueColor colorToChange, int y){
       if (firstY == 0)
          firstY = y;
-
-      convertAccelToRGB(colorToChange, y);
-      convertToHue();
-      sendToHue();
+      else {
+        convertAccelToRGB(colorToChange, y);
+        convertToHue();
+        sendToHue();
+      }
    }
 
    private void convertAccelToRGB(HueColor colorToChange, int y){
       int relativeY = y - firstY;
 
       if (colorToChange == HueColor.RED) {
-         r = Math.min(r+relativeY,255);
+         r = Math.min(r+relativeY/30,255);
          r = Math.max(r,0);
       }
       else if(colorToChange == HueColor.GREEN) {
-         g = Math.min(g+relativeY,255);
+         g = Math.min(g+relativeY/30,255);
          g = Math.max(g,0);
       }
       else if(colorToChange == HueColor.BLUE) {
-         b = Math.min(b+relativeY,255);
+         b = Math.min(b+relativeY/30,255);
          b = Math.max(b,0);
+      } else if(colorToChange == HueColor.ALL) {
+         convertAccelToRGB(HueColor.RED, y);
+         convertAccelToRGB(HueColor.GREEN, y);
+         convertAccelToRGB(HueColor.BLUE, y);
       }
    }
 
@@ -67,8 +73,8 @@ public class PhilipHue{
          String[] cmdArray = new String[4];
 
          // first argument is the program we want to open, in this case I put it within the App I created later
-         // cmdArray[0] = "/Users/TimothyWang/Tim File Sync/work/HandTie/HandTieCode/Processing/udpServerForDemo/AmbiHue.sh";
-         cmdArray[0] = "./AmbiHue.sh";
+         cmdArray[0] = "/Users/TimothyWang/Tim File Sync/work/HandTie/HandTieCode/Processing/udpServerForDemo/AmbiHue.sh";
+         // cmdArray[0] = "./AmbiHue.sh";
 
          // the following arguments are HSV values
          cmdArray[1] = String.valueOf(Math.round(HUE));
@@ -76,9 +82,9 @@ public class PhilipHue{
          cmdArray[3] = String.valueOf(Math.round(BRI));
 
          // print a message, this is just for testing purpose
-         System.out.println(cmdArray[1]);
-         System.out.println(cmdArray[2]);
-         System.out.println(cmdArray[3]);
+         System.out.println(r);
+         System.out.println(g);
+         System.out.println(b);
 
          Runtime.getRuntime().exec(cmdArray);
       }catch(Exception e){
@@ -90,5 +96,11 @@ public class PhilipHue{
    public void reset(){
       firstY = 0;
    }
+   
+//   public static void main(String args[]){
+//     PhilipHue philipHue = new PhilipHue();
+//   }
+   
+   
 
 }

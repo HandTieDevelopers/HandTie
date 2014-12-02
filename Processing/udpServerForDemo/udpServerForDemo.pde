@@ -14,7 +14,7 @@ final static String nodeServerAddress = "127.0.0.1";
 //-- GRT --
 //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
 final int pipelineMode = GRT.CLASSIFICATION_MODE;
-final int numInputs = 8;
+final int numInputs = 5;
 final int numOutputs = 1;
 
 //Create a new GRT instance, this will initalize everything for us and send the setup message to the GRT GUI
@@ -205,9 +205,9 @@ void draw() {
 	}
 
 	//Grab the mouse data and send it to the GRT backend via OSC
-	data[NUM_OF_GAUGE] = analogVals[NUM_OF_GAUGE];
-	data[NUM_OF_GAUGE+1] = analogVals[NUM_OF_GAUGE+1];
-	data[NUM_OF_GAUGE+2] = analogVals[NUM_OF_GAUGE+2];
+//	data[NUM_OF_GAUGE] = analogVals[NUM_OF_GAUGE];
+//	data[NUM_OF_GAUGE+1] = analogVals[NUM_OF_GAUGE+1];
+//	data[NUM_OF_GAUGE+2] = analogVals[NUM_OF_GAUGE+2];
 
 	grt.sendData( data );
 
@@ -295,13 +295,13 @@ void keyPressed() {
 void performGestureAction(){
    Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),grt.getMaximumLikelihood());
    if(gesture == Gesture.RED) {
-     philipHue.accelToHue(HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
+     philipHue.accelToHue(PhilipHue.HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
    }
    else if(gesture == Gesture.GREEN){
-     philipHue.accelToHue(HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
+     philipHue.accelToHue(PhilipHue.HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
    }
    else if(gesture == Gesture.BLUE){
-   	 philipHue.accelToHue(HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
+   	 philipHue.accelToHue(PhilipHue.HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
    }
    else {
      philipHue.reset();
