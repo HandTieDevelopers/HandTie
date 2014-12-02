@@ -61,38 +61,40 @@ IREventListener listener = new IREventListener() {
 					tcpClient.sendMsg(mode + "," + IRMsg); //if this failed, maybe you forgot to comment tcpClient = null in setup
 				}
 			}
-
-			if(IRMsg.equals("U")) {
-				predictedResult = "Up";
-			}
-			else if(IRMsg.equals("D")) {
-				predictedResult = "Down";
-				if(mode.equals("g") && IRMode == 1) {
-					predictedResult = "camera";
+                        
+            if(!isReal) {
+				if(IRMsg.equals("U")) {
+					predictedResult = "Up";
 				}
-			}
-			else if(IRMsg.equals("L")) {
-				predictedResult = "Left";
-			}
-			else if(IRMsg.equals("R")) {
-				predictedResult = "Right";
-			}
-			else if(IRMsg.equals("C")) {
-				if(IRMode == 1) {
-					predictedResult = "Power";
+				else if(IRMsg.equals("D")) {
+					predictedResult = "Down";
+					if(mode.equals("g") && IRMode == 1) {
+						predictedResult = "camera";
+					}
 				}
-				else {
-					predictedResult = "OK";
+				else if(IRMsg.equals("L")) {
+					predictedResult = "Left";
 				}
-			}
-			else if(IRMsg.equals("M")) {
-				IRMode = 0;
-				predictedResult = "No Gesture";
-			}
-			else if(IRMsg.equals("P")) {
-				IRMode = 1;
-				predictedResult = "No Gesture";
-			}
+				else if(IRMsg.equals("R")) {
+					predictedResult = "Right";
+				}
+				else if(IRMsg.equals("C")) {
+					if(IRMode == 1) {
+						predictedResult = "Power";
+					}
+					else {
+						predictedResult = "OK";
+					}
+				}
+				else if(IRMsg.equals("M")) {
+					IRMode = 0;
+					predictedResult = "No Gesture";
+				}
+				else if(IRMsg.equals("P")) {
+					IRMode = 1;
+					predictedResult = "No Gesture";
+				}
+            }
 		}
 		catch(Exception e) {
 			println(e.getMessage());
@@ -200,7 +202,8 @@ void draw() {
         
 	textSize(35);
 	fill(0,0,0);
-        text(predictedResult,440,70); //recognition result
+	//original : 440,70
+    text(predictedResult,70,70); //recognition result
         
 	if(isReal) {
 		triangle(7, 8, 8, 7, 3, 4);
@@ -390,12 +393,16 @@ void performGestureAction(){
    gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),likelihood);
    if(mode == "l") {
 	   if(gesture == Gesture.RED) {
+	     predictedResult = "Red";
 	     philipHue.accelToHue(PhilipHue.HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
 	   } else if(gesture == Gesture.GREEN){
+	     predictedResult = "Green";
 	     philipHue.accelToHue(PhilipHue.HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
 	   } else if(gesture == Gesture.BLUE){
+	   	 predictedResult = "Blue";
 	     philipHue.accelToHue(PhilipHue.HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
 	   } else if(gesture == Gesture.ALL){
+	     predictedResult = "All";
 	     philipHue.accelToHue(PhilipHue.HueColor.ALL, analogVals[NUM_OF_GAUGE + 1]);
 	   } else {
 	     philipHue.reset();
