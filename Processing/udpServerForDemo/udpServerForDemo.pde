@@ -370,17 +370,18 @@ int predictedLabelY = 50;
 final int posStep = 5;
 
 void performGestureAction(){
+
 	Gesture gesture = Gesture.gestureRecognition(grt.getPredictedClassLabel(),grt.getMaximumLikelihood());
 	
 	if(mode == "l") {
 	    if(gesture == Gesture.RED) {
-			philipHue.accelToHue(HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
+			philipHue.accelToHue(PhilipHue.HueColor.RED,analogVals[NUM_OF_GAUGE + 1]);
 		}
 		else if(gesture == Gesture.GREEN){
-			philipHue.accelToHue(HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
+			philipHue.accelToHue(PhilipHue.HueColor.GREEN,analogVals[NUM_OF_GAUGE + 1]);
 		}
 		else if(gesture == Gesture.BLUE){
-			philipHue.accelToHue(HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
+			philipHue.accelToHue(PhilipHue.HueColor.BLUE,analogVals[NUM_OF_GAUGE + 1]);
 		}
 		else {
 			philipHue.reset();

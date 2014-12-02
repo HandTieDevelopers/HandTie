@@ -33,7 +33,7 @@ void setup() {
 //-- strain gauges
 
   for(int i = 0;i < numButtons;i++) {
-    pinMode(buttonPin[i], INPUT);
+    pinMode(buttonPin[i], INPUT_PULLUP);
   }
 
   for(int i=MULT_MIN_PIN; i<MULT_MIN_PIN+NUM_OF_MULT_PINS; i++){
