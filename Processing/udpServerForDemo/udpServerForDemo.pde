@@ -303,6 +303,7 @@ void draw() {
 
 	if (showRGB && gesture != null) {
       textSize(30);
+      fill(0);
       text("Red :       \t" + philipHue.getR(), Width*0.5, Height*0.05);
       text("Green :    \t" + philipHue.getG(), Width*0.5, Height*0.10);
       text("Blue :      \t" + philipHue.getB(), Width*0.5, Height*0.15);

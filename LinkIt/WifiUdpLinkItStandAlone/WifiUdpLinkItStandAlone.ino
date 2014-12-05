@@ -160,7 +160,7 @@ char buff_w[WRITE_BUFF_SIZE];
 
 #define serverPort ((uint16_t)8080)
 #define udpLocalPort ((uint16_t)1234)
-IPAddress serverIP (192,168,1,2);
+IPAddress serverIP (192,168,1,5);
 #define retryIntervalInMilliSec 1000
 
 LWiFiLoginInfo APConnectingInfo(WIFI_AUTH, WIFI_PASSWORD);
