@@ -25,7 +25,7 @@ uint16_t analogVals[numStrainGauges] = {0};
 #define numDims 3
 int16_t accel[numDims] = {0};
 
-const uint32_t baud_rate = 115200;
+const uint32_t baud_rate = 57600;
 char commBuff[200];
 
 #ifdef USING_SEN10724
@@ -160,7 +160,7 @@ void loop() {
 	}
 	Read_Accel();
   char mode = 'n';
-  if(digitalRead(buttonPin[0]) == LOW) {	//do calibration
+  if(digitalRead(buttonPin[0]) == HIGH) {	//do calibration
     mode = 'c'; 
 	}
   sprintf(commBuff,"%c %d %d %d %d %d %d %d %d \n",mode,analogVals[0],analogVals[1],analogVals[2],analogVals[3],analogVals[4],accel[0],accel[1],accel[2]);
