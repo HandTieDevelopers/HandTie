@@ -12,8 +12,8 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   int battLevel = LBattery.level();
-  sprintf(buff,"battery level = %d",  battLevel);
-  Serial.println(buff);
+  //sprintf(buff,"battery level = %d",  battLevel);
+  //Serial.println(buff);
   if(battLevel == 100) {
     Serial.println("fully charged");
     digitalWrite(13,HIGH);
