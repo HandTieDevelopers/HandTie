@@ -36,6 +36,7 @@ void setup(){
 
 void loop(){
    for(int i=0; i<NUM_OF_GAUGE; i++){
+      digitalPotWrite(potPos[i]);
       digitalWrite(MULTIPLEX_MIN_PIN, i & 1);
       digitalWrite(MULTIPLEX_MIN_PIN+1, (i >> 1) & 1);
       digitalWrite(MULTIPLEX_MIN_PIN+2, (i >> 2) & 1);
