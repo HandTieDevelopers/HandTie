@@ -21,8 +21,8 @@ color compress = color(84, 145, 158);
 color ColorRecord = color(240, 200, 200);
 color ColorIdle = color(200, 200, 200);
 
-int Width = 800;
-int Height = 600;
+int Width = 1024;
+int Height = 768;
 float mul = 1;
 int[] analogVals = new int[NUM_OF_GAUGE + ACCEL_DIM];
 int[] strainCaliVals = new int[NUM_OF_GAUGE];
@@ -40,7 +40,7 @@ Table csvTable;
 // 1. Have a look at the Processing console output of this sketch.
 // 2. Look for the serial port list and find the port you need (it's the same as in Arduino).
 // 3. Set your port number here:
-final static int SERIAL_PORT_NUM = 11;
+final static int SERIAL_PORT_NUM = 0;
 // 4. Try again.
 
 
@@ -128,15 +128,15 @@ void draw()
     text("Label:"+NowLabel, Width*0.01, Height*(0.9)); 
   }
 
-  for (int i = NUM_OF_GAUGE; i < NUM_OF_GAUGE+ACCEL_DIM; i++) {
-    if(analogVals[i]>0){
-      fill(stretch);
-      rect(Width*(i+1)*0.1, (float)(Height*(0.4)-Height*0.001*analogVals[i]), 50, (float)(Height*0.001*analogVals[i]));
-    }
-    else{
-      fill(compress);
-      rect(Width*(i+1)*0.1, (float)Height*(0.4), 50, (float)(Height*0.001*abs(analogVals[i])));
-    }
+//  for (int i = NUM_OF_GAUGE; i < NUM_OF_GAUGE+ACCEL_DIM; i++) {
+//    if(analogVals[i]>0){
+//      fill(stretch);
+//      rect(Width*(i+1)*0.1, (float)(Height*(0.4)-Height*0.001*analogVals[i]), 50, (float)(Height*0.001*analogVals[i]));
+//    }
+//    else{
+//      fill(compress);
+//      rect(Width*(i+1)*0.1, (float)Height*(0.4), 50, (float)(Height*0.001*abs(analogVals[i])));
+//    }
     
 //    fill(0, 102, 10);
 //    text((int)analogVals[i], Width*(i+1)*0.1, Height*(0.73)); 
@@ -144,7 +144,7 @@ void draw()
 //    text(analogVals[i], Width*(i+1)*0.1, Height*(0.8)); 
 //    fill(255, 0, 0);
 //    text("Label:"+NowLabel, Width*0.01, Height*(0.9)); 
-  }
+//  }
 
   if(RecordDataFlag){
      TableRow newRow = csvTable.addRow();

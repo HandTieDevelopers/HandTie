@@ -205,7 +205,7 @@ void transmitUDPPacket() {
 
 #define GAUGE_PIN A0
 #define MULT_MIN_PIN 4
-const uint16_t buttonPin[numButtons] = {2};
+const uint16_t buttonPin[numButtons] = {7};
 uint16_t analogVals[NUM_OF_GAUGE] = {0};
 
 uint16_t numAnalogValsAccumulated = 0;

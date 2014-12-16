@@ -8,7 +8,7 @@ import processing.net.*;
 import oscP5.*;
 import netP5.*;
 
-final static int nodeServerPort = 8090;
+final static int nodeServerPort = 8080;
 final static String nodeServerAddress = "127.0.0.1";
 
 //-- GRT --
@@ -142,8 +142,8 @@ void setup() {
 	elongRatios = new float[NUM_OF_GAUGE];
 
 	//init tcp client(Comm with node server on localhost)
-	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-	//tcpClient = null;
+//	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
+	tcpClient = null;
 
 	Runtime.getRuntime().addShutdownHook(terminateHook);
 
