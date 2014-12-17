@@ -26,12 +26,20 @@
 class SGManager
 {
 public:
+   // -------------- Constructor ------------------//
    SGManager(uint8_t gaugePin, uint8_t numOfGauges);    //with multiplexer on gaugePin
    SGManager(uint8_t * gaugePins, uint8_t numOfGauges); //without multiplexer
    ~SGManager();
 
+   // -------------- Calibration ------------------//
    void calibrationWithoutPot();
    void calibrationWithPot();
+
+   // -------------- Serial Print -----------------//
+   void serialPrint();
+
+   // -------- Parse Message from Serial ----------//
+   // void parseMessage(char * message);
 
 private:
    uint8_t numOfGauges;
@@ -41,6 +49,7 @@ private:
 
    AnalogMux * amx;
 
+   // -------------- Calibration ------------------//
    void calibratingBridge();
    void calibratingAmp();
 

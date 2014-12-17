@@ -1,5 +1,6 @@
 #include "SGManager.h"
 
+// --------------------------- Constructor -------------------------------//
 SGManager::SGManager(uint8_t gaugePin, uint8_t numOfGauges){
    this->numOfGauges = numOfGauges;
    gauges = new StrainGauge[numOfGauges];
@@ -28,6 +29,21 @@ SGManager::~SGManager(){
    delete(amx);
 }
 
+// --------------------------- Serial Print -------------------------------//
+void SGManager::serialPrint(){
+   for (int i = 0; i < numOfGauges; ++i){
+      Serial.print(gauges[i].AnalogRead());
+      Serial.print(" ");
+   }
+}
+
+// -------------------- Parse Message from Serial -------------------------//
+// void parseMessage(char * message){
+// 
+// }
+
+
+// --------------------------- Calibration --------------------------------//
 void SGManager::calibrationWithoutPot(){
    Serial.println("Setting calibration base value");
    for (int i = 0; i < numOfGauges; ++i){
@@ -50,12 +66,15 @@ void SGManager::calibratingBridge(){
    for (int i = 0; i < numOfGauges; ++i){
       amx->SelectPin(i);
       timeNow = millis();
+
       #define BRIDGE_POT_POS gauges[i].getBridgePotPos()
       #define TARGET_CALI_VAL gauges[i].getTargetCaliValNoAmp()
+      
       uint16_t bridgePotPos = BRIDGE_POT_POS;
-
+      uint16_t analog;
+      
       while(1){
-         uint16_t analog = gauges[i].AnalogRead();
+         analog = gauges[i].AnalogRead();
 
          if (analog > TARGET_POSITIVE_TOLER(TARGET_CALI_VAL)){
             mcp4251->wiper0_pos(--bridgePotPos);
@@ -77,14 +96,15 @@ void SGManager::calibratingAmp(){
    unsigned long timeNow;
    for (int i = 0; i < numOfGauges; ++i){
       amx->SelectPin(i);
-
       timeNow = millis();
+      
       #define AMP_POT_POS gauges[i].getAmpPotPos()
+      
       #define TARGET_CALI_VAL gauges[i].getTargetCaliVal()
       uint16_t ampPotPos = AMP_POT_POS;
-
+      uint16_t analog;
       while(1){
-         uint16_t analog = gauges[i].AnalogRead();
+         analog = gauges[i].AnalogRead();
 
          if (analog > TARGET_POSITIVE_TOLER(TARGET_CALI_VAL)){
             mcp4251->wiper1_pos(--ampPotPos);
