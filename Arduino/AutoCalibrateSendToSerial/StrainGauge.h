@@ -14,24 +14,22 @@ public:
    float getNormalizedVal();
 
    uint16_t getTargetCaliVal();
-   uint16_t getTargetCaliValNoAmp();
 
    uint16_t getBridgePotPos();
    uint16_t getAmpPotPos();
 
    void setPin(uint8_t pin);
-   void setTargetValues(uint16_t targetCaliValNoAmp, uint16_t targetCaliVal);
+   void setTargetValues(uint16_t targetCaliValsNoAmp, uint16_t targetCaliVals);
    void resetCalibrateBaseVal();
-   
-   void setCaliVal(uint16_t caliVal);
-   void setBridgePotPos(uint16_t bridgePotPos);
-   void setAmpPotPos(uint16_t ampPotPos);
+   void setCalibratedValues(uint16_t caliVal,
+                            uint16_t bridgePotPos,
+                            uint16_t ampPotPos);
 
 private:
    uint8_t pin;
 
-   uint16_t targetCaliValNoAmp;
-   uint16_t targetCaliVal;
+   uint16_t targetCaliValsNoAmp;
+   uint16_t targetCaliVals;
    
    uint16_t caliVal;
    uint16_t bridgePotPos;

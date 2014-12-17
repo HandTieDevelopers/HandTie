@@ -16,11 +16,7 @@ float StrainGauge::getNormalizedVal(){
    return analogRead(pin)/caliVal;
 }
 
-uint16_t StrainGauge::getTargetCaliValNoAmp(){
-  return targetCaliValNoAmp;
-}
-
-uint16_t StrainGauge::getTargetCaliVal(){
+uint16_t getTargetCaliVal(){
   return targetCaliVal;
 }
 
@@ -36,8 +32,8 @@ void StrainGauge::setPin(uint8_t pin){
    this->pin = pin;
 }
 
-void StrainGauge::setTargetValues(uint16_t targetCaliValNoAmp, uint16_t targetCaliVal){
-   this->targetCaliValNoAmp = targetCaliValNoAmp;
+void setTargetValues(uint16_t targetCaliValsNoAmp, uint16_t targetCaliVals){
+   this->targetCaliValsNoAmp = targetCaliValsNoAmp;
    this->targetCaliVal = targetCaliVal;
 }
 
@@ -45,14 +41,10 @@ void StrainGauge::resetCalibrateBaseVal(){
    caliVal = analogRead(pin);
 }
 
-void StrainGauge::setCaliVal(uint16_t caliVal){
-  this->caliVal = caliVal;
-}
-
-void StrainGauge::setBridgePotPos(uint16_t bridgePotPos){
-  this->bridgePotPos = bridgePotPos;
-}
-
-void StrainGauge::setAmpPotPos(uint16_t ampPotPos){
-  this->ampPotPos = ampPotPos;
+void StrainGauge::setCalibratedValues(uint16_t caliVal,
+                                      uint16_t bridgePotPos,
+                                      uint16_t ampPotPos){
+   this->caliVal = caliVal;
+   this->bridgePotPos = bridgePotPos;
+   this->ampPotPos = ampPotPos;
 }
