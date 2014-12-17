@@ -6,10 +6,12 @@
 class StrainGauge
 {
 public:
+   // -------------- Constructor ------------------//
    StrainGauge();
    StrainGauge(uint8_t pin);
    ~StrainGauge();
    
+   // ----------------- Getter --------------------//
    uint16_t AnalogRead();
    float getNormalizedVal();
 
@@ -19,6 +21,7 @@ public:
    uint16_t getBridgePotPos();
    uint16_t getAmpPotPos();
 
+   // ----------------- Setter --------------------//
    void setPin(uint8_t pin);
    void setTargetValues(uint16_t targetCaliValNoAmp, uint16_t targetCaliVal);
    void resetCalibrateBaseVal();
@@ -30,6 +33,7 @@ public:
 private:
    uint8_t pin;
 
+   // ---------------- Calibration ----------------//
    uint16_t targetCaliValNoAmp;
    uint16_t targetCaliVal;
    

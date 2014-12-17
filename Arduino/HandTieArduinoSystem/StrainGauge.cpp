@@ -1,5 +1,6 @@
 #include "StrainGauge.h"
 
+// ----------------------------- Constructor ------------------------------------//
 StrainGauge::StrainGauge(){
    pin = 0;
 }
@@ -8,6 +9,7 @@ StrainGauge::StrainGauge(uint8_t pin){
    this->pin = pin;
 }
 
+// --------------------------------- Getter -------------------------------------//
 uint16_t StrainGauge::AnalogRead(){
    return analogRead(pin);
 }
@@ -32,6 +34,7 @@ uint16_t StrainGauge::getAmpPotPos(){
    return ampPotPos;
 }
 
+// --------------------------------- Setter -------------------------------------//
 void StrainGauge::setPin(uint8_t pin){
    this->pin = pin;
 }
