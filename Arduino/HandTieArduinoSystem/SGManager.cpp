@@ -32,6 +32,10 @@ SGManager::~SGManager(){
 // --------------------------- Serial Print -------------------------------//
 void SGManager::serialPrint(){
    for (int i = 0; i < numOfGauges; ++i){
+      amx->SelectPin(i);
+      mcp4251->wiper0_pos(gauges[i].getBridgePotPos());
+      mcp4251->wiper1_pos(gauges[i].getAmpPotPos());
+      
       Serial.print(gauges[i].AnalogRead());
       Serial.print(" ");
    }
