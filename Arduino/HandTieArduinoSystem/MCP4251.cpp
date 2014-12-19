@@ -209,6 +209,12 @@ void MCP4251::wiper1_pos(unsigned int wiper_pos)
   this->write(kADR_WIPER1, wiper_pos);
 }
 
+void MCP4251::wiper_pos(unsigned int wiper_pos, uint8_t pos_num){
+  if (pos_num == 0)
+    this->wiper0_pos(wiper_pos);
+  else if (pos_num == 1)
+    this->wiper1_pos(wiper_pos);
+}
 // // Not implemented
 // bool MCP4251::pot0_connected(bool terminal_a, bool wiper, bool terminal_b)
 // {

@@ -1,12 +1,10 @@
 #include "StrainGauge.h"
 
 // ----------------------------- Constructor ------------------------------------//
-StrainGauge::StrainGauge(){
-   pin = 0;
-}
-
-StrainGauge::StrainGauge(uint8_t pin){
+StrainGauge::StrainGauge(uint8_t pin, uint16_t targetCaliValNoAmp, uint16_t targetCaliVal){
    this->pin = pin;
+   this->targetCaliValNoAmp = targetCaliValNoAmp;
+   this->targetCaliVal = targetCaliVal;
 }
 
 // --------------------------------- Getter -------------------------------------//

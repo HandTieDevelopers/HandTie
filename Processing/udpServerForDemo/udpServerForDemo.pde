@@ -142,8 +142,8 @@ void setup() {
 	elongRatios = new float[NUM_OF_GAUGE];
 
 	//init tcp client(Comm with node server on localhost)
-//	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
-	tcpClient = null;
+	tcpClient = new TcpClientWithMsgQueue(nodeServerAddress,nodeServerPort);
+	// tcpClient = null;
 
 	Runtime.getRuntime().addShutdownHook(terminateHook);
 

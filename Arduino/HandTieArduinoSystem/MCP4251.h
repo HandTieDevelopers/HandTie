@@ -28,6 +28,7 @@ class MCP4251
 
    void wiper0_pos(unsigned int wiper_pos);
    void wiper1_pos(unsigned int wiper_pos);
+   void wiper_pos(unsigned int wiper_pos, uint8_t pos_num);
 
    // // Not implemented
    // // Connect / disconnect potentiometers

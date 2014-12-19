@@ -7,8 +7,7 @@ class StrainGauge
 {
 public:
    // -------------- Constructor ------------------//
-   StrainGauge();
-   StrainGauge(uint8_t pin);
+   StrainGauge(uint8_t pin, uint16_t targetCaliValNoAmp, uint16_t targetCaliVal);
    ~StrainGauge();
    
    // ----------------- Getter --------------------//
