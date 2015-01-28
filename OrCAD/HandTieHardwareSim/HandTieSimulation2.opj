@@ -1,0 +1,87 @@
+(ExpressProject "HandTieSimulation2"
+  (ProjectVersion "19981106")
+  (ProjectType "Analog or A/D Mixed Mode")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\handtiesimulation2.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (PSPICE_Regenerate_Netlist_Flag "FALSE"))
+  (Folder "Outputs"
+    (File ".\handtiesimulation2-pspicefiles\schematic1\schematic1.net"
+      (Type "Report")))
+  (Folder "PSpice Resources"
+    (Folder "Simulation Profiles"
+      (ActiveProfile ".\handtiesimulation2-pspicefiles\schematic1\opampsim.sim")
+      (File.PSpice.{09528990-3187-11D2-BC7B-00A0C90CBF91}
+         ".\handtiesimulation2-pspicefiles\schematic1\opampsim.sim"
+        (DisplayName "SCHEMATIC1-OpAmpSim")
+        (Type "PSpice Profile")))
+    (Folder "Model Libraries"
+      (Sort User)
+      (File
+         "C:\OrCAD\OrCAD_16.5_Lite\tools\capture\library\CustomLibrary\LM6132B.lib"
+        (Type "PSpiceLibrary")
+        (DisplayName
+           "C:\OrCAD\OrCAD_16.5_Lite\tools\capture\library\CustomLibrary\LM6132B.lib"))
+      (File
+         "C:\OrCAD\OrCAD_16.5_Lite\tools\capture\library\CustomLibrary\LM6132A.lib"
+        (Type "PSpiceLibrary")
+        (DisplayName
+           "C:\OrCAD\OrCAD_16.5_Lite\tools\capture\library\CustomLibrary\LM6132A.lib")))
+    (Folder "Stimulus Files"
+      (Sort User))
+    (Folder "Include Files"
+      (Sort User)))
+  (DefaultLibraryBrowseDirectory "library\PSpice")
+  (PartMRUSelector
+    (LM6132A/NS
+      (FullPartName "LM6132A/NS.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\PSPICE\CUSTOMMODEL\LM6132A.OLB")
+      (DeviceIndex "0"))
+    (LM6132B/NS
+      (FullPartName "LM6132B/NS.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\PSPICE\CUSTOMMODEL\LM6132B.OLB")
+      (DeviceIndex "0"))
+    (LM6132AIM
+      (FullPartName "LM6132AIM.Normal")
+      (LibraryName
+         "C:\CADENCE\SPB_16.6\TOOLS\CAPTURE\LIBRARY\PSPICE\NAT_SEMI.OLB")
+      (DeviceIndex "0"))
+    (LM6132
+      (FullPartName "LM6132.Normal")
+      (LibraryName "C:\ORCAD\ORCAD_16.5_LITE\TOOLS\CAPTURE\LIBRARY\OPAMP.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory
+     "C:\Cadence\SPB_16.6\tools\capture\library\pspice\CustomModel")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "Z:\Tim File Sync\work\HandTie\HandTieCode\OrCAD\HandTieHardwareSim\handtiesimulation2.dsn")
+      (Path "Design Resources"
+         "Z:\Tim File Sync\work\HandTie\HandTieCode\OrCAD\HandTieHardwareSim\handtiesimulation2.dsn"
+         "SCHEMATIC1")
+      (Path "Outputs"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -11 -45 0 214 0 400"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -11 -45 76 2285 76 757")
+        (Scroll "33 338")
+        (Zoom "260")
+        (Occurrence "/"))
+      (Path
+         "Z:\TIM FILE SYNC\WORK\HANDTIE\HANDTIECODE\ORCAD\HANDTIEHARDWARESIM\HANDTIESIMULATION2.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1")))
+  (MPSSessionName "TimothyWang"))

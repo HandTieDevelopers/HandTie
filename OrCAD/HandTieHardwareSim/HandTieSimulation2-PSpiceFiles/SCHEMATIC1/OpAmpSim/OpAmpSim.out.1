@@ -1,0 +1,55 @@
+
+**** 01/25/15 23:27:40 ***** PSpice 16.6.0 (October 2012) ***** ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-OpAmpSim"  [ Z:\Tim File Sync\work\HandTie\HandTieCode\OrCAD\HandTieHardwareSim\handtiesimulation2-pspicefil
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "OpAmpSim.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+.LIB "C:/OrCAD/OrCAD_16.5_Lite/tools/capture/library/CustomLibrary/LM6132B.lib" 
+--------------------------------------------------------------------------------$
+ERROR(ORPSIM-16276): Can't find library
+.LIB "C:/OrCAD/OrCAD_16.5_Lite/tools/capture/library/CustomLibrary/LM6132A.lib" 
+* From [PSPICE NETLIST] section of C:\SPB_Data\cdssetup\OrCAD_PSpice/16.6.0/PSpice.ini file:
+--------------------------------------------------------------------------------$
+ERROR(ORPSIM-16276): Can't find library
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 1000ns 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source HANDTIESIMULATION2
+R_R3         N01468 N01504  10k TC=0,0 
+R_R2         N01512 N01604  47k TC=0,0 
+R_R6         N01488 N01480  100k TC=0,0 
+R_R7         N01604 N01584  5k TC=0,0 
+R_R1         N01584 N01504  47k TC=0,0 
+R_R5         N01480 N01512  10k TC=0,0 
+R_R4         0 N01468  100k TC=0,0 
+V_V2         N01640 0  AC 0
++SIN 2.510V 10mV 16MegHz 0 0 0
+X_U1A         N01640 N01504 0 5V N01504 LM6132A/NS
+X_U1B         2.5V N01512 0 5V N01512 LM6132A/NS
+X_U2A         N01468 N01480 0 5V N01488 LM6132A/NS
+
+**** RESUMING OpAmpSim.cir ****
+.END
+
