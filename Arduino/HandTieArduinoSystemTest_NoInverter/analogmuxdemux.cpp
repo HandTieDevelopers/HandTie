@@ -1,4 +1,4 @@
-#include "Arduino.h"
+// #include "Arduino.h"
 #include "analogmuxdemux.h"
 
 // parts adapted from elements at: http://tomekness.files.wordpress.com/2007/02/analog_multiplexer_demultiplexer_4051.pdf

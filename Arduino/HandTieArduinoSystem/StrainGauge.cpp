@@ -7,6 +7,9 @@ StrainGauge::StrainGauge(uint8_t pin, uint16_t targetCaliValNoAmp, uint16_t targ
    this->targetCaliVal = targetCaliVal;
 }
 
+StrainGauge::~StrainGauge(){
+  
+}
 // --------------------------------- Getter -------------------------------------//
 uint16_t StrainGauge::AnalogRead(){
    return analogRead(pin);

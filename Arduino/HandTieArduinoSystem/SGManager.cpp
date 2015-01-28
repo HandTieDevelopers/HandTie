@@ -28,13 +28,14 @@ SGManager::~SGManager(){
 // --------------------------- Serial Print -------------------------------//
 void SGManager::serialPrint(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
-      amxes[i/NUM_OF_MUX]->SelectPin(i);
+      amxes[0]->SelectPin(i);
       mcp4251s[i/2]->wiper_pos(gauges[i]->getBridgePotPos(), i%2);
       mcp4251s[2]->wiper1_pos(gauges[i]->getAmpPotPos());
       
       Serial.print(gauges[i]->AnalogRead());
       Serial.print(" ");
    }
+   Serial.println();
 }
 
 // -------------------- Parse Message from Serial -------------------------//

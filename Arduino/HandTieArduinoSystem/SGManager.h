@@ -4,7 +4,7 @@
 
 // Digital Potentiometer Macro Define
 #define NUM_OF_MCP4251 3
-#define MIN_CS_PIN 10
+#define MIN_CS_PIN 21
 #define POT_RESISTOR 5000
 #define TARGET_ANALOG_VAL_TOLER 0.1
 #define TARGET_POSITIVE_TOLER(TARGET_ANALOG_VAL) (TARGET_ANALOG_VAL)*(1+TARGET_ANALOG_VAL_TOLER)
@@ -15,13 +15,13 @@
 // Analog Multiplexer Macro Define
 #define NUM_OF_MUX 1
 // master selects
-#define M_S0 6
-#define M_S1 6
-#define M_S2 6
+#define M_S0 255
+#define M_S1 255
+#define M_S2 255
 // slave selects
-#define S_S0 3
-#define S_S1 4
-#define S_S2 5
+#define S_S0 2
+#define S_S1 3
+#define S_S2 4
 // read pin
 #define MIN_READPIN 0
 

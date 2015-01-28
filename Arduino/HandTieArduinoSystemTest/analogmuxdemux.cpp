@@ -1,4 +1,4 @@
-#include "Arduino.h"
+// #include "Arduino.h"
 #include "analogmuxdemux.h"
 
 // parts adapted from elements at: http://tomekness.files.wordpress.com/2007/02/analog_multiplexer_demultiplexer_4051.pdf
@@ -55,8 +55,8 @@ void AnalogMux::SetupMaster(uint8_t MS0, uint8_t MS1, uint8_t MS2, uint8_t readp
 }
 
 void AnalogMux::SelectPin(uint8_t pin) {
-  // sets the required pin on using selection pins
-  // there is no error checking on this so if you go over 7 it will break
+   //sets the required pin on using selection pins
+   //there is no error checking on this so if you go over 7 it will break
 
   _currentPin = pin;
   
@@ -82,6 +82,8 @@ uint16_t AnalogMux::AnalogRead() {
 uint16_t AnalogMux::AnalogRead(uint8_t pin) {
   // this method calculates which pin to read, switches to it and then returns
   // the currently value
+  //Serial.print( AnalogMux::AnalogRead() );
+  //Serial.print( " " );
   SelectPin(pin);
   return AnalogMux::AnalogRead();
 }

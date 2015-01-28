@@ -1,20 +1,19 @@
 #include <SPI.h>
 #include "SGManager.h"
 
-SGManager * sgManager = new SGManager();
+SGManager sgManager;
 
 void setup()
 {
-   Serial.begin(57600);
-   Serial.println("setup");
-   
+  Serial.begin(9600);
+  Serial.println("setup");
+//  sgManager.calibrationWithPot();
 }
 
 void loop()
 {
-   sgManager->calibrationWithPot();
-   delay(1000);
-   Serial.println("in loop");
-   sgManager->serialPrint();
-   delay(1000);
+  Serial.println("in loop");
+  sgManager.serialPrint();
+  delay(1000);
 }
+
