@@ -4,6 +4,7 @@
 #include <Arduino.h>
 #include "analogmuxdemux.h"
 #include "MCP4251.h"
+#include "StrainGauge.h"
 
 // --------- AnalogMux Macro Define --------- //
 #define NUM_OF_MUX 1
@@ -24,6 +25,9 @@
 #define WIPER0_INIT_POS 30
 #define WIPER1_INIT_POS 85
 
+// -------- StrainGauge Macro Define -------- //
+#define NUM_OF_GAUGES 16
+
 // ------------- SGManager class ------------ //
 
 class SGManager{
@@ -32,11 +36,16 @@ public:
    SGManager();
    ~SGManager();
 
-   void SerialPrint();
+   void serialPrint();
+   void calibration();
 
 private:
    AnalogMux * analogMux;
    MCP4251 * mcp4251;
+   StrainGauge * gauges[NUM_OF_GAUGES];
+
+   void calibrateBridgePot();
+   void calibrateAmpPot();
 
 };
 

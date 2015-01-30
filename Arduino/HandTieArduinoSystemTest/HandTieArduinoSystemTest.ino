@@ -10,7 +10,7 @@ void setup()
 
 void loop()
 {
-   sgManager.SerialPrint();
+   sgManager.serialPrint();
 
    // Serial.print("\t newWiper0Pos = ");
    // Serial.print(wiper0Pos);
