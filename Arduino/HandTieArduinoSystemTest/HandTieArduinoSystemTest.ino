@@ -14,7 +14,6 @@ void loop(){
 
 void serialEvent(){
    while(Serial.available()){
-      // sgManager.manualChangePotPos(Serial.parseInt(), Serial.parseInt());
       if(Serial.read() == 'c'){
           sgManager.calibration();
       }

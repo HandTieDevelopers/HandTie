@@ -32,7 +32,7 @@ void SGManager::serialPrint(){
          mcp4251->wiper0_pos(gauges[i+j*NUM_OF_MUX_PIN]->getAmpPotPos());
          mcp4251->wiper1_pos(gauges[i+j*NUM_OF_MUX_PIN]->getBridgePotPos());
          Serial.print(analogMux->AnalogRead(i));
-         Serial.print("\t");
+         Serial.print(" ");
       }
    }
    Serial.println();

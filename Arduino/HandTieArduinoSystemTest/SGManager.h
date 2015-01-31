@@ -28,7 +28,7 @@
 #define TARGET_NO_AMP 20
 #define TARGET_WITH_AMP 295
 #define TARGET_TOLERANCE_NO_AMP 5
-#define TARGET_TOLERANCE_WITH_AMP 10
+#define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
