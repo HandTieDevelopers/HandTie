@@ -7,7 +7,7 @@
 #include "StrainGauge.h"
 
 // --------- AnalogMux Macro Define --------- //
-#define NUM_OF_MUX 1
+#define NUM_OF_MUX 2
 #define NUM_OF_MUX_PIN 8
 
 #define MUX_CS_PIN 5
@@ -27,7 +27,7 @@
 
 #define TARGET_NO_AMP 20
 #define TARGET_WITH_AMP 300
-#define TARGET_TOLERANCE_NO_AMP 10
+#define TARGET_TOLERANCE_NO_AMP 5
 #define TARGET_TOLERANCE_WITH_AMP 10
 
 // -------- StrainGauge Macro Define -------- //
@@ -43,6 +43,7 @@ public:
 
    void serialPrint();
    void calibration();
+   void manualChangePotPos(uint8_t, uint8_t);
 
 private:
    AnalogMux * analogMux;

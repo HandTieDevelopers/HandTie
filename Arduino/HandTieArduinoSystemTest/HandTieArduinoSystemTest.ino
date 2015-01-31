@@ -12,11 +12,11 @@ void loop()
 {
    // delay(1000);
    // sgManager.calibration();
-   sgManager.serialPrint();
+  sgManager.serialPrint();
+}
 
-   // Serial.print("\t newWiper0Pos = ");
-   // Serial.print(wiper0Pos);
-   // Serial.print("\t newWiper1Pos = ");
-   // Serial.print(wiper1Pos);
-   // Serial.println();
+void serialEvent(){
+   while(Serial.available()){
+      sgManager.manualChangePotPos(Serial.parseInt(), Serial.parseInt());
+   }
 }

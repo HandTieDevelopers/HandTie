@@ -24,31 +24,29 @@ SGManager::~SGManager(){
 }
 
 void SGManager::serialPrint(){
-   digitalWrite(MUX_CS_PIN, LOW);
-   for(int i=0; i<NUM_OF_MUX_PIN; i++){
-      Serial.print(analogMux->AnalogRead(i));
-      Serial.print("\t");
-   }
-   digitalWrite(MUX_CS_PIN, HIGH);
-   for(int i=0; i<NUM_OF_MUX_PIN; i++){
-      Serial.print(analogMux->AnalogRead(i));
-      Serial.print("\t");
+   for (int j = 0; j < NUM_OF_MUX; ++j){
+      digitalWrite(MUX_CS_PIN, j%2);
+      // digitalWrite(MUX_CS_PIN, LOW);
+
+      for(int i=0; i<NUM_OF_MUX_PIN; i++){
+         mcp4251->wiper0_pos(gauges[1]->getAmpPotPos());
+         mcp4251->wiper1_pos(gauges[1]->getBridgePotPos());
+         Serial.print(analogMux->AnalogRead(1));
+         Serial.print("\t");
+      }
    }
    Serial.println();
 }
 
 void SGManager::calibration(){
-   digitalWrite(MUX_CS_PIN, LOW);
-   for (int i = 0; i < NUM_OF_MUX_PIN; ++i){
-      calibrateBridgePot(i);
-      calibrateAmpPot(i);
-   }
+   for (int j = 0; j < NUM_OF_MUX; ++j){
+      digitalWrite(MUX_CS_PIN, j%2);
 
-   // digitalWrite(MUX_CS_PIN, HIGH);
-   // for (int i = 0; i < NUM_OF_MUX_PIN; ++i){
-   //    calibrateBridgePot(i);
-   //    // calibrateAmpPot(i);
-   // }
+      for (int i = 0; i < NUM_OF_MUX_PIN; ++i){
+         calibrateBridgePot(i);
+         calibrateAmpPot(i);
+      }
+   }
 }
 
 void SGManager::calibrateBridgePot(int i){
@@ -118,4 +116,9 @@ void SGManager::calibrateAmpPot(int i){
    Serial.print((uint8_t)potPos);
    Serial.print(" analogVal : ");
    Serial.println(analogVal);
+}
+
+void SGManager::manualChangePotPos(uint8_t ampPotPos, uint8_t brigePotPos){
+   mcp4251->wiper0_pos(ampPotPos);
+   mcp4251->wiper1_pos(brigePotPos);
 }
