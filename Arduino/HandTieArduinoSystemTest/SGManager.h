@@ -7,14 +7,12 @@
 #include "StrainGauge.h"
 
 // --------- AnalogMux Macro Define --------- //
-#define NUM_OF_MUX 2
-#define NUM_OF_MUX_PIN 8
-
-#define MUX_CS_PIN 5
-
-#define MS0 2
-#define MS1 3
-#define MS2 4
+#define SS0 2
+#define SS1 3
+#define SS2 4
+#define MS0 5
+#define MS1 255
+#define MS2 255
 #define READPIN A0
 
 // ---------   MCP4251 Macro Define --------- //
@@ -50,8 +48,8 @@ private:
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
 
-   void calibrateBridgePot(int, int);
-   void calibrateAmpPot(int, int);
+   void calibrateBridgePot(int);
+   void calibrateAmpPot(int);
 
 };
 
