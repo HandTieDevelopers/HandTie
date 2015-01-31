@@ -1,7 +1,7 @@
 public class SGManager{
    
    public final static int NUM_OF_GAUGE = 16;
-   public boolean requestForCaliVals = false;
+   public boolean requestForCaliVals = true;
 
    private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGE];
 
