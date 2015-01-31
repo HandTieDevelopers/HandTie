@@ -2,9 +2,10 @@ import processing.serial.*;
 
 SerialManager serialManager = new SerialManager(this);
 SGManager sgManager = new SGManager();
+InteractionMgr interactionMgr = new InteractionMgr(this);
 
 void setup() {
-   size(1024, 768);
+   size(1280, 768);
 }
 
 void draw() {
@@ -13,10 +14,7 @@ void draw() {
 }
 
 void keyPressed(){
-   if (key == 'c') {
-      sgManager.requestForCaliVals = true;
-      serialManager.sendRequestToArduinoForCalibration();
-   }
+   interactionMgr.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
