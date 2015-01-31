@@ -26,7 +26,7 @@
 #define WIPER1_INIT_POS 85
 
 #define TARGET_NO_AMP 20
-#define TARGET_WITH_AMP 300
+#define TARGET_WITH_AMP 295
 #define TARGET_TOLERANCE_NO_AMP 5
 #define TARGET_TOLERANCE_WITH_AMP 10
 
@@ -50,8 +50,8 @@ private:
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
 
-   void calibrateBridgePot(int);
-   void calibrateAmpPot(int);
+   void calibrateBridgePot(int, int);
+   void calibrateAmpPot(int, int);
 
 };
 

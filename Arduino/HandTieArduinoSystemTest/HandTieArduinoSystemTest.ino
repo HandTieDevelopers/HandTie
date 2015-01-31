@@ -6,13 +6,11 @@ SGManager sgManager;
 void setup()
 {
    Serial.begin(115200);
+   sgManager.calibration();
 }
 
-void loop()
-{
-   // delay(1000);
-   // sgManager.calibration();
-  sgManager.serialPrint();
+void loop(){
+   sgManager.serialPrint();
 }
 
 void serialEvent(){

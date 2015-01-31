@@ -85,8 +85,8 @@ uint16_t AnalogMux::AnalogRead(uint8_t pin) {
   //Serial.print( AnalogMux::AnalogRead() );
   //Serial.print( " " );
   SelectPin(pin);
-  // delayMicroseconds(100);
-  delay(10);
+  delayMicroseconds(100);
+  // delay(1);
   return AnalogMux::AnalogRead();
 }
 

@@ -29,9 +29,9 @@ void SGManager::serialPrint(){
       // digitalWrite(MUX_CS_PIN, LOW);
 
       for(int i=0; i<NUM_OF_MUX_PIN; i++){
-         mcp4251->wiper0_pos(gauges[1]->getAmpPotPos());
-         mcp4251->wiper1_pos(gauges[1]->getBridgePotPos());
-         Serial.print(analogMux->AnalogRead(1));
+         mcp4251->wiper0_pos(gauges[i+j*NUM_OF_MUX_PIN]->getAmpPotPos());
+         mcp4251->wiper1_pos(gauges[i+j*NUM_OF_MUX_PIN]->getBridgePotPos());
+         Serial.print(analogMux->AnalogRead(i));
          Serial.print("\t");
       }
    }
@@ -41,84 +41,88 @@ void SGManager::serialPrint(){
 void SGManager::calibration(){
    for (int j = 0; j < NUM_OF_MUX; ++j){
       digitalWrite(MUX_CS_PIN, j%2);
-
+      // digitalWrite(MUX_CS_PIN, LOW);
       for (int i = 0; i < NUM_OF_MUX_PIN; ++i){
-         calibrateBridgePot(i);
-         calibrateAmpPot(i);
+         calibrateBridgePot(i, j);
+         calibrateAmpPot(i, j);
       }
    }
 }
 
-void SGManager::calibrateBridgePot(int i){
-   mcp4251->wiper0_pos(255);
-   uint16_t potPos = gauges[i]->getBridgePotPos();
+void SGManager::calibrateBridgePot(int i, int j){
+   uint16_t potPos = gauges[i+j*NUM_OF_MUX_PIN]->getBridgePotPos();
    uint16_t analogVal;
+   mcp4251->wiper0_pos(255);
+   mcp4251->wiper1_pos((uint8_t)potPos);
 
    while(potPos >= 0 && potPos <= 255){
       analogVal = analogMux->AnalogRead(i);
       if (analogVal < TARGET_NO_AMP - TARGET_TOLERANCE_NO_AMP){
-         potPos++;
-      } else if (analogVal > TARGET_NO_AMP + TARGET_TOLERANCE_NO_AMP){
          potPos--;
+      } else if (analogVal > TARGET_NO_AMP + TARGET_TOLERANCE_NO_AMP){
+         potPos++;
       } else {
          break;
       }
       mcp4251->wiper1_pos((uint8_t)potPos);
-      Serial.print("calibrateBridgePot in while : \t");
-      Serial.print("i : ");
-      Serial.print(i);
-      Serial.print(" potPos : ");
-      Serial.print(potPos);
-      Serial.print(" analogVal : ");
-      Serial.println(analogVal);
+      // Serial.print("calibrateBridgePot in while : \t");
+      // Serial.print("i : ");
+      // Serial.print(i);
+      // Serial.print(" potPos : ");
+      // Serial.print(potPos);
+      // Serial.print(" analogVal : ");
+      // Serial.println(analogVal);
    }
    mcp4251->wiper1_pos((uint8_t)potPos);
-   gauges[i]->setBridgePotPos((uint8_t)potPos);
+   gauges[i+j*NUM_OF_MUX_PIN]->setBridgePotPos((uint8_t)potPos);
    
-   Serial.print("calibrateBridgePot : \t");
-   Serial.print("i : ");
-   Serial.print(i);
-   Serial.print(" potPos : ");
-   Serial.print((uint8_t)potPos);
-   Serial.print(" analogVal : ");
-   Serial.println(analogVal);
+   // Serial.print("calibrateBridgePot : \t");
+   // Serial.print("i : ");
+   // Serial.print(i);
+   // Serial.print(" potPos : ");
+   // Serial.print((uint8_t)potPos);
+   // Serial.print(" analogVal : ");
+   // Serial.println(analogVal);
 }
 
-void SGManager::calibrateAmpPot(int i){
-   uint16_t potPos = gauges[i]->getAmpPotPos();
+void SGManager::calibrateAmpPot(int i, int j){
+   uint16_t potPos = gauges[i+j*NUM_OF_MUX_PIN]->getAmpPotPos();
    uint16_t analogVal;
+
+   mcp4251->wiper0_pos((uint8_t)potPos);
+   mcp4251->wiper1_pos(gauges[i+j*NUM_OF_MUX_PIN]->getBridgePotPos());
 
    while(potPos >= 0 && potPos <= 255){
       analogVal = analogMux->AnalogRead(i);
-      if (analogMux->AnalogRead(i) < TARGET_WITH_AMP - TARGET_TOLERANCE_WITH_AMP){
+      if (analogVal < TARGET_WITH_AMP - TARGET_TOLERANCE_WITH_AMP){
          potPos--;
-      } else if (analogMux->AnalogRead(i) > TARGET_WITH_AMP + TARGET_TOLERANCE_WITH_AMP){
+      } else if (analogVal > TARGET_WITH_AMP + TARGET_TOLERANCE_WITH_AMP){
          potPos++;
       } else {
          break;
       }
       mcp4251->wiper0_pos((uint8_t)potPos);
-      Serial.print("calibrateAmpPot in while : \t");
-      Serial.print("i : ");
-      Serial.print(i);
-      Serial.print(" potPos : ");
-      Serial.print(potPos);
-      Serial.print(" analogVal : ");
-      Serial.println(analogVal);
+      // Serial.print("calibrateAmpPot in while : \t");
+      // Serial.print("i : ");
+      // Serial.print(i);
+      // Serial.print(" potPos : ");
+      // Serial.print((uint8_t)potPos);
+      // Serial.print(" analogVal : ");
+      // Serial.println(analogVal);
    }
    mcp4251->wiper0_pos((uint8_t)potPos);
-   gauges[i]->setAmpPotPos((uint8_t)potPos);
+   gauges[i+j*NUM_OF_MUX_PIN]->setAmpPotPos((uint8_t)potPos);
 
-   Serial.print("calibrateAmpPot : \t");
-   Serial.print("i : ");
-   Serial.print(i);
-   Serial.print(" potPos : ");
-   Serial.print((uint8_t)potPos);
-   Serial.print(" analogVal : ");
-   Serial.println(analogVal);
+   // Serial.print("calibrateAmpPot : \t");
+   // Serial.print("i : ");
+   // Serial.print(i);
+   // Serial.print(" potPos : ");
+   // Serial.print((uint8_t)potPos);
+   // Serial.print(" analogVal : ");
+   // Serial.println(analogVal);
 }
 
-void SGManager::manualChangePotPos(uint8_t ampPotPos, uint8_t brigePotPos){
+void SGManager::manualChangePotPos(uint8_t ampPotPos, uint8_t bridgePotPos){
    mcp4251->wiper0_pos(ampPotPos);
-   mcp4251->wiper1_pos(brigePotPos);
+   mcp4251->wiper1_pos(bridgePotPos);
 }
