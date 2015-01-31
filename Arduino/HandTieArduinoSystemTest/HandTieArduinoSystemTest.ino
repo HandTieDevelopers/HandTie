@@ -4,12 +4,14 @@
 SGManager sgManager;
 
 void setup()
-{   
-   Serial.begin(9600);
+{
+   Serial.begin(115200);
 }
 
 void loop()
 {
+   // delay(1000);
+   // sgManager.calibration();
    sgManager.serialPrint();
 
    // Serial.print("\t newWiper0Pos = ");
@@ -17,11 +19,4 @@ void loop()
    // Serial.print("\t newWiper1Pos = ");
    // Serial.print(wiper1Pos);
    // Serial.println();
-   
-   // if(Serial.available()){
-   //    wiper0Pos = Serial.parseInt();
-   //    wiper1Pos = Serial.parseInt();
-   //    mcp4251.wiper0_pos(wiper0Pos);
-   //    mcp4251.wiper1_pos(wiper1Pos);
-   // }
 }

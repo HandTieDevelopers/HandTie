@@ -22,8 +22,13 @@
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
-#define WIPER0_INIT_POS 30
+#define WIPER0_INIT_POS 50
 #define WIPER1_INIT_POS 85
+
+#define TARGET_NO_AMP 20
+#define TARGET_WITH_AMP 300
+#define TARGET_TOLERANCE_NO_AMP 10
+#define TARGET_TOLERANCE_WITH_AMP 10
 
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
@@ -44,8 +49,8 @@ private:
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
 
-   void calibrateBridgePot();
-   void calibrateAmpPot();
+   void calibrateBridgePot(int);
+   void calibrateAmpPot(int);
 
 };
 

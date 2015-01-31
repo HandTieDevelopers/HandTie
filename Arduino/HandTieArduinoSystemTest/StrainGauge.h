@@ -1,21 +1,24 @@
 #ifndef StrainGauge_h
 #define StrainGauge_h
 
+#include <Arduino.h>
+
 class StrainGauge
 {
 public:
    StrainGauge();
+   StrainGauge(uint8_t, uint8_t);
    ~StrainGauge();
 
-   void setAmpPotPos(int);
-   int getAmpPotPos();
+   void setAmpPotPos(uint8_t);
+   uint8_t getAmpPotPos();
 
-   void setBridgePotPos(int);
-   int getBridgePotPos();
+   void setBridgePotPos(uint8_t);
+   uint8_t getBridgePotPos();
 
 private:
-   int ampPotPos;
-   int bridgePotPos;
+   uint8_t ampPotPos;
+   uint8_t bridgePotPos;
 };
 
 #endif   //StrainGauge_h

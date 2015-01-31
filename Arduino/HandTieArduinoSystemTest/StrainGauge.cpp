@@ -4,22 +4,27 @@ StrainGauge::StrainGauge(){
 
 }
 
+StrainGauge::StrainGauge(uint8_t ampPotPos, uint8_t bridgePotPos){
+   this->ampPotPos = ampPotPos;
+   this->bridgePotPos = bridgePotPos;
+}
+
 StrainGauge::~StrainGauge(){
 
 }
 
-void StrainGauge::setAmpPotPos(int ampPotPos){
+void StrainGauge::setAmpPotPos(uint8_t ampPotPos){
    this->ampPotPos = ampPotPos;
 }
 
-int StrainGauge::getAmpPotPos(){
+uint8_t StrainGauge::getAmpPotPos(){
    return ampPotPos;
 }
 
-void StrainGauge::setBridgePotPos(int bridgePotPos){
+void StrainGauge::setBridgePotPos(uint8_t bridgePotPos){
    this->bridgePotPos = bridgePotPos;
 }
 
-int StrainGauge::getBridgePotPos(){
+uint8_t StrainGauge::getBridgePotPos(){
    return bridgePotPos;
 }
