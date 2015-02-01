@@ -1,10 +1,10 @@
 #include "SGManager.h"
 
 SGManager::SGManager(){
-   uint8_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
-                               20,20,20,20,20,20,20,20};
-   uint8_t targetValWithAmp[] = {295,295,295,295,295,295,295,295,
-                                 295,295,295,295,295,295,295,295};
+   uint16_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
+                                20,20,20,20,20,20,20,20};
+   uint16_t targetValWithAmp[] = {295,295,295,295,295,295,295,295,
+                                  295,295,295,295,295,295,295,295};
 
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);
@@ -123,12 +123,12 @@ void SGManager::manualAssignPotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePo
    gauges[gaugeIdx]->setAmpPotPos(ampPotPos);
 }
 
-void SGManager::manualAssignTargetValNoAmpForOneGauge(uint8_t gaugeIdx, uint8_t targetVal){
+void SGManager::manualAssignTargetValNoAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValNoAmp(targetVal);
    calibrateBridgePot(gaugeIdx);
 }
 
-void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint8_t targetVal){
+void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
    calibrateAmpPot(gaugeIdx);
 }

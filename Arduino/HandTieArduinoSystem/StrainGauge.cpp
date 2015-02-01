@@ -4,8 +4,8 @@ StrainGauge::StrainGauge(){
 
 }
 
-StrainGauge::StrainGauge(uint8_t ampPotPos, uint8_t bridgePotPos, uint8_t targetValNoAmp,
-                         uint8_t targetValWithAmp){
+StrainGauge::StrainGauge(uint8_t ampPotPos, uint8_t bridgePotPos, uint16_t targetValNoAmp,
+                         uint16_t targetValWithAmp){
    this->ampPotPos = ampPotPos;
    this->bridgePotPos = bridgePotPos;
    this->targetValNoAmp = targetValNoAmp;
@@ -32,18 +32,18 @@ uint8_t StrainGauge::getBridgePotPos(){
    return bridgePotPos;
 }
 
-void StrainGauge::setTargetValNoAmp(uint8_t targetVal){
+void StrainGauge::setTargetValNoAmp(uint16_t targetVal){
    this->targetValNoAmp = targetVal;
 }
 
-uint8_t StrainGauge::getTargetValNoAmp(){
+uint16_t StrainGauge::getTargetValNoAmp(){
    return targetValNoAmp;
 }
 
-void StrainGauge::setTargetValWithAmp(uint8_t targetVal){
+void StrainGauge::setTargetValWithAmp(uint16_t targetVal){
    this->targetValWithAmp = targetVal;
 }
 
-uint8_t StrainGauge::getTargetValWithAmp(){
+uint16_t StrainGauge::getTargetValWithAmp(){
    return targetValWithAmp;
 }
