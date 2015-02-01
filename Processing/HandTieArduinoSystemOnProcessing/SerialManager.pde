@@ -30,7 +30,7 @@ public class SerialManager{
       return parsedDataArr;
    }
 
-   public void sendRequestToArduinoForCalibration(){
-      arduinoPort.write('0');
+   public void sendToArduino(String str){
+      arduinoPort.write(str);
    }
 }

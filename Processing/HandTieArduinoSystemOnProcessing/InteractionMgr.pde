@@ -15,7 +15,7 @@ public class InteractionMgr {
 
    public void gaugeCalibration(){
       mainClass.sgManager.requestForCaliVals = true;
-      mainClass.serialManager.sendRequestToArduinoForCalibration();
+      mainClass.serialManager.sendToArduino("0");
    }
 
    // public void performMousePress(){
