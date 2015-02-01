@@ -1,11 +1,17 @@
 #include "SGManager.h"
 
 SGManager::SGManager(){
+   uint8_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
+                               20,20,20,20,20,20,20,20};
+   uint8_t targetValWithAmp[] = {295,295,295,295,295,295,295,295,
+                                 295,295,295,295,295,295,295,295};
+
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);
    
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
-      gauges[i] = new StrainGauge(WIPER0_INIT_POS, WIPER1_INIT_POS);
+      gauges[i] = new StrainGauge(WIPER0_INIT_POS, WIPER1_INIT_POS,
+                                  targetValNoAmp[i], targetValWithAmp[i]);
    }
 
    mcp4251->wiper0_pos(WIPER0_INIT_POS);
@@ -31,7 +37,7 @@ void SGManager::serialPrint(){
    Serial.println();
 }
 
-void SGManager::calibration(){
+void SGManager::allCalibration(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       calibrateBridgePot(i);
       calibrateAmpPot(i);
@@ -46,9 +52,9 @@ void SGManager::calibrateBridgePot(int i){
 
    while(potPos >= 0 && potPos <= 255){
       analogVal = analogMux->AnalogRead(i);
-      if (analogVal < TARGET_NO_AMP - TARGET_TOLERANCE_NO_AMP){
+      if (analogVal < gauges[i]->getTargetValNoAmp() - TARGET_TOLERANCE_NO_AMP){
          potPos--;
-      } else if (analogVal > TARGET_NO_AMP + TARGET_TOLERANCE_NO_AMP){
+      } else if (analogVal > gauges[i]->getTargetValNoAmp() + TARGET_TOLERANCE_NO_AMP){
          potPos++;
       } else {
          break;
@@ -83,9 +89,9 @@ void SGManager::calibrateAmpPot(int i){
 
    while(potPos >= 0 && potPos <= 255){
       analogVal = analogMux->AnalogRead(i);
-      if (analogVal < TARGET_WITH_AMP - TARGET_TOLERANCE_WITH_AMP){
+      if (analogVal < gauges[i]->getTargetValWithAmp() - TARGET_TOLERANCE_WITH_AMP){
          potPos--;
-      } else if (analogVal > TARGET_WITH_AMP + TARGET_TOLERANCE_WITH_AMP){
+      } else if (analogVal > gauges[i]->getTargetValWithAmp() + TARGET_TOLERANCE_WITH_AMP){
          potPos++;
       } else {
          break;
@@ -111,7 +117,18 @@ void SGManager::calibrateAmpPot(int i){
    // Serial.println(analogVal);
 }
 
-void SGManager::manualChangePotPos(uint8_t ampPotPos, uint8_t bridgePotPos){
-   mcp4251->wiper0_pos(ampPotPos);
-   mcp4251->wiper1_pos(bridgePotPos);
+void SGManager::manualAssignPotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePotPos,
+                                              uint8_t ampPotPos){
+   gauges[gaugeIdx]->setBridgePotPos(bridgePotPos);
+   gauges[gaugeIdx]->setAmpPotPos(ampPotPos);
+}
+
+void SGManager::manualAssignTargetValNoAmpForOneGauge(uint8_t gaugeIdx, uint8_t targetVal){
+   gauges[gaugeIdx]->setTargetValNoAmp(targetVal);
+   calibrateBridgePot(gaugeIdx);
+}
+
+void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint8_t targetVal){
+   gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
+   calibrateAmpPot(gaugeIdx);
 }

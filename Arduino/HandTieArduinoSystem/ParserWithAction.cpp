@@ -12,8 +12,8 @@ void ParserWithAction::parse(){
    int task = Serial.parseInt();
 
    switch(task){
-      case ALL_AUTO_CALIBRATION:
-         sgManager->calibration();
+      case ALL_CALIBRATION:
+         sgManager->allCalibration();
          break;
       case MANUAL_CHANGE_TO_ONE_GAUGE:
          parseForManualChangeToOneGauge();

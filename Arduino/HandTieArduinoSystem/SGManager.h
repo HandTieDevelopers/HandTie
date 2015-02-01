@@ -23,8 +23,8 @@
 #define WIPER0_INIT_POS 50
 #define WIPER1_INIT_POS 85
 
-#define TARGET_NO_AMP 20
-#define TARGET_WITH_AMP 295
+// #define TARGET_NO_AMP 20
+// #define TARGET_WITH_AMP 295
 #define TARGET_TOLERANCE_NO_AMP 5
 #define TARGET_TOLERANCE_WITH_AMP 5
 
@@ -40,8 +40,11 @@ public:
    ~SGManager();
 
    void serialPrint();
-   void calibration();
-   void manualChangePotPos(uint8_t, uint8_t);
+   void allCalibration();
+
+   void manualAssignPotPosForOneGauge(uint8_t, uint8_t, uint8_t);
+   void manualAssignTargetValNoAmpForOneGauge(uint8_t, uint8_t);
+   void manualAssignTargetValWithAmpForOneGauge(uint8_t, uint8_t);
 
 private:
    AnalogMux * analogMux;

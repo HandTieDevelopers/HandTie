@@ -7,7 +7,7 @@ ParserWithAction parser(&sgManager);
 
 void setup(){
    Serial.begin(115200);
-   sgManager.calibration();
+   sgManager.allCalibration();
 }
 
 void loop(){
