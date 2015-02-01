@@ -3,17 +3,19 @@
 
 SGManager sgManager;
 
-void setup()
-{
-  Serial.begin(9600);
-  Serial.println("setup");
-//  sgManager.calibrationWithPot();
+void setup(){
+   Serial.begin(115200);
+   sgManager.calibration();
 }
 
-void loop()
-{
-  Serial.println("in loop");
-  sgManager.serialPrint();
-  delay(1000);
+void loop(){
+   sgManager.serialPrint();
 }
 
+void serialEvent(){
+   while(Serial.available()){
+      if(Serial.read() == 'c'){
+          sgManager.calibration();
+      }
+   }
+}

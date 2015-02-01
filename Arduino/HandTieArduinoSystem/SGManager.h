@@ -1,63 +1,56 @@
-#include "StrainGauge.h"
-#include "MCP4251.h"
+#ifndef SGManager_h
+#define SGManager_h
+
+#include <Arduino.h>
 #include "analogmuxdemux.h"
+#include "MCP4251.h"
+#include "StrainGauge.h"
 
-// Digital Potentiometer Macro Define
-#define NUM_OF_MCP4251 3
-#define MIN_CS_PIN 21
-#define POT_RESISTOR 5000
-#define TARGET_ANALOG_VAL_TOLER 0.1
-#define TARGET_POSITIVE_TOLER(TARGET_ANALOG_VAL) (TARGET_ANALOG_VAL)*(1+TARGET_ANALOG_VAL_TOLER)
-#define TARGET_NEGATIVE_TOLER(TARGET_ANALOG_VAL) (TARGET_ANALOG_VAL)*(1-TARGET_ANALOG_VAL_TOLER)
-#define MAX_TIME_CALIBRATION 5000
-#define INITIAL_POSITION 137
+// --------- AnalogMux Macro Define --------- //
+#define SS0 2
+#define SS1 3
+#define SS2 4
+#define MS0 5
+#define MS1 255
+#define MS2 255
+#define READPIN A0
 
-// Analog Multiplexer Macro Define
-#define NUM_OF_MUX 1
-// master selects
-#define M_S0 255
-#define M_S1 255
-#define M_S2 255
-// slave selects
-#define S_S0 2
-#define S_S1 3
-#define S_S2 4
-// read pin
-#define MIN_READPIN 0
+// ---------   MCP4251 Macro Define --------- //
+#define POT_SS_PIN 53
+#define OHM_AB 5040
+#define OHM_WIPER 102
 
+#define WIPER0_INIT_POS 50
+#define WIPER1_INIT_POS 85
 
-// Strain Gauge
-#define NUM_OF_GAUGES 5
-#define TARGET_ANALOG_VAL_NO_AMP 50
-#define TARGET_ANALOG_VAL_WITH_AMP 150
+#define TARGET_NO_AMP 20
+#define TARGET_WITH_AMP 295
+#define TARGET_TOLERANCE_NO_AMP 5
+#define TARGET_TOLERANCE_WITH_AMP 5
 
-class SGManager
-{
+// -------- StrainGauge Macro Define -------- //
+#define NUM_OF_GAUGES 16
+
+// ------------- SGManager class ------------ //
+
+class SGManager{
+
 public:
-   // -------------- Constructor ------------------//
    SGManager();
    ~SGManager();
 
-   // -------------- Calibration ------------------//
-   void calibrationWithoutPot();
-   void calibrationWithPot();
-
-   // -------------- Serial Print -----------------//
    void serialPrint();
-
-   // -------- Parse Message from Serial ----------//
-   // void parseMessage(char * message);
-
-   // ---------- For Testing and Debug ------------//
-   void setTargetValuesForSG();
+   void calibration();
+   void manualChangePotPos(uint8_t, uint8_t);
 
 private:
+   AnalogMux * analogMux;
+   MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
-   MCP4251 * mcp4251s[NUM_OF_MCP4251];
-   AnalogMux * amxes[NUM_OF_MUX];
 
-   // -------------- Calibration ------------------//
-   void calibratingBridge();
-   void calibratingAmp();
+   void calibrateBridgePot(int);
+   void calibrateAmpPot(int);
 
 };
+
+#endif   //SGManager_h
