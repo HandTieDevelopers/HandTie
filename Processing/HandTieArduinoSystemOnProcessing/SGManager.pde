@@ -13,23 +13,31 @@ public class SGManager{
 
    public void setValuesForGauges(int [] newValues){
       if (requestForCaliVals) {
-         setCalibrationValuesForGauges(newValues);
+         setCaliValsForGauges(newValues);
          requestForCaliVals = false;
       } else {
-         setNewValuesForGauges(newValues);
+         setNewAnalogValsForGauges(newValues);
       }
    }
 
-   public void setNewValuesForGauges(int [] newValues){
+   public void setNewAnalogValsForGauges(int [] newValues){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setNewValue(newValues[i]);
       }
    }
 
-   public void setCalibrationValuesForGauges(int [] newValues){
+   public void setCaliValsForGauges(int [] newValues){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setCalibrationValue(newValues[i]);
       }
+   }
+
+   public int [] getAnalogValsOfGauges(){
+      int [] analogVals = new int[gauges.length];
+      for (int i = 0; i < gauges.length; ++i) {
+         analogVals[i] = gauges[i].getNewValue();
+      }
+      return analogVals;
    }
 
    public void draw(){
