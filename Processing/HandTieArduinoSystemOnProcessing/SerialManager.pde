@@ -31,6 +31,6 @@ public class SerialManager{
    }
 
    public void sendRequestToArduinoForCalibration(){
-      arduinoPort.write('c');
+      arduinoPort.write('0');
    }
 }

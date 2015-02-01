@@ -1,7 +1,9 @@
 #include <SPI.h>
 #include "SGManager.h"
+#include "ParserWithAction.h"
 
 SGManager sgManager;
+ParserWithAction parser(&sgManager);
 
 void setup(){
    Serial.begin(115200);
@@ -14,8 +16,6 @@ void loop(){
 
 void serialEvent(){
    while(Serial.available()){
-      if(Serial.read() == 'c'){
-          sgManager.calibration();
-      }
+      parser.parse();
    }
 }
