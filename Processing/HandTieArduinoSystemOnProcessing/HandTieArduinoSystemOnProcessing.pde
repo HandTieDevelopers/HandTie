@@ -23,6 +23,6 @@ void serialEvent(Serial port){
       sgManager.setValuesForGauges(analogVals);
    }
    catch (Exception e) {
-     println(e.getMessage());
+      println(e.getMessage());
    }
 }

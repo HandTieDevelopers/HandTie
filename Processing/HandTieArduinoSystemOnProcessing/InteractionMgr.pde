@@ -9,7 +9,7 @@ public class InteractionMgr {
       switch (k) {
          case 'c' :
             gaugeCalibration();
-            break;   
+            break;
       }
    }
 
