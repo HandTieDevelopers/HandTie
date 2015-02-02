@@ -47,3 +47,27 @@ void StrainGauge::setTargetValWithAmp(uint16_t targetVal){
 uint16_t StrainGauge::getTargetValWithAmp(){
    return targetValWithAmp;
 }
+
+void StrainGauge::setBridgeCaliNeeded(){
+   bridgeCaliComplete = false;
+}
+
+void StrainGauge::setBridgeCaliComplete(){
+   bridgeCaliComplete = true;
+}
+
+boolean StrainGauge::isBridgeCaliComplete(){
+   return bridgeCaliComplete;
+}
+
+void StrainGauge::setAmpCaliNeeded(){
+   ampCaliComplete = false;
+}
+
+void StrainGauge::setAmpCaliComplete(){
+   ampCaliComplete = true;
+}
+
+boolean StrainGauge::isAmpCaliComplete(){
+   return ampCaliComplete;
+}

@@ -22,12 +22,23 @@ public:
    void setTargetValWithAmp(uint16_t);
    uint16_t getTargetValWithAmp();
 
+   void setBridgeCaliNeeded();
+   void setBridgeCaliComplete();
+   boolean isBridgeCaliComplete();
+
+   void setAmpCaliNeeded();
+   void setAmpCaliComplete();
+   boolean isAmpCaliComplete();
+
 private:
    uint8_t ampPotPos;
    uint8_t bridgePotPos;
 
    uint16_t targetValNoAmp;
    uint16_t targetValWithAmp;
+
+   boolean bridgeCaliComplete;
+   boolean ampCaliComplete;
 };
 
 #endif   //StrainGauge_h

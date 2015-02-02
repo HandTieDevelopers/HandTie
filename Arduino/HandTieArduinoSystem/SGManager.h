@@ -40,6 +40,7 @@ public:
    ~SGManager();
 
    void serialPrint();
+   
    void allCalibration();
 
    void manualAssignPotPosForOneGauge(uint8_t, uint8_t, uint8_t);
@@ -51,8 +52,9 @@ private:
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
 
-   void calibrateBridgePot(int);
-   void calibrateAmpPot(int);
+   void calibration();
+   boolean calibrateBridgePot(int);
+   boolean calibrateAmpPot(int);
 
 };
 
