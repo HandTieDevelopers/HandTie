@@ -7,8 +7,11 @@
 enum{
    ALL_CALIBRATION,
 
-   MANUAL_CHANGE_TO_ONE_GAUGE,
-   MANUAL_CHANGE_TO_ALL_GAUGES
+   MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP,
+   MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP,
+
+   MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP,
+   MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP
 };
 
 class ParserWithAction
@@ -22,8 +25,10 @@ public:
 private:
    SGManager * sgManager;
 
-   void parseForManualChangeToOneGauge();
-   void parseForManualChangeToAllGauges();
+   void parseForManualChangeToOneGaugeNoAmp();
+   void parseForManualChangeToOneGaugeWithAmp();
+   void parseForManualChangeToAllGaugesNoAmp();
+   void parseForManualChangeToAllGaugesWithAmp();
 };
 
 #endif

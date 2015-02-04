@@ -44,8 +44,12 @@ public:
    void allCalibration();
 
    void manualAssignPotPosForOneGauge(uint8_t, uint8_t, uint8_t);
+
    void manualAssignTargetValNoAmpForOneGauge(uint8_t, uint16_t);
    void manualAssignTargetValWithAmpForOneGauge(uint8_t, uint16_t);
+
+   void manualAssignTargetValNoAmpForAllGauges(uint16_t);
+   void manualAssignTargetValWithAmpForAllGauges(uint16_t);
 
 private:
    AnalogMux * analogMux;
