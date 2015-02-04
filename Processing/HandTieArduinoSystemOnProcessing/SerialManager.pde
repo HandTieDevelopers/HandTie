@@ -22,14 +22,7 @@ public class SerialManager{
       arduinoPort.bufferUntil(10);    //newline
    }
 
-   public void parseDataFromSerial(Serial port) throws Exception{
-      if (port.equals(arduinoPort)) {
-         int [] analogVals = parseDataFromArduino(port);
-         mainClass.sgManager.setValuesForGauges(analogVals);
-      }
-   }
-
-   public int [] parseDataFromArduino(Serial port) throws Exception{
+   private int [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
       String [] bufSplitArr = buf.split(" ");
       int [] parsedDataArr = new int[bufSplitArr.length-1];
@@ -38,6 +31,17 @@ public class SerialManager{
          parsedDataArr[i] = Integer.parseInt(bufSplitArr[i]);
 
       return parsedDataArr;
+   }
+
+   public void parseDataFromSerial(Serial port) throws Exception{
+      if (port.equals(arduinoPort)) {
+         parseDataFromArduino(port);
+      }
+   }
+
+   private void parseDataFromArduino(Serial port) throws Exception{
+      int [] analogVals = parseSpaceSeparatedData(port);
+      mainClass.sgManager.setValuesForGauges(analogVals);
    }
 
    public void sendToArduino(String str){
