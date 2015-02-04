@@ -1,11 +1,13 @@
 import processing.serial.*;
+import controlP5.*;
 
 SerialManager serialManager = new SerialManager(this);
 SGManager sgManager = new SGManager();
-InteractionMgr interactionMgr = new InteractionMgr(this);
+UIInteractionMgr uiInteractionMgr;
 
 void setup() {
    size(1280, 768);
+   uiInteractionMgr = new UIInteractionMgr(this);
 }
 
 void draw() {
@@ -14,15 +16,18 @@ void draw() {
 }
 
 void keyPressed(){
-   interactionMgr.performKeyPress(key);
+   uiInteractionMgr.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
    try {
-      int [] analogVals = serialManager.parseDataFromArduino(port);
-      sgManager.setValuesForGauges(analogVals);
+      serialManager.parseDataFromSerial(port);
    }
    catch (Exception e) {
       println(e.getMessage());
    }
+}
+
+public void controlEvent(ControlEvent theEvent){
+   uiInteractionMgr.performControlEvent(theEvent);
 }
