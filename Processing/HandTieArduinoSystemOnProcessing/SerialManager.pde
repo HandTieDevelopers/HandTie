@@ -3,11 +3,14 @@ import processing.serial.*;
 public class SerialManager{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
-   final static int SERIAL_PORT_NUM = 7;
+   final static int SERIAL_PORT_NUM = 0;
+
+   HandTieArduinoSystemOnProcessing mainClass;
 
    Serial arduinoPort;
 
    public SerialManager(HandTieArduinoSystemOnProcessing mainClass){
+      this.mainClass = mainClass;
       // Setup serial port I/O
       println("AVAILABLE SERIAL PORTS:");
       println(Serial.list());
@@ -17,6 +20,13 @@ public class SerialManager{
       println("  -> Using port " + SERIAL_PORT_NUM + ": " + portName);
       arduinoPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
       arduinoPort.bufferUntil(10);    //newline
+   }
+
+   public void parseDataFromSerial(Serial port) throws Exception{
+      if (port.equals(arduinoPort)) {
+         int [] analogVals = parseDataFromArduino(port);
+         mainClass.sgManager.setValuesForGauges(analogVals);
+      }
    }
 
    public int [] parseDataFromArduino(Serial port) throws Exception{
