@@ -125,10 +125,28 @@ void SGManager::manualAssignPotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePo
 
 void SGManager::manualAssignTargetValNoAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValNoAmp(targetVal);
-   calibrateBridgePot(gaugeIdx);
+   gauges[gaugeIdx]->setBridgeCaliNeeded();
+   calibration();
 }
 
 void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
-   calibrateAmpPot(gaugeIdx);
+   gauges[gaugeIdx]->setAmpCaliNeeded();
+   calibration();
+}
+
+void SGManager::manualAssignTargetValNoAmpForAllGauges(uint16_t targetVal){
+   for (int i = 0; i < NUM_OF_GAUGES; ++i){
+      gauges[i]->setTargetValNoAmp(targetVal);
+      gauges[i]->setBridgeCaliNeeded();
+   }
+   calibration();
+}
+
+void SGManager::manualAssignTargetValWithAmpForAllGauges(uint16_t targetVal){
+   for (int i = 0; i < NUM_OF_GAUGES; ++i){
+      gauges[i]->setTargetValWithAmp(targetVal);
+      gauges[i]->setAmpCaliNeeded();
+   }
+   calibration();
 }

@@ -1,8 +1,8 @@
 import processing.serial.*;
+import controlP5.*;
 
 SerialManager serialManager = new SerialManager(this);
 SGManager sgManager = new SGManager();
-InteractionMgr interactionMgr = new InteractionMgr(this);
 StudyMgr studyMgr = new StudyMgr(this);
 
 void setup() {
@@ -17,15 +17,17 @@ void draw() {
 
 void keyPressed(){
    studyMgr.performKeyPress(key);
-   interactionMgr.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
    try {
-      int [] analogVals = serialManager.parseDataFromArduino(port);
-      sgManager.setValuesForGauges(analogVals);
+      serialManager.parseDataFromSerial(port);
    }
    catch (Exception e) {
       println(e.getMessage());
    }
+}
+
+public void controlEvent(ControlEvent theEvent){
+   uiInteractionMgr.performControlEvent(theEvent);
 }

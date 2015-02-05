@@ -5,9 +5,12 @@ public class SerialManager{
    final static int SERIAL_PORT_BAUD_RATE = 115200;
    final static int SERIAL_PORT_NUM = 2;
 
+   HandTieArduinoSystemOnProcessing mainClass;
+
    Serial arduinoPort;
 
    public SerialManager(HandTieArduinoSystemOnProcessing mainClass){
+      this.mainClass = mainClass;
       // Setup serial port I/O
       println("AVAILABLE SERIAL PORTS:");
       println(Serial.list());
@@ -19,7 +22,7 @@ public class SerialManager{
       arduinoPort.bufferUntil(10);    //newline
    }
 
-   public int [] parseDataFromArduino(Serial port) throws Exception{
+   private int [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
       String [] bufSplitArr = buf.split(" ");
       int [] parsedDataArr = new int[bufSplitArr.length-1];
@@ -28,6 +31,17 @@ public class SerialManager{
          parsedDataArr[i] = Integer.parseInt(bufSplitArr[i]);
 
       return parsedDataArr;
+   }
+
+   public void parseDataFromSerial(Serial port) throws Exception{
+      if (port.equals(arduinoPort)) {
+         parseDataFromArduino(port);
+      }
+   }
+
+   private void parseDataFromArduino(Serial port) throws Exception{
+      int [] analogVals = parseSpaceSeparatedData(port);
+      mainClass.sgManager.setValuesForGauges(analogVals);
    }
 
    public void sendToArduino(String str){
