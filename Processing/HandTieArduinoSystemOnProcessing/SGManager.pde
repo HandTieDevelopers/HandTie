@@ -39,6 +39,13 @@ public class SGManager{
       }
       return analogVals;
    }
+   public float [] getElongationValsOfGauges(){
+      float [] elongationVals = new float[gauges.length];
+      for (int i = 0; i < gauges.length; ++i) {
+         elongationVals[i] = gauges[i].getElongationValue();
+      }
+      return elongationVals;
+   }
 
    public void draw(){
       color stretch = color(4, 79, 111);

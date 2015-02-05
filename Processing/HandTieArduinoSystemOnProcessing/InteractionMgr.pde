@@ -8,7 +8,7 @@ public class InteractionMgr {
    public void performKeyPress(char k){
       switch (k) {
          case 'c' :
-            gaugeCalibration();
+           gaugeCalibration();
             break;
       }
    }
@@ -18,8 +18,8 @@ public class InteractionMgr {
       mainClass.serialManager.sendToArduino("0");
    }
 
-   // public void performMousePress(){
+   public void performMousePress(){
 
-   // }
+   }
 
 }
