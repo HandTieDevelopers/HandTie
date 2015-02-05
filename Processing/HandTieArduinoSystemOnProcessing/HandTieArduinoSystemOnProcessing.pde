@@ -3,10 +3,12 @@ import controlP5.*;
 
 SerialManager serialManager = new SerialManager(this);
 SGManager sgManager = new SGManager();
+UIInteractionMgr uiInteractionMgr;
 StudyMgr studyMgr = new StudyMgr(this);
 
 void setup() {
    size(900, 600);
+   uiInteractionMgr = new UIInteractionMgr(this);
 }
 
 void draw() {
