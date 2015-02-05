@@ -2,13 +2,15 @@ public class StudyMgr {
   
    HandTieArduinoSystemOnProcessing mainClass;
    public final static int NUM_OF_FINGERS = 5;
-   public final static int NUM_OF_HAND_ROWS = 6;
+   public final static int NUM_OF_HAND_ROWS = 4;
    public final static int NUM_OF_HAND_COLS = 5;
    public final static int NUM_OF_Degree = 3;
    
    public final static int ShowGauge_x = 650;
    public final static int ShowGauge_y = 350;
    public final static int ShowGauge_dist = 40;
+   
+   public final static String StudyID = "0";
    
    public String ShowText = "Study #1";
    public int NowMainStage = 1;
@@ -23,8 +25,15 @@ public class StudyMgr {
    
    public boolean TransFlg = false; 
    
+   public int RowCount;
+
+   Table table;
+   
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
+      
+      RowCount = 0;
+      
    }
    public void start(){
      switch (NowMainStage){
@@ -58,7 +67,7 @@ public class StudyMgr {
              
              for(int i=0; i < 4; i++ ){
                 for(int j=0; j < 2; j++ ){
-                   fill(200+i*10,100+j*20,250-i*20);
+                   fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(i*2+j)));
                    pushMatrix();
                    if(NowDegree==0){
                      translate(ShowGauge_x, ShowGauge_y);
@@ -69,7 +78,6 @@ public class StudyMgr {
                    else if(NowDegree==2){
                      translate(ShowGauge_x,ShowGauge_y+160);
                    }
-                   
                    rotate(radians(-45*NowDegree));
                      rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    popMatrix();
@@ -78,7 +86,7 @@ public class StudyMgr {
            break;
          case 3:
              textSize(40);
-            fill(0, 102, 153);
+            fill(0, 0, 0);
             text("Done", width*0.39, height*0.45); 
           break;
      }
@@ -86,16 +94,26 @@ public class StudyMgr {
        
 //     }
    }
-   
+   public color getHeatmapRGB(float value){
+     float minimum=0.5;
+     float maximum=1.5;
+     float ratio = 2 * (value-minimum) / (maximum - minimum);
+     
+     color heatmapRGB = color((int)max(0, 255*(ratio - 1)),255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );
+     
+     return heatmapRGB;
+   }
    public void performKeyPress(char k){
+      
       switch (k) {
         case 'c' :
-            //gaugeCalibration();
+            gaugeCalibration();
             break;
         case '1' :
             NowMainStage=1;
            break;
         case '2' :
+            NewTable(); 
             NowMainStage=2;
             NowStudyStage=0;
             NowDegree = 0;      //3
@@ -106,6 +124,12 @@ public class StudyMgr {
             TransFlg=false;
 
            break;
+        case 's':
+            saveTable(table, "StudyData/User"+StudyID+".csv");
+           break ;
+        case RETURN:
+            DeleteRow();
+           break ;
         case ' ' :
             if(NowMainStage==2){
                 if(NowStudyStage==0){
@@ -120,13 +144,16 @@ public class StudyMgr {
                       TransFlg=false;
                     }
                     else{
+                      AddNewRow();         
                       NowLevel=1;  //high
                     }
                   }
                   else if(NowLevel==1){
+                    AddNewRow();
                     NowLevel=2;  //low
                   }
                   else if(NowLevel==2){
+                    AddNewRow();
                     NowLevel=0;  //mid
                     NowStudyStage=2;
                     NowBend=true;     //b
@@ -139,13 +166,16 @@ public class StudyMgr {
                       TransFlg=false;
                     }
                     else{
+                      AddNewRow();
                       NowLevel=1;  //high
                     }
                   }
                   else if(NowLevel==1){
+                    AddNewRow();
                     NowLevel=2;  //low
                   }
                   else if(NowLevel==2){
+                    AddNewRow();
                     NowLevel=1;  //high
                     NowStudyStage=3;  
                     NowBend=false;     //s
@@ -158,10 +188,12 @@ public class StudyMgr {
                       TransFlg=false;
                     }
                     else{
+                      AddNewRow();
                       NowBend=true;  //bend
                     }
                   }
                   else if(NowBend==true){
+                    AddNewRow();
                     NowBend=false;  //s
                     NowLevel=0;  //mid
                     NowStudyStage=4;
@@ -176,10 +208,12 @@ public class StudyMgr {
                       TransFlg=false;
                     }
                     else{
+                      AddNewRow();
                       NowBend=true;  //bend
                     }
                   }
                   else if(NowBend==true){
+                    AddNewRow();
                     NowBend=false;  //s
                     NowLevel=2;  //low
                     NowStudyStage=5;
@@ -193,10 +227,12 @@ public class StudyMgr {
                       TransFlg=false;
                     }
                     else{
+                      AddNewRow();
                       NowBend=true;  //bend
                     }
                   }
                   else if(NowBend==true){
+                    AddNewRow();
                     NowBend=false;  //s
                     TransFlg = true;
                     NowStudyStage=0;
@@ -221,6 +257,7 @@ public class StudyMgr {
                           }
                           else{
                             NowMainStage=3;
+                            saveTable(table, "StudyData/User"+StudyID+".csv");
                           }
                         }
                       }
@@ -231,11 +268,55 @@ public class StudyMgr {
           break;
       }
    }
+   public void AddNewRow(){
+    TableRow tmpNewRow = table.addRow();
 
-//   public void gaugeCalibration(){
-//      mainClass.sgManager.requestForCaliVals = true;
-//      mainClass.serialManager.sendToArduino("0");
-//   }
+    tmpNewRow.setString("Degree",str(NowDegree));
+    tmpNewRow.setString("Cols", str(NowCol));
+    tmpNewRow.setString("Rows", str(NowRow));
+    tmpNewRow.setString("Finger", str(NowFinger));
+    tmpNewRow.setString("Level", str(NowLevel));
+    tmpNewRow.setString("Bend", str(NowBend));
+    tmpNewRow.setString("SG0",str(mainClass.sgManager.getOneElongationValsOfGauges(0)));
+    tmpNewRow.setString("SG1",str(mainClass.sgManager.getOneElongationValsOfGauges(1)));
+    tmpNewRow.setString("SG2",str(mainClass.sgManager.getOneElongationValsOfGauges(2)));
+    tmpNewRow.setString("SG3",str(mainClass.sgManager.getOneElongationValsOfGauges(3)));
+    tmpNewRow.setString("SG4",str(mainClass.sgManager.getOneElongationValsOfGauges(4)));
+    tmpNewRow.setString("SG5",str(mainClass.sgManager.getOneElongationValsOfGauges(5)));
+    tmpNewRow.setString("SG6",str(mainClass.sgManager.getOneElongationValsOfGauges(6)));
+    tmpNewRow.setString("SG7",str(mainClass.sgManager.getOneElongationValsOfGauges(7)));     
+
+    RowCount++;
+
+   }
+   public void DeleteRow(){
+     RowCount--;
+     table.removeRow(RowCount);
+   }
+   public void NewTable(){
+      table = new Table();
+      
+      table.addColumn("Degree");
+      table.addColumn("Cols");
+      table.addColumn("Rows");
+      table.addColumn("Finger");
+      table.addColumn("Level");
+      table.addColumn("Bend");
+      table.addColumn("SG0");
+      table.addColumn("SG1");
+      table.addColumn("SG2");
+      table.addColumn("SG3");
+      table.addColumn("SG4");
+      table.addColumn("SG5");
+      table.addColumn("SG6");
+      table.addColumn("SG7");
+
+
+   }
+   public void gaugeCalibration(){
+      mainClass.sgManager.requestForCaliVals = true;
+      mainClass.serialManager.sendToArduino("0");
+   }
 
    // public void performMousePress(){
 
