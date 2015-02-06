@@ -41,7 +41,3 @@ void serialEvent(Serial port){
       println(e.getMessage());
    }
 }
-
-public void controlEvent(ControlEvent theEvent){
-  // uiInteractionMgr.performControlEvent(theEvent);
-}
