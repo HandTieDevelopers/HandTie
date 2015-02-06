@@ -3,7 +3,7 @@ import processing.serial.*;
 public class SerialManager{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
-   final static int SERIAL_PORT_NUM = 2;
+   final static int SERIAL_PORT_NUM = 0;
 
    HandTieArduinoSystemOnProcessing mainClass;
 

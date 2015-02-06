@@ -1,23 +1,27 @@
 import processing.serial.*;
 //import controlP5.*;
 
-SerialManager serialManager = new SerialManager(this);
-SGManager sgManager = new SGManager();
+SGManager sgManager;
+SerialManager serialManager;
 UIInteractionMgr uiInteractionMgr;
-StudyMgr studyMgr = new StudyMgr(this);
+StudyMgr studyMgr;
 public boolean ShowGaugeBar = true; 
 
 void setup() {
    size(900, 600);
+
+   sgManager = new SGManager();
+   serialManager = new SerialManager(this);
    uiInteractionMgr = new UIInteractionMgr(this);
+   studyMgr = new StudyMgr(this);
 }
 
 void draw() {
    background(255, 255, 255, 0);
-   studyMgr.start();
-   if(ShowGaugeBar){
+   // studyMgr.start();
+   // if(ShowGaugeBar){
      sgManager.draw();
-   }
+   // }
 }
 
 void keyPressed(){
@@ -38,6 +42,6 @@ void serialEvent(Serial port){
    }
 }
 
-//public void controlEvent(ControlEvent theEvent){
-//   uiInteractionMgr.performControlEvent(theEvent);
-//}
+public void controlEvent(ControlEvent theEvent){
+  // uiInteractionMgr.performControlEvent(theEvent);
+}

@@ -24,16 +24,22 @@ public class UIInteractionMgr {
          .addItem("change individually", 1)
          .setColorLabel(color(0))
          ;
-      cp5.addNumberbox("Amplified Target Value")
-         .setPosition(100,200)
-         .setSize(100,14)
-         .setRange(0,200)
-         .setMultiplier(0.1) // set the sensitifity of the numberbox
-         .setDirection(Controller.HORIZONTAL)
-         .setValue(100)
-         .setColorLabel(color(0))
-         // .getCaptionLabel().setSize(12).setFont(createFont("Georgia",10));
+
+      for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
+         float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
+
+         cp5.addNumberbox("Amp Target of " + i)
+            .setPosition(barOrigin[0]-20, barOrigin[1] + 150)
+            .setSize(80,14)
+            .setRange(0,1024)
+            // .setMultiplier(1) // set the sensitifity of the numberbox
+            .setDirection(Controller.HORIZONTAL)
+            .setValue(sgManager.getOneCaliValForGauges(i))
+            .setColorLabel(color(0))
+            // .getCaptionLabel().setSize(12).setFont(createFont("Georgia",10));
          ;
+      }
+
       // cp5.addButton("calibrate")
       //    .setValue(0)
       //    .setPosition()

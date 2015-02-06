@@ -1,14 +1,22 @@
 public class SGManager{
    
-   public final static int NUM_OF_GAUGE = 16;
+   public final static int NUM_OF_GAUGES = 16;
    public boolean requestForCaliVals = true;
 
-   private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGE];
+   private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGES];
 
    public SGManager(){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i] = new StrainGauge();
-      }
+         // println("width = " + width);
+         gauges[i].setBarDisplayProperties(width*(i+1)*0.04,
+                                           height*0.42, 20);
+         gauges[i].setTextDisplayPropertiesForElong(width*(i+1)*0.04,
+                                                    height*((i%2==1)?0.6:0.58),
+                                                    14);
+         gauges[i].setTextDisplayPropertiesForAnalogVal(width*(i+1)*0.04,
+                                                        height*((i%2==1)?0.65:0.63),
+                                                        15);      }
    }
 
    public void setValuesForGauges(int [] newValues){
@@ -32,6 +40,10 @@ public class SGManager{
       }
    }
 
+   public int getOneCaliValForGauges(int index){
+      return gauges[index].getCalibrationValue();
+   }
+
    public int [] getAnalogValsOfGauges(){
       int [] analogVals = new int[gauges.length];
       for (int i = 0; i < gauges.length; ++i) {
@@ -46,37 +58,19 @@ public class SGManager{
       }
       return elongationVals;
    }
+
    public float getOneElongationValsOfGauges(int index){
       return gauges[index].getElongationValue();
    }
+
+   public float [] getOneBarBaseCenterOfGauges(int index){
+      return gauges[index].getBarBaseCenter();
+   }
+
    public void draw(){
-      color stretch = color(4, 79, 111);
-      color compress = color(255, 145, 158);
-      int heightOffSet = 180;
-      float mul = 0.6;
-
       for (int i = 0; i < gauges.length; i++) {
-         float elongRatio = gauges[i].getElongationValue();
-
-         if(elongRatio>1){
-            fill(stretch);
-            rect(width*(i+1)*0.04,
-                 (float)(height*(0.42)-height*mul*(elongRatio-1)) + heightOffSet,
-                 20,
-                 (float)(height*mul*(elongRatio-1)));
-         }else{
-            fill(compress);
-            rect(width*(i+1)*0.04,
-                 (float)height*(0.42) + heightOffSet,
-                 20,
-                 (float)(height*mul*(1-elongRatio)));
-         }
-         textSize(14);
-         fill(0, 102, 10);
-         text(String.format("%.2f",elongRatio), width*(i+1)*0.04, height*((i%2==1)?0.6:0.58)+ heightOffSet); 
-         fill(150, 150, 150);
-         text((int)gauges[i].getNewValue(), width*(i+1)*0.04, height*((i%2==1)?0.65:0.63) + heightOffSet); 
-         fill(255, 0, 0);
+         gauges[i].drawBar();
+         gauges[i].drawText();
       }
    }
 }

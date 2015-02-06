@@ -14,8 +14,10 @@ public class StrainGauge{
    //Text Display data member
    private float elongTextXOrigin;
    private float elongTextYOrigin;
+   private float elongTextSize;
    private float analogValTextXOrigin;
    private float analogValTextYOrigin;
+   private float analogValTextSize;
 
    //Value methods
    public int getNewValue(){
@@ -27,6 +29,10 @@ public class StrainGauge{
 
    public void setCalibrationValue(int calibrationValue){
       this.calibrationValue = calibrationValue;
+   }
+
+   public int getCalibrationValue(){
+      return calibrationValue;
    }
 
    public float getElongationValue(){
@@ -41,8 +47,11 @@ public class StrainGauge{
       this.barWidth = barWidth;
    }
 
-   public float getBarBaseCenter(){
-      return (barXOrigin + barYOrigin)/2;
+   public float [] getBarBaseCenter(){
+      float [] barOrigin = new float[2];
+      barOrigin[0] = barXOrigin + barWidth/2;
+      barOrigin[1] = barYOrigin;
+      return barOrigin;
    }
 
    public void drawBar(){
@@ -56,23 +65,30 @@ public class StrainGauge{
    }
 
    //Text Display
-   public void setTextDisplayPropertiesForElong(float elongTextXOrigin
-                                                float elongTextYOrigin){
+   public void setTextDisplayPropertiesForElong(float elongTextXOrigin,
+                                                float elongTextYOrigin,
+                                                float elongTextSize){
       this.elongTextXOrigin = elongTextXOrigin;
       this.elongTextYOrigin = elongTextYOrigin;
+      this.elongTextSize = elongTextSize;
    }
 
    public void setTextDisplayPropertiesForAnalogVal(float analogValTextXOrigin,
-                                                    float analogValTextYOrigin){
+                                                    float analogValTextYOrigin,
+                                                    float analogValTextSize){
       this.analogValTextXOrigin = analogValTextXOrigin;
       this.analogValTextYOrigin = analogValTextYOrigin;
+      this.analogValTextSize = analogValTextSize;
    }
 
    public void drawText(){
       fill(0, 102, 10);
-      text((float)getElongationValue(), elongTextYOrigin, elongTextYOrigin);
+      textSize(elongTextSize);
+      text(String.format("%.2f",getElongationValue()), elongTextYOrigin,
+           elongTextYOrigin);
 
       fill(150,150,150);
+      textSize(analogValTextSize);
       text((int)newValue, analogValTextXOrigin, analogValTextYOrigin);
    }
 }
