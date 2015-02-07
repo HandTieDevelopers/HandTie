@@ -30,6 +30,9 @@ public:
    void setAmpCaliComplete();
    boolean isAmpCaliComplete();
 
+   void setBroken();
+   boolean isBroken();
+
 private:
    uint8_t ampPotPos;
    uint8_t bridgePotPos;
@@ -39,6 +42,8 @@ private:
 
    boolean bridgeCaliComplete;
    boolean ampCaliComplete;
+
+   boolean broken;
 };
 
 #endif   //StrainGauge_h

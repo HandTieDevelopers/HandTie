@@ -1,7 +1,7 @@
 public class SGManager{
    
    public final static int NUM_OF_GAUGES = 16;
-   public boolean requestForCaliVals = true;
+   public boolean requestForCaliVals;
 
    private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGES];
 
@@ -15,8 +15,10 @@ public class SGManager{
                                                     height*((i%2==1)?0.6:0.58),
                                                     14);
          gauges[i].setTextDisplayPropertiesForAnalogVal(width*(i+1)*0.04,
-                                                        height*((i%2==1)?0.65:0.63),
-                                                        15);      }
+                                                        height*((i%2==1)?0.63:0.61),
+                                                        15);
+      }
+      requestForCaliVals = true;
    }
 
    public void setValuesForGauges(int [] newValues){

@@ -10,6 +10,7 @@ StrainGauge::StrainGauge(uint8_t ampPotPos, uint8_t bridgePotPos, uint16_t targe
    this->bridgePotPos = bridgePotPos;
    this->targetValNoAmp = targetValNoAmp;
    this->targetValWithAmp = targetValWithAmp;
+   broken = false;
 }
 
 StrainGauge::~StrainGauge(){
@@ -70,4 +71,12 @@ void StrainGauge::setAmpCaliComplete(){
 
 boolean StrainGauge::isAmpCaliComplete(){
    return ampCaliComplete;
+}
+
+void StrainGauge::setBroken(){
+   broken = true;
+}
+
+boolean StrainGauge::isBroken(){
+   return broken;
 }

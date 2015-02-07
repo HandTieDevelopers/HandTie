@@ -3,8 +3,8 @@
 SGManager::SGManager(){
    uint16_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
                                 20,20,20,20,20,20,20,20};
-   uint16_t targetValWithAmp[] = {450,450,450,450,450,450,450,450,
-                                  450,450,450,450,450,450,450,450};
+   uint16_t targetValWithAmp[] = {400,400,400,400,400,400,400,400,
+                                  400,400,400,400,400,400,400,400};
 
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);
@@ -71,7 +71,11 @@ boolean SGManager::calibrateBridgePot(int i){
    mcp4251->wiper1_pos((uint8_t)potPos);
 
    uint16_t analogVal = analogMux->AnalogRead(i);
+   #ifdef BROKEN_OMIT
+   if (gauges[i]->isBridgeCaliComplete() || gauges[i]->isBroken())
+   #else
    if (gauges[i]->isBridgeCaliComplete())
+   #endif   
       return true;
    
    if (analogVal < gauges[i]->getTargetValNoAmp() - TARGET_TOLERANCE_NO_AMP){
@@ -86,6 +90,7 @@ boolean SGManager::calibrateBridgePot(int i){
 
    if (potPos < 0 || potPos > 255){
       gauges[i]->setBridgeCaliComplete();
+      gauges[i]->setBroken();
    }
 
    return gauges[i]->isBridgeCaliComplete();
@@ -97,7 +102,11 @@ boolean SGManager::calibrateAmpPot(int i){
    mcp4251->wiper1_pos(gauges[i]->getBridgePotPos());
 
    uint16_t analogVal = analogMux->AnalogRead(i);
+   #ifdef BROKEN_OMIT
+   if (gauges[i]->isAmpCaliComplete() || gauges[i]->isBroken())
+   #else
    if (gauges[i]->isAmpCaliComplete())
+   #endif
       return true;
    
    if (analogVal < gauges[i]->getTargetValWithAmp() - TARGET_TOLERANCE_WITH_AMP){
@@ -112,6 +121,7 @@ boolean SGManager::calibrateAmpPot(int i){
 
    if (potPos < 0 || potPos > 255){
       gauges[i]->setAmpCaliComplete();
+      gauges[i]->setBroken();
    }
 
    return gauges[i]->isAmpCaliComplete();

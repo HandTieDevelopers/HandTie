@@ -27,8 +27,8 @@ public class UIInteractionMgr implements ControlListener{
       //    .addItem("change individually", 1)
       //    .setColorLabel(color(0))
       //    ;
-
-      for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
+      int i;
+      for (i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
          float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
 
          // cp5.addNumberbox("Amp Target of " + i)
@@ -41,9 +41,9 @@ public class UIInteractionMgr implements ControlListener{
          //    .setColorLabel(color(0))
          //    // .getCaptionLabel().setSize(12).setFont(createFont("Georgia",10));
          // ;
-         cp5.addSlider("SG"+(i+1))
-            .setPosition(barOrigin[0]-10, barOrigin[1] + 150)
-            .setSize(10,100)
+         cp5.addSlider("amp"+i)
+            .setPosition(barOrigin[0]-5, barOrigin[1] + 150)
+            .setSize(10,80)
             .setRange(0,1000)
             .setValue(sgManager.getOneCaliValForGauges(i))
             .setColorLabel(color(0))
@@ -54,6 +54,19 @@ public class UIInteractionMgr implements ControlListener{
          ;
       }
 
+      float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(i-1);
+      cp5.addSlider("all_amp")
+         .setPosition(barOrigin[0]+30, barOrigin[1] + 150)
+         .setSize(10,80)
+         .setRange(0,1000)
+         .setValue(500)
+         .setColorLabel(color(0))
+         .setTriggerEvent(Slider.RELEASE)
+         .setNumberOfTickMarks(21)
+         .snapToTickMarks(true)
+         .setDecimalPrecision(0)
+
+      ;
       // cp5.addButton("calibrate")
       //    .setValue(0)
       //    .setPosition()
@@ -63,8 +76,35 @@ public class UIInteractionMgr implements ControlListener{
 
    public void controlEvent(ControlEvent theEvent){
       if (millis() < 1500) return;
-      println("performControlEvent: " + theEvent.getController().getName());
+      // println("performControlEvent: " + theEvent.getName());
 
+      if (theEvent.getName().equals("all_amp")) {
+         manualChangeToAllGaugesWithAmp(theEvent);
+      } else if (theEvent.getName().contains("amp")){
+         manualChangeToOneGaugeWithAmp(theEvent);
+      }
+   }
+
+   private void manualChangeToAllGaugesWithAmp(ControlEvent theEvent){
+      for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller("amp"+i).setValue(theEvent.getValue());
+      }
+      String sendMessage = new String(mainClass
+                                      .serialManager
+                                      .MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP +
+                                      " " + theEvent.getValue());
+      mainClass.serialManager.sendToArduino(sendMessage);
+
+   }
+
+   private void manualChangeToOneGaugeWithAmp(ControlEvent theEvent){
+      String [] nameSplit = theEvent.getName().split("amp");
+      int index = Integer.parseInt(nameSplit[1]);
+      String sendMessage = new String(mainClass
+                                      .serialManager
+                                      .MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP +
+                                      " " + theEvent.getValue());
+      mainClass.serialManager.sendToArduino(sendMessage);
    }
 
    public void performKeyPress(char k){
