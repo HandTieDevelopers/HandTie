@@ -17,10 +17,10 @@ void setup() {
 
 void draw() {
    background(255, 255, 255, 0);
-   // studyMgr.start();
-   // if(ShowGaugeBar){
+    studyMgr.start();
+     if(ShowGaugeBar){
      sgManager.draw();
-   // }
+    }
 }
 
 void keyPressed(){
