@@ -9,7 +9,7 @@ public class StrainGauge{
    private float barYOrigin;
    private float barWidth;
    // private float barHeight;
-   private float barElongRatio = 1;
+   private float barElongRatio = 500;
 
    //Text Display data member
    private float elongTextXOrigin;
