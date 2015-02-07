@@ -5,8 +5,11 @@ public class UIInteractionMgr implements ControlListener{
 
    ControlP5 cp5;
 
-   //Serial UI constants
-
+   private final static String RADIO_DISPLAY = "display";
+   private final static String SLIDER_BRIDGE_ALL = "brdg_all";
+   private final static String SLIDER_AMP_ALL =  "amp_all";
+   private final static String SLIDERS_BRIDGE = "brdg";
+   private final static String SLIDERS_AMP = "amp";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
@@ -19,30 +22,25 @@ public class UIInteractionMgr implements ControlListener{
    }
 
    private void createUIForSerial(){
-      // cp5.addRadioButton("Adjustment")
-      //    .setPosition(10,20)
-      //    .setItemWidth(30)
-      //    .setItemHeight(30)
-      //    .addItem("change all", 0)
-      //    .addItem("change individually", 1)
-      //    .setColorLabel(color(0))
-      //    ;
+      float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(0);
+      cp5.addRadioButton(RADIO_DISPLAY)
+         .setPosition(width*0.1, height*0.9)
+         .setItemWidth(20)
+         .setItemHeight(20)
+         .addItem("bar", 0)
+         .addItem("bridge slider", 1)
+         .addItem("amp slider", 2)
+         .setColorLabel(color(0))
+         .activate(0)
+         .setItemsPerRow(5)
+         .setSpacingColumn((int)(width*0.1))
+         ;
+
       int i;
       for (i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
-         float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
-
-         // cp5.addNumberbox("Amp Target of " + i)
-         //    .setPosition(barOrigin[0]-20, barOrigin[1] + 150)
-         //    .setSize(80,14)
-         //    .setRange(0,1024)
-         //    // .setMultiplier(1) // set the sensitifity of the numberbox
-         //    .setDirection(Controller.HORIZONTAL)
-         //    .setValue(sgManager.getOneCaliValForGauges(i))
-         //    .setColorLabel(color(0))
-         //    // .getCaptionLabel().setSize(12).setFont(createFont("Georgia",10));
-         // ;
-         cp5.addSlider("amp"+i)
-            .setPosition(barOrigin[0]-5, barOrigin[1] + 150)
+         barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
+         cp5.addSlider(SLIDERS_AMP+i)
+            .setPosition(barOrigin[0]-4, barOrigin[1]-40)
             .setSize(10,80)
             .setRange(0,1000)
             .setValue(sgManager.getOneCaliValForGauges(i))
@@ -51,12 +49,28 @@ public class UIInteractionMgr implements ControlListener{
             .setNumberOfTickMarks(21)
             .snapToTickMarks(true)
             .setDecimalPrecision(0)
+            .showTickMarks(false)
+            .setVisible(false)
+         ;
+
+         cp5.addSlider(SLIDERS_BRIDGE+i)
+            .setPosition(barOrigin[0]-4, barOrigin[1]-40)
+            .setSize(10,80)
+            .setRange(0,1000)
+            .setValue(sgManager.getOneCaliValForGauges(i))
+            .setColorLabel(color(0))
+            .setTriggerEvent(Slider.RELEASE)
+            .setNumberOfTickMarks(21)
+            .snapToTickMarks(true)
+            .setDecimalPrecision(0)
+            .showTickMarks(false)
+            .setVisible(false)
          ;
       }
 
-      float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(i-1);
-      cp5.addSlider("all_amp")
-         .setPosition(barOrigin[0]+30, barOrigin[1] + 150)
+      barOrigin = sgManager.getOneBarBaseCenterOfGauges(i-1);
+      cp5.addSlider(SLIDER_AMP_ALL)
+         .setPosition(barOrigin[0]+35, barOrigin[1]-40)
          .setSize(10,80)
          .setRange(0,1000)
          .setValue(500)
@@ -65,7 +79,21 @@ public class UIInteractionMgr implements ControlListener{
          .setNumberOfTickMarks(21)
          .snapToTickMarks(true)
          .setDecimalPrecision(0)
-
+         .showTickMarks(false)
+         .setVisible(false)
+      ;
+      cp5.addSlider(SLIDER_BRIDGE_ALL)
+         .setPosition(barOrigin[0]+35, barOrigin[1]-40)
+         .setSize(10,80)
+         .setRange(0,1000)
+         .setValue(500)
+         .setColorLabel(color(0))
+         .setTriggerEvent(Slider.RELEASE)
+         .setNumberOfTickMarks(21)
+         .snapToTickMarks(true)
+         .setDecimalPrecision(0)
+         .showTickMarks(false)
+         .setVisible(false)
       ;
       // cp5.addButton("calibrate")
       //    .setValue(0)
@@ -76,18 +104,21 @@ public class UIInteractionMgr implements ControlListener{
 
    public void controlEvent(ControlEvent theEvent){
       if (millis() < 1500) return;
-      // println("performControlEvent: " + theEvent.getName());
+      println("performControlEvent: " + theEvent.getName());
+      println("event value: " + theEvent.getValue());
 
-      if (theEvent.getName().equals("all_amp")) {
+      if (theEvent.getName().equals(SLIDER_AMP_ALL)) {
          manualChangeToAllGaugesWithAmp(theEvent);
-      } else if (theEvent.getName().contains("amp")){
+      } else if (theEvent.getName().contains(SLIDERS_AMP)){
          manualChangeToOneGaugeWithAmp(theEvent);
+      } else if (theEvent.getName().equals(RADIO_DISPLAY)){
+         changeDisplay(theEvent);
       }
    }
 
    private void manualChangeToAllGaugesWithAmp(ControlEvent theEvent){
       for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller("amp"+i).setValue(theEvent.getValue());
+         cp5.controller(SLIDERS_AMP+i).setValue(theEvent.getValue());
       }
       String sendMessage = new String(mainClass
                                       .serialManager
@@ -98,13 +129,38 @@ public class UIInteractionMgr implements ControlListener{
    }
 
    private void manualChangeToOneGaugeWithAmp(ControlEvent theEvent){
-      String [] nameSplit = theEvent.getName().split("amp");
+      String [] nameSplit = theEvent.getName().split(SLIDERS_AMP);
       int index = Integer.parseInt(nameSplit[1]);
       String sendMessage = new String(mainClass
                                       .serialManager
                                       .MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP +
                                       " " + theEvent.getValue());
       mainClass.serialManager.sendToArduino(sendMessage);
+   }
+
+   private void changeDisplay(ControlEvent theEvent){
+      hideAllUIItems();
+      if (theEvent.getValue() == 0.0f) {
+         mainClass.sgManager.hideBar = false;
+         mainClass.sgManager.hideText = false;
+      } else if (theEvent.getValue() == 1.0f){
+         for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
+            cp5.controller(SLIDERS_BRIDGE+i).setVisible(true);
+         }
+      } else if (theEvent.getValue() == 2.0f){
+         for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
+            cp5.controller(SLIDERS_AMP+i).setVisible(true);
+         }
+      }
+   }
+
+   private void hideAllUIItems(){
+      for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE+i).setVisible(false);
+         cp5.controller(SLIDERS_AMP+i).setVisible(false);
+      }
+      mainClass.sgManager.hideBar = true;
+      // mainClass.sgManager.hideText = true;
    }
 
    public void performKeyPress(char k){

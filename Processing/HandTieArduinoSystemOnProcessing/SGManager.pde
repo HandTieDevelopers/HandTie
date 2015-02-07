@@ -1,7 +1,9 @@
 public class SGManager{
    
    public final static int NUM_OF_GAUGES = 16;
-   public boolean requestForCaliVals;
+   public boolean requestForCaliVals = true;
+   public boolean hideBar = false;
+   public boolean hideText = false;
 
    private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGES];
 
@@ -18,7 +20,6 @@ public class SGManager{
                                                         height*((i%2==1)?0.63:0.61),
                                                         15);
       }
-      requestForCaliVals = true;
    }
 
    public void setValuesForGauges(int [] newValues){
@@ -71,8 +72,8 @@ public class SGManager{
 
    public void draw(){
       for (int i = 0; i < gauges.length; i++) {
-         gauges[i].drawBar();
-         gauges[i].drawText();
+         if (!hideBar)  gauges[i].drawBar();
+         if (!hideText) gauges[i].drawText();
       }
    }
 }
