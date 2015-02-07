@@ -12,12 +12,12 @@ public class SGManager{
          gauges[i] = new StrainGauge();
          // println("width = " + width);
          gauges[i].setBarDisplayProperties(width*(i+1)*0.04,
-                                           height*0.42, 20);
-         gauges[i].setTextDisplayPropertiesForElong(width*(i+1)*0.04,
-                                                    height*((i%2==1)?0.6:0.58),
+                                           height*0.7, 20);
+         gauges[i].setTextDisplayPropertiesForElong(width*(i+1)*0.04-5,
+                                                    height*((i%2==1)?0.84:0.82),
                                                     14);
-         gauges[i].setTextDisplayPropertiesForAnalogVal(width*(i+1)*0.04,
-                                                        height*((i%2==1)?0.63:0.61),
+         gauges[i].setTextDisplayPropertiesForAnalogVal(width*(i+1)*0.04-5,
+                                                        height*((i%2==1)?0.87:0.85),
                                                         15);
       }
    }
