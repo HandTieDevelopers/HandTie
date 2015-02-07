@@ -24,11 +24,7 @@ void draw() {
 }
 
 void keyPressed(){
-   switch (key) {
-        case TAB :
-            ShowGaugeBar=!ShowGaugeBar;
-            break;
-   }
+   uiInteractionMgr.performKeyPress(key);
    studyMgr.performKeyPress(key);
 }
 
