@@ -5,6 +5,8 @@ public class UIInteractionMgr implements ControlListener{
 
    ControlP5 cp5;
 
+   RadioButton radioButton;
+
    private final static String RADIO_DISPLAY = "display";
    private final static String SLIDER_BRIDGE_ALL = "brdg_all";
    private final static String SLIDER_AMP_ALL =  "amp_all";
@@ -24,18 +26,18 @@ public class UIInteractionMgr implements ControlListener{
 
    private void createUIForSerial(){
       float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(0);
-      cp5.addRadioButton(RADIO_DISPLAY)
-         .setPosition(width*0.25, height*0.9)
-         .setItemWidth(20)
-         .setItemHeight(20)
-         .addItem("bar", 0)
-         .addItem("bridge slider", 1)
-         .addItem("amp slider", 2)
-         .setColorLabel(color(0))
-         .activate(0)
-         .setItemsPerRow(5)
-         .setSpacingColumn((int)(width*0.08))
-         ;
+      radioButton = cp5.addRadioButton(RADIO_DISPLAY)
+                       .setPosition(width*0.25, height*0.9)
+                       .setItemWidth(20)
+                       .setItemHeight(20)
+                       .addItem("bar", 0)
+                       .addItem("bridge slider", 1)
+                       .addItem("amp slider", 2)
+                       .setColorLabel(color(0))
+                       .activate(0)
+                       .setItemsPerRow(5)
+                       .setSpacingColumn((int)(width*0.08))
+                    ;
 
       int i;
       for (i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
@@ -117,7 +119,7 @@ public class UIInteractionMgr implements ControlListener{
       } else if (theEvent.getName().contains(SLIDERS_AMP)){
          manualChangeToOneGaugeWithAmp(theEvent);
       } else if (theEvent.getName().equals(RADIO_DISPLAY)){
-         changeDisplay(theEvent);
+         changeDisplay(theEvent.getValue());
       } else if (theEvent.getName().equals(CALIBRATE)){
          gaugeCalibration();
       }
@@ -166,24 +168,24 @@ public class UIInteractionMgr implements ControlListener{
       mainClass.serialManager.sendToArduino(sendMessage);
    }
 
-   private void changeDisplay(ControlEvent theEvent){
+   private void changeDisplay(float eventValue){
       hideAllUIItems();
-      if (theEvent.getValue() == 0.0f) {
+      if (eventValue == 0.0f) {
          mainClass.sgManager.hideBar = false;
          mainClass.sgManager.hideText = false;
-      } else if (theEvent.getValue() == 1.0f){
+      } else if (eventValue == 1.0f){
          mainClass.sgManager.hideText = false;
          for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
             cp5.controller(SLIDERS_BRIDGE+i).setVisible(true);
          }
          cp5.controller(SLIDER_BRIDGE_ALL).setVisible(true);
-      } else if (theEvent.getValue() == 2.0f){
+      } else if (eventValue == 2.0f){
          mainClass.sgManager.hideText = false;
          for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
             cp5.controller(SLIDERS_AMP+i).setVisible(true);
          }
          cp5.controller(SLIDER_AMP_ALL).setVisible(true);
-      } else if (theEvent.getValue() == -1.0f){
+      } else if (eventValue == -1.0f){
          mainClass.sgManager.hideText = true;
       }
    }
@@ -204,6 +206,15 @@ public class UIInteractionMgr implements ControlListener{
          case 'c' :
             gaugeCalibration();
             break;
+         case TAB :
+            hideAllUIItems();
+            if (!radioButton.isVisible())
+               changeDisplay(0.0);
+            cp5.controller(CALIBRATE).setVisible(!cp5.controller(CALIBRATE)
+                                                     .isVisible());
+            radioButton.setVisible(!radioButton.isVisible());
+            break;
+            
       }
    }
 
