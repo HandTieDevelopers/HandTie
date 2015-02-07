@@ -3,7 +3,13 @@ import processing.serial.*;
 public class SerialManager{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
-   final static int SERIAL_PORT_NUM = 0;
+   final static int SERIAL_PORT_NUM = 5;
+
+   public final static int ALL_CALIBRATION = 0;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP = 1;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP = 2;
+   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP = 3;
+   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP= 4;
 
    HandTieArduinoSystemOnProcessing mainClass;
 
