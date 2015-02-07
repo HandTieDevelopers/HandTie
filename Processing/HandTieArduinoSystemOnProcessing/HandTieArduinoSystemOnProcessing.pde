@@ -4,7 +4,6 @@ SGManager sgManager;
 SerialManager serialManager;
 UIInteractionMgr uiInteractionMgr;
 StudyMgr studyMgr;
-public boolean ShowGaugeBar = true; 
 
 void setup() {
    size(900, 600);
@@ -17,10 +16,8 @@ void setup() {
 
 void draw() {
    background(255, 255, 255, 0);
-    studyMgr.start();
-     if(ShowGaugeBar){
-     sgManager.draw();
-    }
+   studyMgr.start();
+   sgManager.draw();
 }
 
 void keyPressed(){
