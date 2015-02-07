@@ -9,7 +9,7 @@ public class StrainGauge{
    private float barYOrigin;
    private float barWidth;
    // private float barHeight;
-   private float barElongRatio = 1;
+   private float barElongRatio = 200;
 
    //Text Display data member
    private float elongTextXOrigin;
@@ -84,7 +84,7 @@ public class StrainGauge{
    public void drawText(){
       fill(0, 102, 10);
       textSize(elongTextSize);
-      text(String.format("%.2f",getElongationValue()), elongTextYOrigin,
+      text(String.format("%.2f",getElongationValue()), elongTextXOrigin,
            elongTextYOrigin);
 
       fill(150,150,150);

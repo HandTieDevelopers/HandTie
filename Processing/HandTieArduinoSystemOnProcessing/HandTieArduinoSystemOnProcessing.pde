@@ -1,5 +1,4 @@
 import processing.serial.*;
-//import controlP5.*;
 
 SGManager sgManager;
 SerialManager serialManager;
