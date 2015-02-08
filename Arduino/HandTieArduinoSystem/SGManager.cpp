@@ -27,12 +27,34 @@ SGManager::~SGManager(){
    }
 }
 
-void SGManager::serialPrint(){
+void SGManager::serialPrint(int protocol){
+   Serial.print(protocol);
+   Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       mcp4251->wiper0_pos(gauges[i]->getAmpPotPos());
       mcp4251->wiper1_pos(gauges[i]->getBridgePotPos());
       Serial.print(analogMux->AnalogRead(i));
       Serial.print(" ");
+   }
+   Serial.println();
+}
+
+void SGManager::sendTargetValNoAmp(){
+   Serial.print(SEND_TARGET_NO_AMP_VALS);
+   Serial.print(" ");
+   for (int i = 0; i < NUM_OF_GAUGES; ++i){
+       Serial.print(gauges[i]->getTargetValNoAmp());
+       Serial.print(" ");
+   }
+   Serial.println();
+}
+
+void SGManager::sendTargetValWithAmp(){
+   Serial.print(SEND_TARGET_AMP_VALS)
+   Serial.print(" ");
+   for (int i = 0; i < NUM_OF_GAUGES; ++i){
+       Serial.print(gauges[i]->getTargetValWithAmp());
+       Serial.print(" ");
    }
    Serial.println();
 }
@@ -63,6 +85,7 @@ void SGManager::calibration(){
             complete = false;
       }
    }
+   serialPrint(SEND_CALI_VALS);
 }
 
 boolean SGManager::calibrateBridgePot(int i){

@@ -32,6 +32,13 @@
 #define NUM_OF_GAUGES 16
 #define BROKEN_OMIT
 
+// ------------- Serial Protocol ------------ //
+enum{
+   SEND_NORMAL_VALS,
+   SEND_CALI_VALS,
+   SEND_TARGET_NO_AMP_VALS,
+   SEND_TARGET_AMP_VALS
+};
 
 // ------------- SGManager class ------------ //
 
@@ -41,8 +48,10 @@ public:
    SGManager();
    ~SGManager();
 
-   void serialPrint();
-   
+   void serialPrint(int);
+   void sendTargetValNoAmp();
+   void sendTargetValWithAmp();
+
    void allCalibration();
 
    void manualAssignPotPosForOneGauge(uint8_t, uint8_t, uint8_t);
