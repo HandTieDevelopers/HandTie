@@ -1,6 +1,7 @@
 import processing.serial.*;
+import java.util.ArrayList;
 
-public class SerialManager{
+public class SerialManager implements SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
@@ -12,10 +13,11 @@ public class SerialManager{
    public final static int MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP = 3;
    public final static int MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP= 4;
 
-
    HandTieArduinoSystemOnProcessing mainClass;
 
    Serial arduinoPort;
+
+   ArrayList<SerialListener> serialListeners = new ArrayList<SerialListener>();
 
    public SerialManager(HandTieArduinoSystemOnProcessing mainClass){
       this.mainClass = mainClass;
@@ -49,10 +51,42 @@ public class SerialManager{
 
    private void parseDataFromArduino(Serial port) throws Exception{
       int [] analogVals = parseSpaceSeparatedData(port);
-      mainClass.sgManager.setValuesForGauges(analogVals);
+      notifyAllWithAnalogVals(analogVals);
    }
 
    public void sendToArduino(String str){
       arduinoPort.write(str);
+   }
+
+   public void registerForSerialListener(SerialListener listener){
+      serialListeners.add(listener);
+   }
+
+   public void removeSerialListener(SerialListener listener){
+      serialListeners.remove(listener);
+   }
+
+   public void notifyAllWithAnalogVals(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateAnalogVals(values);
+      }
+   }
+
+   public void notifyAllWithCaliVals(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateCaliVals(values);
+      }
+   }
+
+   public void notifyAllWithTargetAnalogValsNoAmp(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateTargetAnalogValsNoAmp(values);
+      }
+   }
+
+   public void notifyAllWithTargetAnalogValsWithAmp(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateTargetAnalogValsWithAmp(values);
+      }
    }
 }

@@ -12,12 +12,18 @@ void setup() {
    serialManager = new SerialManager(this);
    uiInteractionMgr = new UIInteractionMgr(this);
    studyMgr = new StudyMgr(this);
+
+   listenerRegistrations();
 }
 
 void draw() {
    background(255, 255, 255, 0);
    studyMgr.start();
    sgManager.draw();
+}
+
+void listenerRegistrations(){
+   sgManager.registerToSerialNotifier(serialManager);
 }
 
 void keyPressed(){
