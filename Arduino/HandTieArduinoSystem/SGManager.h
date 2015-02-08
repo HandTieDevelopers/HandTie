@@ -30,7 +30,7 @@
 
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
-#define BROKEN_OMIT
+// #define BROKEN_OMIT
 
 // ------------- Serial Protocol ------------ //
 enum{

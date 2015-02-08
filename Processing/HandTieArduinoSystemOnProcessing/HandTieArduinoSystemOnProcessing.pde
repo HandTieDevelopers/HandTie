@@ -35,8 +35,7 @@ void keyPressed(){
 void serialEvent(Serial port){
    try {
       serialManager.parseDataFromSerial(port);
-   }
-   catch (Exception e) {
+   } catch (Exception e) {
       println(e.getMessage());
    }
 }

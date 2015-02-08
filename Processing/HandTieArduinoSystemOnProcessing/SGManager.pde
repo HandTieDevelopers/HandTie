@@ -57,6 +57,10 @@ public class SGManager implements ControlListener, SerialListener{
       }
    }
 
+   // public void performKeyPress(char k){
+
+   // }
+
    @Override
    public void registerToSerialNotifier(SerialNotifier notifier){
       notifier.registerForSerialListener(this);
@@ -92,5 +96,21 @@ public class SGManager implements ControlListener, SerialListener{
    public void controlEvent(ControlEvent theEvent){
       if (millis()<1000) return;
       
+      if (theEvent.getName().equals(UIInteractionMgr.RADIO_DISPLAY)) {
+         changeDisplay(theEvent.getValue());
+      }
+   }
+
+   private void changeDisplay(float eventValue){
+      if (eventValue == UIInteractionMgr.RADIO_SHOW_BAR_ITEM) {
+         hideText = false;
+         hideBar = false;
+      } else if (eventValue == UIInteractionMgr.RADIO_HIDE_ITEMS) {
+         hideText = true;
+         hideBar = true;
+      } else {
+         hideText = false;
+         hideBar = true;
+      }
    }
 }
