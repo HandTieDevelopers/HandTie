@@ -48,9 +48,10 @@ public:
    SGManager();
    ~SGManager();
 
+   void serialPrint();
    void serialPrint(int);
-   void sendTargetValNoAmp();
-   void sendTargetValWithAmp();
+   void sendTargetValsNoAmp();
+   void sendTargetValsWithAmp();
 
    void allCalibration();
 

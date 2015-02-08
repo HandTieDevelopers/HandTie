@@ -27,6 +27,12 @@ void ParserWithAction::parse(){
       case MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP:
          parseForManualChangeToAllGaugesWithAmp();
          break;
+      case REQUEST_FOR_TARGET_VALS_NO_AMP:
+         sgManager->sendTargetValsNoAmp();
+         break;
+      case REQUEST_FOR_TARGET_VALS_WITH_AMP:
+         sgManager->sendTargetValsWithAmp();
+         break;
    }
 }
 

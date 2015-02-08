@@ -27,6 +27,10 @@ SGManager::~SGManager(){
    }
 }
 
+void SGManager::serialPrint(){
+   serialPrint(SEND_NORMAL_VALS);
+}
+
 void SGManager::serialPrint(int protocol){
    Serial.print(protocol);
    Serial.print(" ");
@@ -39,7 +43,7 @@ void SGManager::serialPrint(int protocol){
    Serial.println();
 }
 
-void SGManager::sendTargetValNoAmp(){
+void SGManager::sendTargetValsNoAmp(){
    Serial.print(SEND_TARGET_NO_AMP_VALS);
    Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
@@ -49,8 +53,8 @@ void SGManager::sendTargetValNoAmp(){
    Serial.println();
 }
 
-void SGManager::sendTargetValWithAmp(){
-   Serial.print(SEND_TARGET_AMP_VALS)
+void SGManager::sendTargetValsWithAmp(){
+   Serial.print(SEND_TARGET_AMP_VALS);
    Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
        Serial.print(gauges[i]->getTargetValWithAmp());
