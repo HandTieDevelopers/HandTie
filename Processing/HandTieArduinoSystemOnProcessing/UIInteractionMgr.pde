@@ -13,11 +13,16 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static float RADIO_SHOW_BRIDGE_ITEM = 1.0f;
    public final static float RADIO_SHOW_AMP_ITEM = 2.0f;
 
+   // sliders
    public final static String SLIDER_BRIDGE_ALL = "brdg_all";
    public final static String SLIDER_AMP_ALL =  "amp_all";
    public final static String SLIDERS_BRIDGE = "brdg";
    public final static String SLIDERS_AMP = "amp";
+
+   // buttons
    public final static String CALIBRATE = "calibrate";
+   public final static String REQUEST_TARGET_VAL_NO_AMP="get targets (no amp)";
+   public final static String REQUEST_TARGET_VAL_AMP = "get targets (amp)";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
@@ -34,7 +39,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    private void createUIForSerial(){
       float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(0);
       radioButton = cp5.addRadioButton(RADIO_DISPLAY)
-                       .setPosition(width*0.25, height*0.9)
+                       .setPosition(width*0.21, height*0.88)
                        .setItemWidth(20)
                        .setItemHeight(20)
                        .addItem("bar", RADIO_SHOW_BAR_ITEM)
@@ -107,8 +112,18 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       ;
       cp5.addButton(CALIBRATE)
          .setValue(0)
-         .setPosition(width*0.1, height*0.9)
-         .setSize(48,20)
+         .setPosition(width*0.2, height*0.93)
+         .setSize(95,20)
+      ;
+      cp5.addButton(REQUEST_TARGET_VAL_NO_AMP)
+         .setValue(0)
+         .setPosition(width*0.2 + 100, height*0.93)
+         .setSize(95,20)
+      ;
+      cp5.addButton(REQUEST_TARGET_VAL_AMP)
+         .setValue(0)
+         .setPosition(width*0.2 + 200, height*0.93)
+         .setSize(95,20)
       ;
    }
 
@@ -167,8 +182,12 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       switch (k) {
          case TAB :
             hideAllUIItems();
-            cp5.controller(CALIBRATE).setVisible(!cp5.controller(CALIBRATE)
-                                                     .isVisible());
+            cp5.controller(CALIBRATE)
+               .setVisible(!cp5.controller(CALIBRATE).isVisible());
+            cp5.controller(REQUEST_TARGET_VAL_AMP)
+               .setVisible(!cp5.controller(REQUEST_TARGET_VAL_AMP).isVisible());
+            cp5.controller(REQUEST_TARGET_VAL_NO_AMP)
+               .setVisible(!cp5.controller(REQUEST_TARGET_VAL_NO_AMP).isVisible());
             radioButton.setVisible(!radioButton.isVisible());
             break;
             

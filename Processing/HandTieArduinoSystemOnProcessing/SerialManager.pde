@@ -131,12 +131,16 @@ public class SerialManager implements ControlListener, SerialNotifier{
          manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP, theEvent);
       } else if (theEvent.getName().equals(UIInteractionMgr.SLIDER_AMP_ALL)){
          manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP, theEvent);
+      } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE)){
+         sendToArduino(Integer.toString(ALL_CALIBRATION));
+      } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_NO_AMP)){
+         sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_NO_AMP));
+      } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_AMP)){
+         sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_WITH_AMP));
       } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE)){
          manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP, theEvent);
       } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_AMP)){
          manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP, theEvent);
-      } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE)){
-         sendToArduino(Integer.toString(ALL_CALIBRATION));
       }
    }
 
