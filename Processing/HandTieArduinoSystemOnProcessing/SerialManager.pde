@@ -1,17 +1,25 @@
 import processing.serial.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class SerialManager implements SerialNotifier{
+public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
    final static int SERIAL_PORT_NUM = 5;
 
+   //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
    public final static int MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP = 1;
    public final static int MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP = 2;
    public final static int MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP = 3;
    public final static int MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP= 4;
+
+   //receive from arduino protocol
+   public final static int RECEIVE_NORMAL_VALS = 0;
+   public final static int RECEIVE_CALI_VALS = 1;
+   public final static int RECEIVE_TARGET_NO_AMP_VALS = 2;
+   public final static int RECEIVE_TARGET_AMP_VALS = 3;
 
    HandTieArduinoSystemOnProcessing mainClass;
 
@@ -51,42 +59,70 @@ public class SerialManager implements SerialNotifier{
 
    private void parseDataFromArduino(Serial port) throws Exception{
       int [] analogVals = parseSpaceSeparatedData(port);
-      notifyAllWithAnalogVals(analogVals);
+      switch (analogVals[0]) {
+         case RECEIVE_NORMAL_VALS:
+            notifyAllWithAnalogVals(Arrays.copyOfRange(analogVals, 1,
+                                                       analogVals.length));
+            break;
+         case RECEIVE_CALI_VALS:
+            notifyAllWithCaliVals(Arrays.copyOfRange(analogVals, 1,
+                                                     analogVals.length));
+            break;
+         case RECEIVE_TARGET_NO_AMP_VALS:
+            notifyAllWithTargetAnalogValsNoAmp(Arrays.copyOfRange(analogVals, 1,
+                                                                  analogVals.length));
+            break;
+         case RECEIVE_TARGET_AMP_VALS:
+            notifyAllWithTargetAnalogValsWithAmp(Arrays.copyOfRange(analogVals, 1,
+                                                                    analogVals.length));
+            break;
+      }
    }
 
    public void sendToArduino(String str){
       arduinoPort.write(str);
    }
 
+   @Override
    public void registerForSerialListener(SerialListener listener){
       serialListeners.add(listener);
    }
 
+   @Override
    public void removeSerialListener(SerialListener listener){
       serialListeners.remove(listener);
    }
 
+   @Override
    public void notifyAllWithAnalogVals(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateAnalogVals(values);
       }
    }
 
+   @Override
    public void notifyAllWithCaliVals(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCaliVals(values);
       }
    }
 
+   @Override
    public void notifyAllWithTargetAnalogValsNoAmp(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateTargetAnalogValsNoAmp(values);
       }
    }
 
+   @Override
    public void notifyAllWithTargetAnalogValsWithAmp(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateTargetAnalogValsWithAmp(values);
       }
+   }
+
+   @Override
+   public void controlEvent(ControlEvent theEvent){
+      if (millis() < 1000) return;
    }
 }

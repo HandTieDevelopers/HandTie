@@ -1,6 +1,6 @@
 import controlP5.*;
 
-public class UIInteractionMgr implements ControlListener{
+public class UIInteractionMgr implements ControlListener, SerialListener{
    HandTieArduinoSystemOnProcessing mainClass;
 
    ControlP5 cp5;
@@ -20,6 +20,8 @@ public class UIInteractionMgr implements ControlListener{
       cp5 = new ControlP5(mainClass);
       cp5.setColorValue(0);
       cp5.addListener(this);
+      cp5.addListener(mainClass.sgManager);
+      cp5.addListener(mainClass.serialManager);
 
       createUIForSerial();
    }
@@ -219,7 +221,6 @@ public class UIInteractionMgr implements ControlListener{
    }
 
    public void gaugeCalibration(){
-      mainClass.sgManager.requestForCaliVals = true;
       mainClass.serialManager.sendToArduino(Integer.toString(mainClass.serialManager
                                                              .ALL_CALIBRATION));
    }
@@ -227,5 +228,33 @@ public class UIInteractionMgr implements ControlListener{
    // public void performMousePress(){
 
    // }
+
+   @Override
+   public void registerToSerialNotifier(SerialNotifier notifier){
+      notifier.registerForSerialListener(this);
+   }
+   @Override
+   public void removeToSerialNotifier(SerialNotifier notifier){
+      notifier.removeSerialListener(this);
+   }
+   
+   @Override
+   public void updateAnalogVals(int [] values){}
+   @Override
+   public void updateCaliVals(int [] values){}
+
+   @Override
+   public void updateTargetAnalogValsNoAmp(int [] values){
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE+i).setValue((float)values[i]);
+      }
+   }
+
+   @Override
+   public void updateTargetAnalogValsWithAmp(int [] values){
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_AMP+i).setValue((float)values[i]);
+      }
+   }
 
 }

@@ -108,9 +108,6 @@ public class StudyMgr {
    public void performKeyPress(char k){
       
       switch (k) {
-        case 'c' :
-            gaugeCalibration();
-            break;
         case '1' :
             NowMainStage=1;
            break;
@@ -212,10 +209,6 @@ public class StudyMgr {
       table.addColumn("SG7");
 
 
-   }
-   public void gaugeCalibration(){
-      mainClass.sgManager.requestForCaliVals = true;
-      mainClass.serialManager.sendToArduino("0");
    }
    public void lastStep(){
             if(NowMainStage==2){

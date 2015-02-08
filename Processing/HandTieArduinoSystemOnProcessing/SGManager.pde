@@ -1,4 +1,4 @@
-public class SGManager implements SerialListener{
+public class SGManager implements ControlListener, SerialListener{
    
    public final static int NUM_OF_GAUGES = 16;
    public boolean hideBar = false;
@@ -57,28 +57,40 @@ public class SGManager implements SerialListener{
       }
    }
 
+   @Override
    public void registerToSerialNotifier(SerialNotifier notifier){
       notifier.registerForSerialListener(this);
       serialNotifier = notifier;
    }
 
+   @Override
    public void removeToSerialNotifier(SerialNotifier notifier){
       notifier.removeSerialListener(this);
       serialNotifier = null;
    }
    
+   @Override
    public void updateAnalogVals(int [] values){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setNewValue(values[i]);
       }
    }
 
+   @Override
    public void updateCaliVals(int [] values){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setCalibrationValue(values[i]);
       }
    }
 
+   @Override
    public void updateTargetAnalogValsNoAmp(int [] values){}
+   @Override
    public void updateTargetAnalogValsWithAmp(int [] values){}
+
+   @Override
+   public void controlEvent(ControlEvent theEvent){
+      if (millis()<1000) return;
+      
+   }
 }
