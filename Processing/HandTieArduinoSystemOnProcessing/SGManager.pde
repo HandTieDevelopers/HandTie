@@ -2,7 +2,8 @@ public class SGManager implements ControlListener, SerialListener{
    
    public final static int NUM_OF_GAUGES = 16;
    public boolean hideBar = false;
-   public boolean hideText = false;
+   public boolean hideNormalText = false;
+   public boolean hideCalibratingText = true;
 
    private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGES];
 
@@ -53,7 +54,13 @@ public class SGManager implements ControlListener, SerialListener{
    public void draw(){
       for (int i = 0; i < gauges.length; i++) {
          if (!hideBar)  gauges[i].drawBar();
-         if (!hideText) gauges[i].drawText();
+         if (!hideNormalText) gauges[i].drawText();
+         if (!hideCalibratingText) {
+            fill(50, 100, 255, 0);
+            textSize(15);
+            text("Calibrating...", width*(i+1)*0.04, height*0.7-20);
+            gauges[i].drawCalibratingText();
+         }
       }
    }
 
@@ -82,6 +89,7 @@ public class SGManager implements ControlListener, SerialListener{
 
    @Override
    public void updateCaliVals(int [] values){
+      hideCalibratingText = true;
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setCalibrationValue(values[i]);
       }
@@ -91,6 +99,21 @@ public class SGManager implements ControlListener, SerialListener{
    public void updateTargetAnalogValsNoAmp(int [] values){}
    @Override
    public void updateTargetAnalogValsWithAmp(int [] values){}
+   @Override
+   public void updateCalibratingValsNoAmp(int [] values){
+      hideCalibratingText = false;
+      for (int i = 0; i < NUM_OF_GAUGES; ++i) {
+         gauges[i].setCalibratingValue(values[i]);
+      }
+   }
+   @Override
+   public void updateCalibratingValsWithAmp(int [] values){
+      hideCalibratingText = false;
+      for (int i = 0; i < NUM_OF_GAUGES; ++i) {
+         gauges[i].setCalibratingValue(values[i]);
+      }
+   }
+
 
    @Override
    public void controlEvent(ControlEvent theEvent){
@@ -103,13 +126,13 @@ public class SGManager implements ControlListener, SerialListener{
 
    private void changeDisplay(float eventValue){
       if (eventValue == UIInteractionMgr.RADIO_SHOW_BAR_ITEM) {
-         hideText = false;
+         hideNormalText = false;
          hideBar = false;
       } else if (eventValue == UIInteractionMgr.RADIO_HIDE_ITEMS) {
-         hideText = true;
+         hideNormalText = true;
          hideBar = true;
       } else {
-         hideText = false;
+         hideNormalText = false;
          hideBar = true;
       }
    }

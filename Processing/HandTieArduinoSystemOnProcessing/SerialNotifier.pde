@@ -6,4 +6,6 @@ public interface SerialNotifier{
    public void notifyAllWithCaliVals(int [] values);
    public void notifyAllWithTargetAnalogValsNoAmp(int [] values);
    public void notifyAllWithTargetAnalogValsWithAmp(int [] values);
+   public void notifyAllWithCalibratingValsNoAmp(int [] values);
+   public void notifyAllWithCalibratingValsWithAmp(int [] values);
 }

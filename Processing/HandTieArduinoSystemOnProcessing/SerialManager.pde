@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
-   final static int SERIAL_PORT_NUM = 5;
+   final static int SERIAL_PORT_NUM = 0;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -22,15 +22,16 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int RECEIVE_CALI_VALS = 1;
    public final static int RECEIVE_TARGET_NO_AMP_VALS = 2;
    public final static int RECEIVE_TARGET_AMP_VALS = 3;
-
-   HandTieArduinoSystemOnProcessing mainClass;
+   public final static int RECEIVE_BRIDGE_POT_POS_VALS = 4;
+   public final static int RECEIVE_AMP_POT_POS_VALS = 5;
+   public final static int RECEIVE_CALIBRATING_NO_AMP_VALS = 6;
+   public final static int RECEIVE_CALIBRATING_AMP_VALS = 7;
 
    Serial arduinoPort;
 
    ArrayList<SerialListener> serialListeners = new ArrayList<SerialListener>();
 
    public SerialManager(HandTieArduinoSystemOnProcessing mainClass){
-      this.mainClass = mainClass;
       // Setup serial port I/O
       println("AVAILABLE SERIAL PORTS:");
       println(Serial.list());
@@ -60,23 +61,26 @@ public class SerialManager implements ControlListener, SerialNotifier{
    }
 
    private void parseDataFromArduino(Serial port) throws Exception{
-      int [] analogVals = parseSpaceSeparatedData(port);
-      switch (analogVals[0]) {
+      int [] parsedData = parseSpaceSeparatedData(port);
+      int [] analogVals = Arrays.copyOfRange(parsedData,1,parsedData.length);
+      switch (parsedData[0]) {
          case RECEIVE_NORMAL_VALS:
-            notifyAllWithAnalogVals(Arrays.copyOfRange(analogVals, 1,
-                                                       analogVals.length));
+            notifyAllWithAnalogVals(analogVals);
             break;
          case RECEIVE_CALI_VALS:
-            notifyAllWithCaliVals(Arrays.copyOfRange(analogVals, 1,
-                                                     analogVals.length));
+            notifyAllWithCaliVals(analogVals);
             break;
          case RECEIVE_TARGET_NO_AMP_VALS:
-            notifyAllWithTargetAnalogValsNoAmp(Arrays.copyOfRange(analogVals, 1,
-                                                                  analogVals.length));
+            notifyAllWithTargetAnalogValsNoAmp(analogVals);
             break;
          case RECEIVE_TARGET_AMP_VALS:
-            notifyAllWithTargetAnalogValsWithAmp(Arrays.copyOfRange(analogVals, 1,
-                                                                    analogVals.length));
+            notifyAllWithTargetAnalogValsWithAmp(analogVals);
+            break;
+         case RECEIVE_CALIBRATING_NO_AMP_VALS:
+            notifyAllWithCalibratingValsNoAmp(analogVals);
+            break;
+         case RECEIVE_CALIBRATING_AMP_VALS:
+            notifyAllWithCalibratingValsWithAmp(analogVals);
             break;
       }
    }
@@ -128,6 +132,20 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public void notifyAllWithTargetAnalogValsWithAmp(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateTargetAnalogValsWithAmp(values);
+      }
+   }
+
+   @Override
+   public void notifyAllWithCalibratingValsNoAmp(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateCalibratingValsNoAmp(values);
+      }
+   }
+
+   @Override
+   public void notifyAllWithCalibratingValsWithAmp(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateCalibratingValsWithAmp(values);
       }
    }
 

@@ -226,4 +226,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       }
    }
 
+   @Override
+   public void updateCalibratingValsNoAmp(int [] values){}
+   @Override
+   public void updateCalibratingValsWithAmp(int [] values){}
 }

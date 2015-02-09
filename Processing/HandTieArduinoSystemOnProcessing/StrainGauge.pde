@@ -3,6 +3,7 @@ public class StrainGauge{
    //Value data member
    private int calibrationValue;
    private int newValue;
+   private int calibratingValue;
 
    //Bar Display data member
    private float barXOrigin;
@@ -38,6 +39,14 @@ public class StrainGauge{
 
    public float getElongationValue(){
       return (float)newValue/calibrationValue;
+   }
+
+   public void setCalibratingValue(int calibratingValue){
+      this.calibratingValue = calibratingValue;
+   }
+
+   public int getCalibratingValue(){
+      return calibratingValue;
    }
 
    //Bar Display data member
@@ -91,5 +100,11 @@ public class StrainGauge{
       fill(150,150,150);
       textSize(analogValTextSize);
       text((int)newValue, analogValTextXOrigin, analogValTextYOrigin);
+   }
+
+   public void drawCalibratingText(){
+      fill(100,50,50);
+      textSize(10);
+      text(calibratingValue, barXOrigin, barYOrigin);
    }
 }
