@@ -100,6 +100,10 @@ public class SGManager implements ControlListener, SerialListener{
    @Override
    public void updateTargetAnalogValsWithAmp(int [] values){}
    @Override
+   public void updateBridgePotPosVals(int [] values){}
+   @Override
+   public void updateAmpPotPosVals(int [] values){}
+   @Override
    public void updateCalibratingValsNoAmp(int [] values){
       hideCalibratingText = false;
       for (int i = 0; i < NUM_OF_GAUGES; ++i) {

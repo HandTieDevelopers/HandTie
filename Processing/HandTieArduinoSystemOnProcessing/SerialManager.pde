@@ -10,10 +10,10 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
-   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP = 1;
-   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP = 2;
-   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP = 3;
-   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP = 4;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP = 1;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP = 2;
+   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_NO_AMP = 3;
+   public final static int MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_WITH_AMP = 4;
    public final static int REQUEST_FOR_TARGET_VALS_NO_AMP = 5;
    public final static int REQUEST_FOR_TARGET_VALS_WITH_AMP = 6;
 
@@ -76,6 +76,10 @@ public class SerialManager implements ControlListener, SerialNotifier{
          case RECEIVE_TARGET_AMP_VALS:
             notifyAllWithTargetAnalogValsWithAmp(analogVals);
             break;
+         case RECEIVE_BRIDGE_POT_POS_VALS:
+            break;
+         case RECEIVE_AMP_POT_POS_VALS:
+            break;
          case RECEIVE_CALIBRATING_NO_AMP_VALS:
             notifyAllWithCalibratingValsNoAmp(analogVals);
             break;
@@ -136,6 +140,20 @@ public class SerialManager implements ControlListener, SerialNotifier{
    }
 
    @Override
+   public void notifyAllWithBridgePotPosVals(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateBridgePotPosVals(values);
+      }
+   }
+
+   @Override
+   public void notifyAllWithAmpPotPosVals(int [] values){
+      for (SerialListener listener : serialListeners) {
+         listener.updateAmpPotPosVals(values);
+      }
+   }
+
+   @Override
    public void notifyAllWithCalibratingValsNoAmp(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCalibratingValsNoAmp(values);
@@ -154,9 +172,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
       if (millis() < 1000) return;
 
       if (theEvent.getName().equals(UIInteractionMgr.SLIDER_BRIDGE_ALL)) {
-         manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_NO_AMP, theEvent);
+         manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_NO_AMP, theEvent);
       } else if (theEvent.getName().equals(UIInteractionMgr.SLIDER_AMP_ALL)){
-         manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_WITH_AMP, theEvent);
+         manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_WITH_AMP, theEvent);
       } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE)){
          sendToArduino(Integer.toString(ALL_CALIBRATION));
       } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_NO_AMP)){
@@ -164,9 +182,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
       } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_AMP)){
          sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_WITH_AMP));
       } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE)){
-         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP, theEvent);
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP, theEvent);
       } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_AMP)){
-         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP, theEvent);
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP, theEvent);
       }
    }
 
@@ -179,11 +197,11 @@ public class SerialManager implements ControlListener, SerialNotifier{
    private void manualChangeOneGauge(int protocol, ControlEvent theEvent){
       String [] nameSplit = null;
       switch (protocol) {
-         case MANUAL_CHANGE_TO_ONE_GAUGE_NO_AMP :
+         case MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP :
             nameSplit = theEvent.getName()
                                 .split(UIInteractionMgr.SLIDERS_BRIDGE);
             break;
-         case MANUAL_CHANGE_TO_ONE_GAUGE_WITH_AMP :
+         case MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP :
             nameSplit = theEvent.getName()
                                 .split(UIInteractionMgr.SLIDERS_AMP);
             break;

@@ -227,6 +227,16 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    }
 
    @Override
+   public void updateBridgePotPosVals(int [] values){
+
+   }
+
+   @Override
+   public void updateAmpPotPosVals(int [] values){
+
+   }
+
+   @Override
    public void updateCalibratingValsNoAmp(int [] values){}
    @Override
    public void updateCalibratingValsWithAmp(int [] values){}
