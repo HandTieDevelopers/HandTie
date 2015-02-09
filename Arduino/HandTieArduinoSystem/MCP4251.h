@@ -73,6 +73,11 @@ class MCP4251
 
    const static uint8_t kTCON_REGISTER    = B01000000;
    const static uint8_t kSTATUS_REGISTER  = B01010000;
+   
+   const static uint8_t tcon_0off_1on     = B11110000;
+   const static uint8_t tcon_0on_1off     = B00001111;
+   const static uint8_t tcon_0off_1off    = B00000000;
+   const static uint8_t tcon_0on_1on      = B11111111;
 
    uint16_t byte2uint16(byte high_byte, byte low_byte);
    byte uint16_high_byte(uint16_t uint16);
