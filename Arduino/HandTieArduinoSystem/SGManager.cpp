@@ -48,25 +48,44 @@ void SGManager::serialPrint(int protocol){
    Serial.println();
 }
 
-void SGManager::sendTargetValsNoAmp(){
-   Serial.print(SEND_TARGET_NO_AMP_VALS);
+void SGManager::sendStoredValues(int protocol){
+   Serial.print(protocol);
    Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
-       Serial.print(gauges[i]->getTargetValNoAmp());
-       Serial.print(" ");
+      switch(protocol){
+         case SEND_TARGET_NO_AMP_VALS:
+            Serial.print(gauges[i]->getTargetValNoAmp());
+            break;
+         case SEND_TARGET_AMP_VALS:
+            Serial.print(gauges[i]->getTargetValWithAmp());
+            break;
+         case SEND_BRIDGE_POT_POS_VALS:
+            Serial.print(gauges[i]->getBridgePotPos());
+            break;
+         case SEND_AMP_POT_POS_VALS:
+            Serial.print(gauges[i]->getAmpPotPos());
+            break;
+      }
+      Serial.print(" ");
    }
    Serial.println();
 }
 
-void SGManager::sendTargetValsWithAmp(){
-   Serial.print(SEND_TARGET_AMP_VALS);
-   Serial.print(" ");
-   for (int i = 0; i < NUM_OF_GAUGES; ++i){
-       Serial.print(gauges[i]->getTargetValWithAmp());
-       Serial.print(" ");
-   }
-   Serial.println();
+void SGManager::sendTargetValsNoAmp(){
+   sendStoredValues(SEND_TARGET_NO_AMP_VALS);
 }
+
+void SGManager::sendTargetValsWithAmp(){
+   sendStoredValues(SEND_TARGET_AMP_VALS);
+}
+
+// void SGManager::sendBridgePotPosVals(){
+//    sendStoredValues(SEND_BRIDGE_POT_POS_VALS);
+// }
+
+// void SGManager::sendAmpPotPosVals(){
+//    sendStoredValues(SEND_AMP_POT_POS_VALS);
+// }
 
 void SGManager::allCalibration(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
@@ -97,6 +116,8 @@ void SGManager::calibration(){
       serialPrint(SEND_CALIBRATING_AMP_VALS);
    }
    serialPrint(SEND_CALI_VALS);
+   sendStoredValues(SEND_BRIDGE_POT_POS_VALS);
+   sendStoredValues(SEND_AMP_POT_POS_VALS);
 }
 
 boolean SGManager::calibrateBridgePot(int i){

@@ -57,8 +57,11 @@ public:
 
    void serialPrint();
    void serialPrint(int);
+
    void sendTargetValsNoAmp();
    void sendTargetValsWithAmp();
+   // void sendBridgePotPosVals();
+   // void sendAmpPotPosVals();
 
    void allCalibration();
 
@@ -79,6 +82,8 @@ private:
    void calibration();
    boolean calibrateBridgePot(int);
    boolean calibrateAmpPot(int);
+
+   void sendStoredValues(int);
 
 };
 
