@@ -20,12 +20,12 @@
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
-#define WIPER0_INIT_POS 50
-#define WIPER1_INIT_POS 85
+#define WIPER0_INIT_POS 255
+#define WIPER1_INIT_POS 255
 
 // #define TARGET_NO_AMP 20
 // #define TARGET_WITH_AMP 295
-#define TARGET_TOLERANCE_NO_AMP 5
+#define TARGET_TOLERANCE_NO_AMP 1
 #define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
@@ -36,8 +36,15 @@
 enum{
    SEND_NORMAL_VALS,
    SEND_CALI_VALS,
+
    SEND_TARGET_NO_AMP_VALS,
-   SEND_TARGET_AMP_VALS
+   SEND_TARGET_AMP_VALS,
+
+   SEND_BRIDGE_POT_POS_VALS,
+   SEND_AMP_POT_POS_VALS,
+
+   SEND_CALIBRATING_NO_AMP_VALS,
+   SEND_CALIBRATING_AMP_VALS
 };
 
 // ------------- SGManager class ------------ //
@@ -55,7 +62,8 @@ public:
 
    void allCalibration();
 
-   void manualAssignPotPosForOneGauge(uint8_t, uint8_t, uint8_t);
+   void manualAssignBridgePotPosForOneGauge(uint8_t, uint8_t);
+   void manualAssignAmpPotPosForOneGauge(uint8_t, uint8_t);
 
    void manualAssignTargetValNoAmpForOneGauge(uint8_t, uint16_t);
    void manualAssignTargetValWithAmpForOneGauge(uint8_t, uint16_t);

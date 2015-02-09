@@ -1,8 +1,8 @@
 #include "SGManager.h"
 
 SGManager::SGManager(){
-   uint16_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
-                                20,20,20,20,20,20,20,20};
+   uint16_t targetValNoAmp[] = {15,15,15,15,15,15,15,15,
+                                15,15,15,15,15,15,15,15};
    uint16_t targetValWithAmp[] = {300,300,300,300,300,300,300,300,
                                   300,300,300,300,300,300,300,300};
 
@@ -35,8 +35,13 @@ void SGManager::serialPrint(int protocol){
    Serial.print(protocol);
    Serial.print(" ");
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
-      mcp4251->wiper0_pos(gauges[i]->getAmpPotPos());
+      if (protocol == SEND_CALIBRATING_NO_AMP_VALS)
+         mcp4251->wiper0_pos(255);
+      else
+         mcp4251->wiper0_pos(gauges[i]->getAmpPotPos());
+
       mcp4251->wiper1_pos(gauges[i]->getBridgePotPos());
+
       Serial.print(analogMux->AnalogRead(i));
       Serial.print(" ");
    }
@@ -79,6 +84,7 @@ void SGManager::calibration(){
          if (!calibrateBridgePot(i))
             complete = false;
       }
+      serialPrint(SEND_CALIBRATING_NO_AMP_VALS);
    }
 
    complete = false;
@@ -88,6 +94,7 @@ void SGManager::calibration(){
          if (!calibrateAmpPot(i))
             complete = false;
       }
+      serialPrint(SEND_CALIBRATING_AMP_VALS);
    }
    serialPrint(SEND_CALI_VALS);
 }
@@ -154,9 +161,11 @@ boolean SGManager::calibrateAmpPot(int i){
    return gauges[i]->isAmpCaliComplete();
 }
 
-void SGManager::manualAssignPotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePotPos,
-                                              uint8_t ampPotPos){
+void SGManager::manualAssignBridgePotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePotPos){
    gauges[gaugeIdx]->setBridgePotPos(bridgePotPos);
+}
+
+void SGManager::manualAssignAmpPotPosForOneGauge(uint8_t gaugeIdx, uint8_t ampPotPos){
    gauges[gaugeIdx]->setAmpPotPos(ampPotPos);
 }
 
