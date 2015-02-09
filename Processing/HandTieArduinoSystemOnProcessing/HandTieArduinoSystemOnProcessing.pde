@@ -14,6 +14,7 @@ void setup() {
    studyMgr = new StudyMgr(this);
 
    listenerRegistrations();
+   serialManager.performKeyPress('c');
 }
 
 void draw() {
@@ -30,6 +31,7 @@ void listenerRegistrations(){
 void keyPressed(){
    uiInteractionMgr.performKeyPress(key);
    studyMgr.performKeyPress(key);
+   serialManager.performKeyPress(key);
 }
 
 void serialEvent(Serial port){

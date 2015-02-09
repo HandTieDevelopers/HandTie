@@ -85,6 +85,14 @@ public class SerialManager implements ControlListener, SerialNotifier{
       arduinoPort.write(str);
    }
 
+   public void performKeyPress(char k){
+      switch (k) {
+         case 'c' :
+            sendToArduino(Integer.toString(ALL_CALIBRATION));
+            break;
+      }
+   }
+
    @Override
    public void registerForSerialListener(SerialListener listener){
       serialListeners.add(listener);
