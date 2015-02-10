@@ -34,6 +34,7 @@ public class StudyMgr {
 
    public boolean loadTableFlg = false; 
    
+   public boolean autoSpace = false;
    // public int RowCount;
 
    Table table;
@@ -56,22 +57,22 @@ public class StudyMgr {
             textSize(20);
             fill(0, 102, 153);
             text("Degree: "+ ((NowDegree==0)?"0":((NowDegree==1)?"45":"90"))+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger+"\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), 10, 30);
-            text("Col2: "+NowCol2+" Row2: "+NowRow2, width-140, 60);
+            text("Col2: "+NowCol2+" Row2: "+NowRow2, width-170, 60);
 //            rect(width*0.1,height*(0.1),200,200);
             text("Stage:"+NowStudyStage, 10, height*0.45); 
             if(NowStudyStage==0){
                textSize(40);
-               text("Press <SPACE> to start", width*0.25, height*0.45); 
+               text("Press <SPACE> to start", width*0.25, height*0.1); 
              }
              else{
                fill(255, 102, 153);
                textSize(40);
                
                if(TransFlg==false){  
-                 text("Record? <SPACE>", width*0.25, height*0.45); 
+                 text("Record? <SPACE>", width*0.25, height*0.1); 
                }
                else{
-                 text("Stage "+ NowStudyStage+ " ready? <SPACE>", width*0.25, height*0.45); 
+                 text("Stage "+ NowStudyStage+ " ready? <SPACE>", width*0.25, height*0.1); 
                } 
                  
              }
@@ -109,6 +110,11 @@ public class StudyMgr {
                    popMatrix();
                 }
              } 
+             
+             if(autoSpace==true){
+               nextStep();
+             
+             }
            break;
          case 3:
              textSize(40);
@@ -136,12 +142,14 @@ public class StudyMgr {
             NowMainStage=1;
            break;
         case '2' :
+            autoSpace=false;
             NewTable(); 
             NowMainStage=2;
             NowStudyStage=0;
             NowDegree = 0;      //3
             NowCol1 = 0;         //5
             NowRow1 = 0; 
+            NowFinger = 0;
             NowLevel=0;      //mid
             NowBend=false;     //s
             TransFlg=false;
@@ -149,6 +157,9 @@ public class StudyMgr {
             NowCol2 = NUM_OF_HAND_COLS-NowCol1-1;         
             NowRow2 = NUM_OF_HAND_ROWS-NowRow1-1;    
 
+           break;
+        case '3' :
+            NowMainStage=3;
            break;
         case 's':
             saveTable(table, "StudyData/User"+StudyID+".csv");
@@ -183,6 +194,9 @@ public class StudyMgr {
            break ;
         case ' ' :
             nextStep();
+          break;
+        case 'o' :
+            autoSpace=true;
           break;
       }
    }
@@ -474,8 +488,27 @@ public class StudyMgr {
                       NowFinger=0;
                       
                       if(NowRow1<NUM_OF_HAND_ROWS-1){
-                        NowRow1++;
-                        NowRow2--;
+                        if(NowCol1 >= floor((float)(NUM_OF_HAND_COLS-1)/2) && NowRow1 >= floor((float)(NUM_OF_HAND_ROWS-1)/2) ){
+                            if(NowDegree < NUM_OF_Degree-1){
+                              NowDegree++;
+
+                              NowStudyStage=0;
+
+                              NowCol1=0;
+                              NowRow1=0;
+
+                              NowCol2 = NUM_OF_HAND_COLS-NowCol1-1;        
+                              NowRow2 = NUM_OF_HAND_ROWS-NowRow1-1;
+                            }
+                            else{
+                              NowMainStage=3;
+                              saveTable(table, "StudyData/User"+StudyID+".csv");
+                            }
+                        }
+                        else{
+                          NowRow1++;
+                          NowRow2--;
+                        }
                       }
                       else{
                         NowRow1=0;
@@ -490,8 +523,16 @@ public class StudyMgr {
                         else{
                           NowCol1=0;
                           NowCol2=NUM_OF_HAND_COLS-1-NowCol1;
-                          if(NowDegree<NUM_OF_Degree-1){
+                          if(NowDegree < NUM_OF_Degree-1){
                             NowDegree++;
+                            
+                            NowStudyStage=0;
+
+                            NowCol1=0;
+                            NowRow1=0;
+
+                            NowCol2 = NUM_OF_HAND_COLS-NowCol1-1;        
+                            NowRow2 = NUM_OF_HAND_ROWS-NowRow1-1;
                           }
                           else{
                             NowMainStage=3;
