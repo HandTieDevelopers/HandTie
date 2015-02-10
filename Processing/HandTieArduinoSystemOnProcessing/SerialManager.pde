@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
-   final static int SERIAL_PORT_NUM = 0;
+   final static int SERIAL_PORT_NUM = 2;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
