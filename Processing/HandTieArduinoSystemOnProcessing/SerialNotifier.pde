@@ -10,4 +10,5 @@ public interface SerialNotifier{
    public void notifyAllWithAmpPotPosVals(int [] values);
    public void notifyAllWithCalibratingValsNoAmp(int [] values);
    public void notifyAllWithCalibratingValsWithAmp(int [] values);
+   public void notifyAllWithReceiveRecordSignal();
 }

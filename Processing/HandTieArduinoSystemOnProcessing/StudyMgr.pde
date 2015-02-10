@@ -1,4 +1,4 @@
-public class StudyMgr {
+public class StudyMgr implements SerialListener{
   
    HandTieArduinoSystemOnProcessing mainClass;
    public final static int NUM_OF_FINGERS = 5;
@@ -550,5 +550,18 @@ public class StudyMgr {
    // public void performMousePress(){
 
    // }
-
+  public void registerToSerialNotifier(SerialNotifier notifier){}
+  public void removeToSerialNotifier(SerialNotifier notifier){}
+   
+  public void updateAnalogVals(int [] values){}
+  public void updateCaliVals(int [] values){}
+  public void updateTargetAnalogValsNoAmp(int [] values){}
+  public void updateTargetAnalogValsWithAmp(int [] values){}
+  public void updateBridgePotPosVals(int [] values){}
+  public void updateAmpPotPosVals(int [] values){}
+  public void updateCalibratingValsNoAmp(int [] values){}
+  public void updateCalibratingValsWithAmp(int [] values){}
+  public void updateReceiveRecordSignal(){
+    performKeyPress(' ');
+  }
 }

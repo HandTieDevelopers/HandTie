@@ -10,4 +10,5 @@ public interface SerialListener{
    public void updateAmpPotPosVals(int [] values);
    public void updateCalibratingValsNoAmp(int [] values);
    public void updateCalibratingValsWithAmp(int [] values);
+   public void updateReceiveRecordSignal();
 }

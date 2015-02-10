@@ -29,6 +29,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int RECEIVE_AMP_POT_POS_VALS = 5;
    public final static int RECEIVE_CALIBRATING_NO_AMP_VALS = 6;
    public final static int RECEIVE_CALIBRATING_AMP_VALS = 7;
+   public final static int RECEIVE_RECORD_SIGNAL = 8;
 
    Serial arduinoPort;
 
@@ -90,6 +91,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
             break;
          case RECEIVE_CALIBRATING_AMP_VALS:
             notifyAllWithCalibratingValsWithAmp(values);
+            break;
+         case RECEIVE_RECORD_SIGNAL:
+            notifyAllWithReceiveRecordSignal();
             break;
       }
    }
@@ -169,6 +173,13 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public void notifyAllWithCalibratingValsWithAmp(int [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCalibratingValsWithAmp(values);
+      }
+   }
+
+   @Override
+   public void notifyAllWithReceiveRecordSignal(){
+      for (SerialListener listener : serialListeners) {
+         listener.updateReceiveRecordSignal();
       }
    }
 

@@ -5,6 +5,7 @@
 #include "analogmuxdemux.h"
 #include "MCP4251.h"
 #include "StrainGauge.h"
+#include "SerialProtocol.h"
 
 // --------- AnalogMux Macro Define --------- //
 #define SS0 2
@@ -32,20 +33,6 @@
 #define NUM_OF_GAUGES 16
 // #define BROKEN_OMIT
 
-// ------------- Serial Protocol ------------ //
-enum{
-   SEND_NORMAL_VALS,
-   SEND_CALI_VALS,
-
-   SEND_TARGET_NO_AMP_VALS,
-   SEND_TARGET_AMP_VALS,
-
-   SEND_BRIDGE_POT_POS_VALS,
-   SEND_AMP_POT_POS_VALS,
-
-   SEND_CALIBRATING_NO_AMP_VALS,
-   SEND_CALIBRATING_AMP_VALS
-};
 
 // ------------- SGManager class ------------ //
 
