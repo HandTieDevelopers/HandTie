@@ -41,6 +41,11 @@ public class SGManager implements ControlListener, SerialListener{
       }
       return analogVals;
    }
+
+   public float getOneAnalogValOfGauges(int index){
+      return gauges[index].getNewValue();
+   }
+   
    public float [] getElongationValsOfGauges(){
       float [] elongationVals = new float[gauges.length];
       for (int i = 0; i < gauges.length; ++i) {
