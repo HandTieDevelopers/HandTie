@@ -33,6 +33,12 @@ void ParserWithAction::parse(){
       case REQUEST_FOR_TARGET_VALS_WITH_AMP:
          sgManager->sendTargetValsWithAmp();
          break;
+      case MANUAL_CHANGE_TO_ONE_GAUGE_BRIDGE_POT_POS:
+         parseForManualChangeToOneGaugeBridgePotPos();
+         break;
+      case MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS:
+         parseForManualChangeToOneGaugeAmpPotPos();
+         break;
    }
 }
 
@@ -49,6 +55,21 @@ void ParserWithAction::parseForManualChangeToOneGaugeTargetValWithAmp(){
 
    sgManager->manualAssignTargetValWithAmpForOneGauge(gaugeIdx, targetValWithAmp);
 }
+
+void ParserWithAction::parseForManualChangeToOneGaugeBridgePotPos(){
+   uint8_t gaugeIdx = Serial.parseInt();
+   uint8_t bridgePotPos = Serial.parseInt();
+
+   sgManager->manualAssignBridgePotPosForOneGauge(gaugeIdx, bridgePotPos);
+}
+
+void ParserWithAction::parseForManualChangeToOneGaugeAmpPotPos(){
+   uint8_t gaugeIdx = Serial.parseInt();
+   uint8_t ampPotPos = Serial.parseInt();
+
+   sgManager->manualAssignAmpPotPosForOneGauge(gaugeIdx, ampPotPos);
+}
+
 
 void ParserWithAction::parseForManualChangeToAllGaugesTargetValsNoAmp(){
    uint16_t targetValNoAmp = Serial.parseInt();
