@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
-   final static int SERIAL_PORT_NUM = 0;
+   final static int SERIAL_PORT_NUM = 5;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -16,6 +16,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_WITH_AMP = 4;
    public final static int REQUEST_FOR_TARGET_VALS_NO_AMP = 5;
    public final static int REQUEST_FOR_TARGET_VALS_WITH_AMP = 6;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_BRIDGE_POT_POS = 7;
+   public final static int MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS = 8;
+
 
    //receive from arduino protocol
    public final static int RECEIVE_NORMAL_VALS = 0;
@@ -62,29 +65,31 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    private void parseDataFromArduino(Serial port) throws Exception{
       int [] parsedData = parseSpaceSeparatedData(port);
-      int [] analogVals = Arrays.copyOfRange(parsedData,1,parsedData.length);
+      int [] values = Arrays.copyOfRange(parsedData,1,parsedData.length);
       switch (parsedData[0]) {
          case RECEIVE_NORMAL_VALS:
-            notifyAllWithAnalogVals(analogVals);
+            notifyAllWithAnalogVals(values);
             break;
          case RECEIVE_CALI_VALS:
-            notifyAllWithCaliVals(analogVals);
+            notifyAllWithCaliVals(values);
             break;
          case RECEIVE_TARGET_NO_AMP_VALS:
-            notifyAllWithTargetAnalogValsNoAmp(analogVals);
+            notifyAllWithTargetAnalogValsNoAmp(values);
             break;
          case RECEIVE_TARGET_AMP_VALS:
-            notifyAllWithTargetAnalogValsWithAmp(analogVals);
+            notifyAllWithTargetAnalogValsWithAmp(values);
             break;
          case RECEIVE_BRIDGE_POT_POS_VALS:
+            notifyAllWithBridgePotPosVals(values);
             break;
          case RECEIVE_AMP_POT_POS_VALS:
+            notifyAllWithAmpPotPosVals(values);
             break;
          case RECEIVE_CALIBRATING_NO_AMP_VALS:
-            notifyAllWithCalibratingValsNoAmp(analogVals);
+            notifyAllWithCalibratingValsNoAmp(values);
             break;
          case RECEIVE_CALIBRATING_AMP_VALS:
-            notifyAllWithCalibratingValsWithAmp(analogVals);
+            notifyAllWithCalibratingValsWithAmp(values);
             break;
       }
    }
@@ -173,18 +178,34 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
       if (theEvent.getName().equals(UIInteractionMgr.SLIDER_BRIDGE_ALL)) {
          manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_NO_AMP, theEvent);
-      } else if (theEvent.getName().equals(UIInteractionMgr.SLIDER_AMP_ALL)){
+      }
+      else if (theEvent.getName().equals(UIInteractionMgr.SLIDER_AMP_ALL)){
          manualChangeAllGauges(MANUAL_CHANGE_TO_ALL_GAUGES_TARGET_VALS_WITH_AMP, theEvent);
-      } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE)){
+      }
+      else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE)){
          sendToArduino(Integer.toString(ALL_CALIBRATION));
-      } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_NO_AMP)){
+      }
+      else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_NO_AMP)){
          sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_NO_AMP));
-      } else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_AMP)){
+      }
+      else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_AMP)){
          sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_WITH_AMP));
-      } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE)){
-         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP, theEvent);
-      } else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_AMP)){
-         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP, theEvent);
+      }
+      else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE_TARGET)){
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP, theEvent,
+                              UIInteractionMgr.SLIDERS_BRIDGE_TARGET);
+      }
+      else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_AMP_TARGET)){
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP, theEvent,
+                              UIInteractionMgr.SLIDERS_AMP_TARGET);
+      }
+      else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE_POT)){
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_BRIDGE_POT_POS, theEvent,
+                              UIInteractionMgr.SLIDERS_BRIDGE_POT);
+      }
+      else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_AMP_POT)){
+         manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS, theEvent,
+                              UIInteractionMgr.SLIDERS_AMP_POT);
       }
    }
 
@@ -194,18 +215,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
       sendToArduino(sendMessage);
    }
 
-   private void manualChangeOneGauge(int protocol, ControlEvent theEvent){
-      String [] nameSplit = null;
-      switch (protocol) {
-         case MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP :
-            nameSplit = theEvent.getName()
-                                .split(UIInteractionMgr.SLIDERS_BRIDGE);
-            break;
-         case MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP :
-            nameSplit = theEvent.getName()
-                                .split(UIInteractionMgr.SLIDERS_AMP);
-            break;
-      }
+   private void manualChangeOneGauge(int protocol, ControlEvent theEvent,
+                                     String splitStr){
+      String [] nameSplit = theEvent.getName().split(splitStr);
 
       int index = Integer.parseInt(nameSplit[1]);
 

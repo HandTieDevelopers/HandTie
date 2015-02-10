@@ -32,6 +32,7 @@ void keyPressed(){
    uiInteractionMgr.performKeyPress(key);
    studyMgr.performKeyPress(key);
    serialManager.performKeyPress(key);
+   sgManager.performKeyPress(key);
 }
 
 void serialEvent(Serial port){

@@ -1,6 +1,7 @@
 public class StrainGauge{
    
    //Value data member
+   private int gaugeIdx;
    private int calibrationValue;
    private int newValue;
    private int calibratingValue;
@@ -20,6 +21,13 @@ public class StrainGauge{
    private float analogValTextXOrigin;
    private float analogValTextYOrigin;
    private float analogValTextSize;
+   private float gaugeIdxTextXOrigin;
+   private float gaugeIdxTextYOrigin;
+   private float gaugeIdxTextSize;
+
+   public StrainGauge(int gaugeIdx){
+      this.gaugeIdx = gaugeIdx;
+   }
 
    //Value methods
    public int getNewValue(){
@@ -91,7 +99,19 @@ public class StrainGauge{
       this.analogValTextSize = analogValTextSize;
    }
 
+   public void setTextDisplayPropertiesForGaugeIdx(float gaugeIdxTextXOrigin,
+                                                   float gaugeIdxTextYOrigin,
+                                                   float gaugeIdxTextSize){
+      this.gaugeIdxTextXOrigin = gaugeIdxTextXOrigin;
+      this.gaugeIdxTextYOrigin = gaugeIdxTextYOrigin;
+      this.gaugeIdxTextSize = gaugeIdxTextSize;
+   }
+
    public void drawText(){
+      fill(0, 102, 255);
+      textSize(gaugeIdxTextSize);
+      text("SG"+(int)gaugeIdx, gaugeIdxTextXOrigin, gaugeIdxTextYOrigin);
+
       fill(0, 102, 10);
       textSize(elongTextSize);
       text(String.format("%.2f",getElongationValue()), elongTextXOrigin,
@@ -103,8 +123,8 @@ public class StrainGauge{
    }
 
    public void drawCalibratingText(){
-      fill(100,50,50);
+      fill(0,0,30,255);
       textSize(10);
-      text(calibratingValue, barXOrigin, barYOrigin);
+      text(calibratingValue, barXOrigin, barYOrigin+20);
    }
 }

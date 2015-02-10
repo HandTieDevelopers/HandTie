@@ -1,5 +1,7 @@
 import controlP5.*;
 
+public boolean uiHidden = false;
+
 public class UIInteractionMgr implements ControlListener, SerialListener{
    HandTieArduinoSystemOnProcessing mainClass;
 
@@ -12,12 +14,16 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static float RADIO_SHOW_BAR_ITEM = 0.0f;
    public final static float RADIO_SHOW_BRIDGE_ITEM = 1.0f;
    public final static float RADIO_SHOW_AMP_ITEM = 2.0f;
+   public final static float RADIO_SHOW_BRIDGE_POT_POS_ITEM = 3.0f;
+   public final static float RADIO_SHOW_AMP_POT_POS_ITEM = 4.0f;
 
    // sliders
    public final static String SLIDER_BRIDGE_ALL = "brdg_all";
    public final static String SLIDER_AMP_ALL =  "amp_all";
-   public final static String SLIDERS_BRIDGE = "brdg";
-   public final static String SLIDERS_AMP = "amp";
+   public final static String SLIDERS_BRIDGE_TARGET = "brdg";
+   public final static String SLIDERS_AMP_TARGET = "amp";
+   public final static String SLIDERS_BRIDGE_POT = "b_Pot";
+   public final static String SLIDERS_AMP_POT = "a_Pot";
 
    // buttons
    public final static String CALIBRATE = "calibrate";
@@ -39,12 +45,14 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    private void createUIForSerial(){
       float [] barOrigin = sgManager.getOneBarBaseCenterOfGauges(0);
       radioButton = cp5.addRadioButton(RADIO_DISPLAY)
-                       .setPosition(width*0.21, height*0.88)
+                       .setPosition(width*0.13, height*0.88)
                        .setItemWidth(20)
                        .setItemHeight(20)
                        .addItem("bar", RADIO_SHOW_BAR_ITEM)
-                       .addItem("bridge slider", RADIO_SHOW_BRIDGE_ITEM)
-                       .addItem("amp slider", RADIO_SHOW_AMP_ITEM)
+                       .addItem("bridge target", RADIO_SHOW_BRIDGE_ITEM)
+                       .addItem("amp target", RADIO_SHOW_AMP_ITEM)
+                       .addItem("bridge pot pos", RADIO_SHOW_BRIDGE_POT_POS_ITEM)
+                       .addItem("amp pot pos", RADIO_SHOW_AMP_POT_POS_ITEM)
                        .setColorLabel(color(0))
                        .activate(0)
                        .setItemsPerRow(5)
@@ -52,9 +60,9 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
                     ;
 
       int i;
-      for (i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
+      for (i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
-         cp5.addSlider(SLIDERS_AMP+i)
+         cp5.addSlider(SLIDERS_AMP_TARGET+i)
             .setPosition(barOrigin[0]-4, barOrigin[1]-40)
             .setSize(10,80)
             .setRange(0,1000)
@@ -68,7 +76,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setVisible(false)
          ;
 
-         cp5.addSlider(SLIDERS_BRIDGE+i)
+         cp5.addSlider(SLIDERS_BRIDGE_TARGET+i)
             .setPosition(barOrigin[0]-4, barOrigin[1]-40)
             .setSize(10,80)
             .setRange(0,30)
@@ -76,6 +84,34 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setColorLabel(color(0))
             .setTriggerEvent(Slider.RELEASE)
             .setNumberOfTickMarks(31)
+            .snapToTickMarks(true)
+            .setDecimalPrecision(0)
+            .showTickMarks(false)
+            .setVisible(false)
+         ;
+
+         cp5.addSlider(SLIDERS_BRIDGE_POT+i)
+            .setPosition(barOrigin[0]-4, barOrigin[1]-40)
+            .setSize(10,80)
+            .setRange(0,255)
+            .setValue(255)
+            .setColorLabel(color(0))
+            .setTriggerEvent(Slider.RELEASE)
+            .setNumberOfTickMarks(256)
+            .snapToTickMarks(true)
+            .setDecimalPrecision(0)
+            .showTickMarks(false)
+            .setVisible(false)
+         ;
+
+         cp5.addSlider(SLIDERS_AMP_POT+i)
+            .setPosition(barOrigin[0]-4, barOrigin[1]-40)
+            .setSize(10,80)
+            .setRange(0,255)
+            .setValue(255)
+            .setColorLabel(color(0))
+            .setTriggerEvent(Slider.RELEASE)
+            .setNumberOfTickMarks(256)
             .snapToTickMarks(true)
             .setDecimalPrecision(0)
             .showTickMarks(false)
@@ -143,36 +179,44 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    }
 
    private void manualChangeToAllGaugesNoAmp(ControlEvent theEvent){
-      for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller(SLIDERS_BRIDGE+i).setValue(theEvent.getValue());
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE_TARGET+i).setValue(theEvent.getValue());
       }
    }
 
    private void manualChangeToAllGaugesWithAmp(ControlEvent theEvent){
-      for (int i = 0; i < mainClass.sgManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller(SLIDERS_AMP+i).setValue(theEvent.getValue());
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_AMP_TARGET+i).setValue(theEvent.getValue());
       }
    }
 
    private void changeDisplay(float eventValue){
-      hideAllUIItems();
+      hideAllUISliders();
       if (eventValue == RADIO_SHOW_BRIDGE_ITEM){
-         for (int i=0; i<SGManager.NUM_OF_GAUGES; ++i) {
-            cp5.controller(SLIDERS_BRIDGE+i).setVisible(true);
-         }
+         showUISliders(SLIDERS_BRIDGE_TARGET);
          cp5.controller(SLIDER_BRIDGE_ALL).setVisible(true);
       } else if (eventValue == RADIO_SHOW_AMP_ITEM){
-         for (int i=0; i<SGManager.NUM_OF_GAUGES; ++i) {
-            cp5.controller(SLIDERS_AMP+i).setVisible(true);
-         }
+         showUISliders(SLIDERS_AMP_TARGET);
          cp5.controller(SLIDER_AMP_ALL).setVisible(true);
+      } else if (eventValue == RADIO_SHOW_BRIDGE_POT_POS_ITEM){
+         showUISliders(SLIDERS_BRIDGE_POT);
+      } else if (eventValue == RADIO_SHOW_AMP_POT_POS_ITEM){
+         showUISliders(SLIDERS_AMP_POT);
       }
    }
 
-   private void hideAllUIItems(){
-      for (int i=0; i<sgManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller(SLIDERS_BRIDGE+i).setVisible(false);
-         cp5.controller(SLIDERS_AMP+i).setVisible(false);
+   private void showUISliders(String sliderName){
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(sliderName+i).setVisible(true);
+      }
+   }
+
+   private void hideAllUISliders(){
+      for (int i=0; i<SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE_TARGET+i).setVisible(false);
+         cp5.controller(SLIDERS_AMP_TARGET+i).setVisible(false);
+         cp5.controller(SLIDERS_BRIDGE_POT+i).setVisible(false);
+         cp5.controller(SLIDERS_AMP_POT+i).setVisible(false);
       }
       cp5.controller(SLIDER_BRIDGE_ALL).setVisible(false);
       cp5.controller(SLIDER_AMP_ALL).setVisible(false);
@@ -181,7 +225,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public void performKeyPress(char k){
       switch (k) {
          case TAB :
-            hideAllUIItems();
+            hideAllUISliders();
             cp5.controller(CALIBRATE)
                .setVisible(!cp5.controller(CALIBRATE).isVisible());
             cp5.controller(REQUEST_TARGET_VAL_AMP)
@@ -189,6 +233,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             cp5.controller(REQUEST_TARGET_VAL_NO_AMP)
                .setVisible(!cp5.controller(REQUEST_TARGET_VAL_NO_AMP).isVisible());
             radioButton.setVisible(!radioButton.isVisible());
+            radioButton.setValue(RADIO_SHOW_BAR_ITEM);
+            uiHidden = !uiHidden;
             break;
             
       }
@@ -215,25 +261,29 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    @Override
    public void updateTargetAnalogValsNoAmp(int [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller(SLIDERS_BRIDGE+i).setValue((float)values[i]);
+         cp5.controller(SLIDERS_BRIDGE_TARGET+i).setValue((float)values[i]);
       }
    }
 
    @Override
    public void updateTargetAnalogValsWithAmp(int [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
-         cp5.controller(SLIDERS_AMP+i).setValue((float)values[i]);
+         cp5.controller(SLIDERS_AMP_TARGET+i).setValue((float)values[i]);
       }
    }
 
    @Override
    public void updateBridgePotPosVals(int [] values){
-
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE_POT+i).setValue((float)values[i]);
+      }
    }
 
    @Override
    public void updateAmpPotPosVals(int [] values){
-
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_AMP_POT+i).setValue((float)values[i]);
+      }
    }
 
    @Override
