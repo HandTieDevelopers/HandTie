@@ -39,6 +39,10 @@ public class StudyMgr implements SerialListener{
 
    Table table;
    
+   PImage img;
+   public final static int imgWidth = 450;
+   public final static int imgHeight = -30;
+
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
       
@@ -53,6 +57,8 @@ public class StudyMgr implements SerialListener{
             text("Study One", width*0.39, height*0.45); 
            break;
         case 2 :      //
+            
+            showImage();
 
             textSize(20);
             fill(0, 102, 153);
@@ -109,8 +115,9 @@ public class StudyMgr implements SerialListener{
                      rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    popMatrix();
                 }
-             } 
-             
+             }
+
+
              if(autoSpace==true){
                nextStep();
              
@@ -120,6 +127,7 @@ public class StudyMgr implements SerialListener{
              textSize(40);
             fill(0, 0, 0);
             text("Done", width*0.39, height*0.45); 
+
           break;
      }
 //     for(int k=0; k < 3; k++ ){
@@ -142,6 +150,7 @@ public class StudyMgr implements SerialListener{
             NowMainStage=1;
            break;
         case '2' :
+        
             autoSpace=false;
             NewTable(); 
             NowMainStage=2;
@@ -279,6 +288,7 @@ public class StudyMgr implements SerialListener{
                     if(NowBend==true){
                         NowLevel=2;
                         NowBend=false;
+
                     }
                     else{
                         NowLevel=0;
@@ -373,7 +383,9 @@ public class StudyMgr implements SerialListener{
 
                 }
 
+
             }
+            loadWhichImage();
    }
    public void nextStep(){
             if(NowMainStage==2){
@@ -382,20 +394,24 @@ public class StudyMgr implements SerialListener{
                   NowLevel=0;      //mid
                   NowBend=false;     //s
                   TransFlg=true;
+                   
                 }
                 else if(NowStudyStage==1){
                   if(NowLevel==0){
                      if(TransFlg==true){
                       TransFlg=false;
+                       
                     }
                     else{
                       AddNewRow();         
                       NowLevel=1;  //high
+                       
                     }
                   }
                   else if(NowLevel==1){
                     AddNewRow();
                     NowLevel=2;  //low
+                     
                   }
                   else if(NowLevel==2){
                     AddNewRow();
@@ -403,21 +419,25 @@ public class StudyMgr implements SerialListener{
                     NowStudyStage=2;
                     NowBend=true;     //b
                     TransFlg = true;
+                     
                   }
                 }
                 else if(NowStudyStage==2){
                   if(NowLevel==0){
                     if(TransFlg==true){
                       TransFlg=false;
+                       
                     }
                     else{
                       AddNewRow();
                       NowLevel=1;  //high
+                       
                     }
                   }
                   else if(NowLevel==1){
                     AddNewRow();
                     NowLevel=2;  //low
+                     
                   }
                   else if(NowLevel==2){
                     AddNewRow();
@@ -425,16 +445,19 @@ public class StudyMgr implements SerialListener{
                     NowStudyStage=3;  
                     NowBend=false;     //s
                     TransFlg = true;
+                     
                   }
                 }
                 else if(NowStudyStage==3){
                   if(NowBend==false){
                     if(TransFlg==true){
                       TransFlg=false;
+                       
                     }
                     else{
                       AddNewRow();
                       NowBend=true;  //bend
+                       
                     }
                   }
                   else if(NowBend==true){
@@ -444,6 +467,7 @@ public class StudyMgr implements SerialListener{
                     NowStudyStage=4;
                     NowBend=false;     //s
                     TransFlg = true;
+                     
                   }
                   
                 }
@@ -451,10 +475,12 @@ public class StudyMgr implements SerialListener{
                   if(NowBend==false){
                     if(TransFlg==true){
                       TransFlg=false;
+                       
                     }
                     else{
                       AddNewRow();
                       NowBend=true;  //bend
+                       
                     }
                   }
                   else if(NowBend==true){
@@ -464,16 +490,19 @@ public class StudyMgr implements SerialListener{
                     NowStudyStage=5;
                     NowBend=false;     //s
                     TransFlg = true;
+                     
                   }
                 }
                 else if(NowStudyStage==5){
                   if(NowBend==false){
                     if(TransFlg==true){
                       TransFlg=false;
+                       
                     }
                     else{
                       AddNewRow();
                       NowBend=true;  //bend
+                       
                     }
                   }
                   else if(NowBend==true){
@@ -544,7 +573,290 @@ public class StudyMgr implements SerialListener{
                   }
                 }
             }
+            loadWhichImage();
+   }
+   public void loadWhichImage(){
+     if(TransFlg){
+        // switch (NowFinger) {
+        //          case 0:
+        //            img = loadImage("Photo/IMG_0086.JPG");
+        //             break;
+        //          case 1:
+        //            img = loadImage("Photo/IMG_0092.JPG");
+        //             break;
+        //          case 2:
+        //            img = loadImage("Photo/IMG_0098.JPG");
+        //             break;
+        //          case 3:
+        //            img = loadImage("Photo/IMG_0104.JPG");
+        //             break;
+        //          case 4:
+        //            img = loadImage("Photo/IMG_0110.JPG");
+        //             break;
+        // }
+        img = loadImage("Photo/blank.jpg");
+     }
+     else{
+       
+          if(NowStudyStage == 1){
+            if(NowLevel==0){
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0086.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0092.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0098.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0104.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0110.JPG");
+                    break;
+              }
+              
+            }
+            else if(NowLevel==1){
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0087.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0093.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0099.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0105.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0115.JPG");
+                    break;
+              }
+               
+            }
+            else{
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0088.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0094.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0100.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0106.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0111.JPG");
+                    break;
+              }
+               
+            }
+          }
+          else if(NowStudyStage == 2){
+            if(NowLevel==0){
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0089.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0095.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0101.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0107.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0112.JPG");
+                    break;
+              }
+              
+            }
+            else if(NowLevel==1){
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0090.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0096.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0102.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0108.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0113.JPG");
+                    break;
+              }
+               
+            }
+            else{
+              switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0091.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0097.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0103.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0109.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0114.JPG");
+                    break;
+              }
+               
+            }
+          }
+          else if(NowStudyStage == 3){
+              if(NowBend==true){
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0090.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0096.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0102.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0108.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0113.JPG");
+                    break;
+                }
+                
+              }
+              else{
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0087.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0093.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0099.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0105.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0115.JPG");
+                    break;
+                }
+                
+              }
+          }
+          else if(NowStudyStage == 4){
+              if(NowBend==true){
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0089.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0095.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0101.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0107.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0112.JPG");
+                    break;
+                }
+                
+              }
+              else{
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0086.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0092.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0098.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0104.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0110.JPG");
+                    break;
+                }
+                
+              }
+          }
+          else if(NowStudyStage == 5){
+              if(NowBend==true){
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0091.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0097.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0103.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0109.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0114.JPG");
+                    break;
+                }
+                
+              }
+              else{
+                switch (NowFinger) {
+                 case 0:
+                   img = loadImage("Photo/IMG_0088.JPG");
+                    break;
+                 case 1:
+                   img = loadImage("Photo/IMG_0094.JPG");
+                    break;
+                 case 2:
+                   img = loadImage("Photo/IMG_0100.JPG");
+                    break;
+                 case 3:
+                   img = loadImage("Photo/IMG_0106.JPG");
+                    break;
+                 case 4:
+                   img = loadImage("Photo/IMG_0111.JPG");
+                    break;
+                }
+                
+              }
+          }
+       
 
+     }
+    
+   }
+   public void showImage(){
+      if(NowStudyStage>0){
+        image(img, imgWidth, imgHeight, width/2 , height );
+      }
    }
 
    // public void performMousePress(){
