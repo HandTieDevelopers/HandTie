@@ -32,7 +32,7 @@
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
 // #define BROKEN_OMIT
-
+#define AC_CALIBRATION
 
 // ------------- SGManager class ------------ //
 
@@ -65,9 +65,15 @@ private:
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
 
+   #ifdef AC_CALIBRATION
    void calibration();
    boolean calibrateBridgePot(int);
    boolean calibrateAmpPot(int);
+   #else
+   void calibration(int);
+   void calibrateBridgePot(int);
+   void calibrateAmpPot(int);
+   #endif
 
 };
 
