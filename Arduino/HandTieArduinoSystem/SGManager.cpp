@@ -16,6 +16,10 @@ SGManager::SGManager(){
 
    mcp4251->wiper0_pos(WIPER0_INIT_POS);
    mcp4251->wiper1_pos(WIPER1_INIT_POS);
+
+   config = new FilterConfig();
+   config->filterType = MEDIAN_FILTER;
+
 }
 
 SGManager::~SGManager(){
@@ -42,7 +46,24 @@ void SGManager::serialPrint(int protocol){
 
       mcp4251->wiper1_pos(gauges[i]->getBridgePotPos());
 
-      Serial.print(analogMux->AnalogRead(i));
+      //we only do software filter in final stage(after calibrating)
+      if(protocol == SEND_NORMAL_VALS) {
+         uint16_t unfilteredVal = analogMux->AnalogRead(i);
+         gauges[i]->updateInputVals(unfilteredVal);
+         config->inputVals = gauges[i]->getInputVals();
+         config->numInputVals = gauges[i]->getNumValsToCached();
+         uint16_t filteredVal = Filter::compute(config);
+         if(filteredVal != 0) {
+            Serial.print(filteredVal);
+         }
+         else { //number of data points is not enough 
+            Serial.print(unfilteredVal);
+         }
+      }
+      else {
+         Serial.print(analogMux->AnalogRead(i));
+      }
+
       Serial.print(" ");
    }
    Serial.println();

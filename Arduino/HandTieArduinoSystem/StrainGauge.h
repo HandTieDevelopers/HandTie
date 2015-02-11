@@ -33,6 +33,11 @@ public:
    void setBroken();
    boolean isBroken();
 
+   uint16_t* getInputVals();
+   uint32_t getNumValsToCached();
+
+   void updateInputVals(uint16_t val);
+
 private:
    uint8_t ampPotPos;
    uint8_t bridgePotPos;
@@ -44,6 +49,10 @@ private:
    boolean ampCaliComplete;
 
    boolean broken;
+
+   const static uint32_t numValsToCached = 5;
+   uint16_t inputVals[numValsToCached];
+   uint32_t currentIndexToUpdate;
 };
 
 #endif   //StrainGauge_h

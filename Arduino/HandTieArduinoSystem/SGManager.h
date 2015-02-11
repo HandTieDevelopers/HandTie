@@ -6,6 +6,7 @@
 #include "MCP4251.h"
 #include "StrainGauge.h"
 #include "SerialProtocol.h"
+#include "Filter.h"
 
 // --------- AnalogMux Macro Define --------- //
 #define SS0 2
@@ -64,6 +65,7 @@ private:
    AnalogMux * analogMux;
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
+   FilterConfig* config;
 
    void calibration();
    boolean calibrateBridgePot(int);
