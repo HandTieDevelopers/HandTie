@@ -14,7 +14,6 @@ void setup() {
    studyMgr = new StudyMgr(this);
 
    listenerRegistrations();
-   serialManager.performKeyPress('c');
 }
 
 void draw() {
