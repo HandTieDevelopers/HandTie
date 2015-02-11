@@ -576,6 +576,7 @@ public class StudyMgr implements SerialListener{
             loadWhichImage();
    }
    public void loadWhichImage(){
+    
      if(TransFlg){
         // switch (NowFinger) {
         //          case 0:
