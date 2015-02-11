@@ -127,8 +127,8 @@ public class StudyMgr implements SerialListener{
 //     }
    }
    public color getHeatmapRGB(float value){
-     float minimum=0.5;
-     float maximum=1.5;
+     float minimum=0.6;
+     float maximum=1.4;
      float ratio = 2 * (value-minimum) / (maximum - minimum);
      
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)),255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );

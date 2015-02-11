@@ -72,13 +72,25 @@ public class StrainGauge{
       return barOrigin;
    }
 
+   public color getHeatmapRGB(float value){
+     float minimum=0.6;
+     float maximum=1.4;
+     float ratio = 2 * (value-minimum) / (maximum - minimum);
+     
+     color heatmapRGB = color((int)max(0, 255*(ratio - 1)),
+                              255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)),
+                              (int)max(0, 255*(1 - ratio)) );
+     
+     return heatmapRGB;
+   }
+
    public void drawBar(){
       float elongRatio = getElongationValue();
 
-      color stretch = color(4, 79, 111);
-      color compress = color(255, 145, 158);
+      // color stretch = color(4, 79, 111);
+      // color compress = color(255, 145, 158);
 
-      fill((elongRatio > 1) ? stretch : compress);
+      fill(getHeatmapRGB(getElongationValue()));
       rect(barXOrigin, barYOrigin, barWidth, (1-elongRatio)*barElongRatio);
    }
 
