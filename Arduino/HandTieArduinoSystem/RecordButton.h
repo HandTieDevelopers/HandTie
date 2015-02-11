@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "SerialProtocol.h"
 
-#define RECORD_BUTTON_PIN 6
+#define RECORD_BUTTON_PIN 7
 
 class RecordButton{
 public:

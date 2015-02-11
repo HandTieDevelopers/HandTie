@@ -26,6 +26,7 @@ void draw() {
 void listenerRegistrations(){
    sgManager.registerToSerialNotifier(serialManager);
    uiInteractionMgr.registerToSerialNotifier(serialManager);
+   studyMgr.registerToSerialNotifier(serialManager);
 }
 
 void keyPressed(){

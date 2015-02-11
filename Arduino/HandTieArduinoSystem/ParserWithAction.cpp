@@ -28,10 +28,10 @@ void ParserWithAction::parse(){
          parseForManualChangeToAllGaugesTargetValsWithAmp();
          break;
       case REQUEST_FOR_TARGET_VALS_NO_AMP:
-         sgManager->sendTargetValsNoAmp();
+         sgManager->sendStoredValues(SEND_TARGET_NO_AMP_VALS);
          break;
       case REQUEST_FOR_TARGET_VALS_WITH_AMP:
-         sgManager->sendTargetValsWithAmp();
+         sgManager->sendStoredValues(SEND_TARGET_AMP_VALS);
          break;
       case MANUAL_CHANGE_TO_ONE_GAUGE_BRIDGE_POT_POS:
          parseForManualChangeToOneGaugeBridgePotPos();

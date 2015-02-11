@@ -3,8 +3,6 @@
 #include "ParserWithAction.h"
 #include "RecordButton.h"
 
-#define RECORD_BUTTON_PIN 6
-
 SGManager sgManager;
 ParserWithAction parser(&sgManager);
 RecordButton recordButton;

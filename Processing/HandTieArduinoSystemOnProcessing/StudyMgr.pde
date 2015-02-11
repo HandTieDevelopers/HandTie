@@ -550,17 +550,33 @@ public class StudyMgr implements SerialListener{
    // public void performMousePress(){
 
    // }
-  public void registerToSerialNotifier(SerialNotifier notifier){}
-  public void removeToSerialNotifier(SerialNotifier notifier){}
-   
+  @Override
+  public void registerToSerialNotifier(SerialNotifier notifier){
+    notifier.registerForSerialListener(this);
+  }
+  @Override
+  public void removeToSerialNotifier(SerialNotifier notifier){
+    notifier.removeSerialListener(this);
+  }
+  
+  @Override
   public void updateAnalogVals(int [] values){}
+  @Override
   public void updateCaliVals(int [] values){}
+  @Override
   public void updateTargetAnalogValsNoAmp(int [] values){}
+  @Override
   public void updateTargetAnalogValsWithAmp(int [] values){}
+  @Override
   public void updateBridgePotPosVals(int [] values){}
+  @Override
   public void updateAmpPotPosVals(int [] values){}
+  @Override
   public void updateCalibratingValsNoAmp(int [] values){}
+  @Override
   public void updateCalibratingValsWithAmp(int [] values){}
+
+  @Override
   public void updateReceiveRecordSignal(){
     performKeyPress(' ');
   }
