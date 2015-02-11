@@ -89,10 +89,6 @@ uint16_t* StrainGauge::getInputVals() {
    return inputVals;
 }
 
-uint32_t StrainGauge::getNumValsToCached() {
-   return numValsToCached;
-}
-
 void StrainGauge::updateInputVals(uint16_t val) {
    inputVals[currentIndexToUpdate] = val;
    currentIndexToUpdate = (currentIndexToUpdate + 1) % numValsToCached;

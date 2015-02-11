@@ -29,6 +29,8 @@ SGManager::~SGManager(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       delete(gauges[i]);
    }
+
+   delete(config);
 }
 
 void SGManager::serialPrint(){
@@ -51,7 +53,7 @@ void SGManager::serialPrint(int protocol){
          uint16_t unfilteredVal = analogMux->AnalogRead(i);
          gauges[i]->updateInputVals(unfilteredVal);
          config->inputVals = gauges[i]->getInputVals();
-         config->numInputVals = gauges[i]->getNumValsToCached();
+         config->numInputVals = StrainGauge::numValsToCached;
          uint16_t filteredVal = Filter::compute(config);
          if(filteredVal != 0) {
             Serial.print(filteredVal);

@@ -34,7 +34,7 @@ public:
    boolean isBroken();
 
    uint16_t* getInputVals();
-   uint32_t getNumValsToCached();
+   const static uint32_t numValsToCached = 5;
 
    void updateInputVals(uint16_t val);
 
@@ -50,7 +50,6 @@ private:
 
    boolean broken;
 
-   const static uint32_t numValsToCached = 5;
    uint16_t inputVals[numValsToCached];
    uint32_t currentIndexToUpdate;
 };
