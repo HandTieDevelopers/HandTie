@@ -71,22 +71,6 @@ void SGManager::sendStoredValues(int protocol){
    Serial.println();
 }
 
-void SGManager::sendTargetValsNoAmp(){
-   sendStoredValues(SEND_TARGET_NO_AMP_VALS);
-}
-
-void SGManager::sendTargetValsWithAmp(){
-   sendStoredValues(SEND_TARGET_AMP_VALS);
-}
-
-// void SGManager::sendBridgePotPosVals(){
-//    sendStoredValues(SEND_BRIDGE_POT_POS_VALS);
-// }
-
-// void SGManager::sendAmpPotPosVals(){
-//    sendStoredValues(SEND_AMP_POT_POS_VALS);
-// }
-
 void SGManager::allCalibration(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       gauges[i]->setBridgeCaliNeeded();
@@ -116,6 +100,8 @@ void SGManager::calibration(){
       serialPrint(SEND_CALIBRATING_AMP_VALS);
    }
    serialPrint(SEND_CALI_VALS);
+   sendStoredValues(SEND_TARGET_NO_AMP_VALS);
+   sendStoredValues(SEND_TARGET_AMP_VALS);
    sendStoredValues(SEND_BRIDGE_POT_POS_VALS);
    sendStoredValues(SEND_AMP_POT_POS_VALS);
 }

@@ -47,8 +47,7 @@ public:
 
    void sendTargetValsNoAmp();
    void sendTargetValsWithAmp();
-   // void sendBridgePotPosVals();
-   // void sendAmpPotPosVals();
+   void sendStoredValues(int);
 
    void allCalibration();
 
@@ -69,8 +68,6 @@ private:
    void calibration();
    boolean calibrateBridgePot(int);
    boolean calibrateAmpPot(int);
-
-   void sendStoredValues(int);
 
 };
 
