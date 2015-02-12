@@ -10,13 +10,13 @@ enum{
 };
 
 typedef struct FilterConfig{
-	int filterType;
-	uint16_t* inputVals;
-	uint32_t numInputVals;
-	float* inputCoeffs;
-	//fast initialization
-	FilterConfig(): filterType(0),inputVals(NULL),numInputVals(0),inputCoeffs(NULL)
-	{}
+   int filterType;
+   uint16_t* inputVals;
+   uint32_t numInputVals;
+   float* inputCoeffs;
+   //fast initialization
+   FilterConfig(): filterType(0),inputVals(NULL),numInputVals(0),inputCoeffs(NULL)
+   {}
 
 } FilterConfig;
 
@@ -24,7 +24,7 @@ typedef struct FilterConfig{
 class Filter {
 
 public:
-	static uint16_t compute(FilterConfig *config);
+   static uint16_t compute(FilterConfig *config);
 
 };
 
