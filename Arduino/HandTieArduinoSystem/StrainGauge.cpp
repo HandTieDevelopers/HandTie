@@ -11,6 +11,10 @@ StrainGauge::StrainGauge(uint8_t ampPotPos, uint8_t bridgePotPos, uint16_t targe
    this->targetValNoAmp = targetValNoAmp;
    this->targetValWithAmp = targetValWithAmp;
    broken = false;
+   currentIndexToUpdate = 0;
+   for(int i = 0;i < numValsToCached;i++) {
+      inputVals[i] = 0;
+   }
 }
 
 StrainGauge::~StrainGauge(){
@@ -79,4 +83,13 @@ void StrainGauge::setBroken(){
 
 boolean StrainGauge::isBroken(){
    return broken;
+}
+
+uint16_t* StrainGauge::getInputVals() {
+   return inputVals;
+}
+
+void StrainGauge::updateInputVals(uint16_t val) {
+   inputVals[currentIndexToUpdate] = val;
+   currentIndexToUpdate = (currentIndexToUpdate + 1) % numValsToCached;
 }

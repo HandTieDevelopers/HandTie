@@ -6,6 +6,7 @@
 #include "MCP4251.h"
 #include "StrainGauge.h"
 #include "SerialProtocol.h"
+#include "Filter.h"
 
 // --------- AnalogMux Macro Define --------- //
 #define SS0 2
@@ -32,7 +33,7 @@
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
 // #define BROKEN_OMIT
-
+#define AC_CALIBRATION
 
 // ------------- SGManager class ------------ //
 
@@ -64,10 +65,17 @@ private:
    AnalogMux * analogMux;
    MCP4251 * mcp4251;
    StrainGauge * gauges[NUM_OF_GAUGES];
+   FilterConfig* config;
 
+   #ifdef AC_CALIBRATION
    void calibration();
    boolean calibrateBridgePot(int);
    boolean calibrateAmpPot(int);
+   #else
+   void calibration(int);
+   void calibrateBridgePot(int);
+   void calibrateAmpPot(int);
+   #endif
 
 };
 
