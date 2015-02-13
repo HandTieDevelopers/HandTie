@@ -40,12 +40,18 @@ public class StudyMgr implements SerialListener{
    Table table;
    
    PImage img;
+   PImage[] imgArray = new PImage[30];
+   boolean loadedImgFlg = false;
+
    public final static int imgWidth = 450;
    public final static int imgHeight = -30;
 
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
-      
+  
+      for(int i=86; i<86+30;i++){
+          imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+      }
       // RowCount = 0;
       
    }
@@ -603,19 +609,19 @@ public class StudyMgr implements SerialListener{
             if(NowLevel==0){
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0086.JPG");
+                   img = imgArray[0];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0092.JPG");
+                   img = imgArray[6];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0098.JPG");
+                   img = imgArray[12];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0104.JPG");
+                   img = imgArray[18];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0110.JPG");
+                   img = imgArray[24];
                     break;
               }
               
@@ -623,19 +629,19 @@ public class StudyMgr implements SerialListener{
             else if(NowLevel==1){
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0087.JPG");
+                   img = imgArray[1];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0093.JPG");
+                   img = imgArray[7];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0099.JPG");
+                   img = imgArray[13];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0105.JPG");
+                   img = imgArray[19];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0115.JPG");
+                   img = imgArray[29];
                     break;
               }
                
@@ -643,19 +649,19 @@ public class StudyMgr implements SerialListener{
             else{
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0088.JPG");
+                   img = imgArray[2];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0094.JPG");
+                   img = imgArray[8];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0100.JPG");
+                   img = imgArray[14];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0106.JPG");
+                   img = imgArray[20];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0111.JPG");
+                   img = imgArray[25];
                     break;
               }
                
@@ -665,19 +671,19 @@ public class StudyMgr implements SerialListener{
             if(NowLevel==0){
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0089.JPG");
+                   img = imgArray[3];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0095.JPG");
+                   img = imgArray[9];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0101.JPG");
+                   img = imgArray[15];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0107.JPG");
+                   img = imgArray[21];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0112.JPG");
+                   img = imgArray[26];
                     break;
               }
               
@@ -685,19 +691,19 @@ public class StudyMgr implements SerialListener{
             else if(NowLevel==1){
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0090.JPG");
+                   img = imgArray[4];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0096.JPG");
+                   img = imgArray[10];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0102.JPG");
+                   img = imgArray[16];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0108.JPG");
+                   img = imgArray[22];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0113.JPG");
+                   img = imgArray[27];
                     break;
               }
                
@@ -705,19 +711,19 @@ public class StudyMgr implements SerialListener{
             else{
               switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0091.JPG");
+                   img = imgArray[5];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0097.JPG");
+                   img = imgArray[11];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0103.JPG");
+                   img = imgArray[17];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0109.JPG");
+                   img = imgArray[23];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0114.JPG");
+                   img = imgArray[28];
                     break;
               }
                
@@ -727,19 +733,19 @@ public class StudyMgr implements SerialListener{
               if(NowBend==true){
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0090.JPG");
+                   img = imgArray[4];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0096.JPG");
+                   img = imgArray[10];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0102.JPG");
+                   img = imgArray[16];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0108.JPG");
+                   img = imgArray[22];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0113.JPG");
+                   img = imgArray[27];
                     break;
                 }
                 
@@ -747,19 +753,19 @@ public class StudyMgr implements SerialListener{
               else{
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0087.JPG");
+                   img = imgArray[1];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0093.JPG");
+                   img = imgArray[7];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0099.JPG");
+                   img = imgArray[13];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0105.JPG");
+                   img = imgArray[19];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0115.JPG");
+                   img = imgArray[29];
                     break;
                 }
                 
@@ -769,19 +775,19 @@ public class StudyMgr implements SerialListener{
               if(NowBend==true){
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0089.JPG");
+                   img = imgArray[3];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0095.JPG");
+                   img = imgArray[9];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0101.JPG");
+                   img = imgArray[15];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0107.JPG");
+                   img = imgArray[21];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0112.JPG");
+                   img = imgArray[26];
                     break;
                 }
                 
@@ -789,19 +795,19 @@ public class StudyMgr implements SerialListener{
               else{
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0086.JPG");
+                   img = imgArray[0];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0092.JPG");
+                   img = imgArray[6];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0098.JPG");
+                   img = imgArray[12];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0104.JPG");
+                   img = imgArray[18];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0110.JPG");
+                   img = imgArray[24];
                     break;
                 }
                 
@@ -811,19 +817,19 @@ public class StudyMgr implements SerialListener{
               if(NowBend==true){
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0091.JPG");
+                   img = imgArray[5];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0097.JPG");
+                   img = imgArray[11];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0103.JPG");
+                   img = imgArray[17];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0109.JPG");
+                   img = imgArray[23];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0114.JPG");
+                   img = imgArray[28];
                     break;
                 }
                 
@@ -831,19 +837,19 @@ public class StudyMgr implements SerialListener{
               else{
                 switch (NowFinger) {
                  case 0:
-                   img = loadImage("Photo/IMG_0088.JPG");
+                   img = imgArray[2];
                     break;
                  case 1:
-                   img = loadImage("Photo/IMG_0094.JPG");
+                   img = imgArray[8];
                     break;
                  case 2:
-                   img = loadImage("Photo/IMG_0100.JPG");
+                   img = imgArray[14];
                     break;
                  case 3:
-                   img = loadImage("Photo/IMG_0106.JPG");
+                   img = imgArray[20];
                     break;
                  case 4:
-                   img = loadImage("Photo/IMG_0111.JPG");
+                   img = imgArray[25];
                     break;
                 }
                 
@@ -885,7 +891,13 @@ public class StudyMgr implements SerialListener{
   @Override
   public void updateAmpPotPosVals(int [] values){}
   @Override
-  public void updateCalibratingValsNoAmp(int [] values){}
+  public void updateCalibratingValsNoAmp(int [] values){
+    if(!loadedImgFlg){
+      for(int i=86; i<86+30;i++){
+            imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+        }
+    }
+  }
   @Override
   public void updateCalibratingValsWithAmp(int [] values){}
 
