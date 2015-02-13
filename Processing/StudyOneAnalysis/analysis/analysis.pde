@@ -263,8 +263,8 @@ public color getHeatmapRGB(float value){
      return heatmapRGB;
 }
 public color getSubRGB(float value){
-     float minimum=-1.0;
-     float maximum=1.0;
+     float minimum=-0.4;
+     float maximum=0.4;
      float ratio = 2 * (value-minimum) / (maximum - minimum);
      
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)), 255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );
