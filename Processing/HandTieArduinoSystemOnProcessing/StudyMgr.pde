@@ -54,13 +54,7 @@ public class StudyMgr implements SerialListener{
 //          imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
 //      }
       // RowCount = 0;
-      if(!loadedImgFlg){
-         loadedImgFlg=true;
-          for(int i=86; i<86+30;i++){
-                imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
-            }
-          imgArray[30]=loadImage("Photo/blank.jpg");
-      }
+     
       
    }
    public void start(){
@@ -900,7 +894,13 @@ public class StudyMgr implements SerialListener{
   public void updateAmpPotPosVals(int [] values){}
   @Override
   public void updateCalibratingValsNoAmp(int [] values){
-     
+      if(!loadedImgFlg){
+         loadedImgFlg=true;
+          for(int i=86; i<86+30;i++){
+                imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+            }
+          imgArray[30]=loadImage("Photo/blank.jpg");
+      }
   }
   @Override
   public void updateCalibratingValsWithAmp(int [] values){}
