@@ -4,7 +4,7 @@ public class StudyMgr implements SerialListener{
    public final static int NUM_OF_FINGERS = 5;
    public final static int NUM_OF_HAND_ROWS = 4;
    public final static int NUM_OF_HAND_COLS = 5;
-   public final static int NUM_OF_Degree = 2;
+   public final static int NUM_OF_Degree = 3;
    
    public final static int ShowGauge_x = 630;
    public final static int ShowGauge_y = 400;
@@ -35,7 +35,6 @@ public class StudyMgr implements SerialListener{
    public boolean loadTableFlg = false; 
    
    public boolean autoSpace = false;
-   public boolean autoL = false;
    // public int RowCount;
 
    Table table;
@@ -66,9 +65,8 @@ public class StudyMgr implements SerialListener{
             text("Study One", width*0.39, height*0.45); 
            break;
         case 2 :      //
-            
             textSize(20);
-            fill(0, 102, 153);      
+            fill(0, 102, 153);
             
             if(loadedImgFlg){
               showImage();
@@ -78,11 +76,10 @@ public class StudyMgr implements SerialListener{
             }
             
             
-            text("Degree: "+ ((NowDegree==0)?"0":"90")+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger+"\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), 10, 30);
+            text("Degree: "+ ((NowDegree==0)?"0":((NowDegree==1)?"45":"90"))+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger+"\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), 10, 30);
             text("Col2: "+NowCol2+" Row2: "+NowRow2, width-170, 60);
 //            rect(width*0.1,height*(0.1),200,200);
-            //text("Stage:"+NowStudyStage, 10, height*0.45); 
-
+            text("Stage:"+NowStudyStage, 10, height*0.45); 
             if(NowStudyStage==0){
                textSize(40);
                text("Press <SPACE> to start", width*0.25, height*0.1); 
@@ -108,10 +105,12 @@ public class StudyMgr implements SerialListener{
                      translate(ShowGauge_x, ShowGauge_y);
                    }
                    else if(NowDegree==1){
-                     translate(ShowGauge_x,ShowGauge_y+160);
-                     
+                     translate(ShowGauge_x-30,ShowGauge_y+80);
                    }
-                   rotate(radians(-90*NowDegree));
+                   else if(NowDegree==2){
+                     translate(ShowGauge_x,ShowGauge_y+160);
+                   }
+                   rotate(radians(-45*NowDegree));
                      rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    popMatrix();
 
@@ -121,9 +120,12 @@ public class StudyMgr implements SerialListener{
                      translate(ShowGauge_x+ShowGauge_x2_dist, ShowGauge_y+ShowGauge_y2_dist);
                    }
                    else if(NowDegree==1){
+                     translate(ShowGauge_x+ShowGauge_x2_dist-30,ShowGauge_y+ShowGauge_y2_dist+80);
+                   }
+                   else if(NowDegree==2){
                      translate(ShowGauge_x+ShowGauge_x2_dist,ShowGauge_y+ShowGauge_y2_dist+160);
                    }
-                   rotate(radians(-90*NowDegree));
+                   rotate(radians(-45*NowDegree));
                      rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    popMatrix();
                 }
@@ -131,26 +133,9 @@ public class StudyMgr implements SerialListener{
 
 
              if(autoSpace==true){
-               nextStep(); 
+               nextStep();
+             
              }
-             if(autoL==true){
-                lastStep(); 
-             }
-             showSGPos();
-
-             fill(color(0,255));
-             textSize(16);
-             text("Stage: 1   2   3   4   5", 10, height*0.32); 
-             for(int st=1; st<=5; st++){
-                if(NowStudyStage==st){
-                    fill(color(0,255));
-                }
-                else{
-                    fill(color(255));
-                }
-                ellipse(66 + (st-1)*26, height*0.35, 10, 10);
-              }
-
            break;
          case 3:
              textSize(40);
@@ -162,7 +147,6 @@ public class StudyMgr implements SerialListener{
 //     for(int k=0; k < 3; k++ ){
        
 //     }
-
    }
    public color getHeatmapRGB(float value){
      float minimum=0.6;
@@ -237,15 +221,7 @@ public class StudyMgr implements SerialListener{
           }
           break;
         case 'o' :
-            if(!autoL){
-              autoSpace=!autoSpace;
-            }
-          break;
-        case 'p' :
-            if(!autoSpace){
-              autoL=!autoL;
-            }
-           
+            autoSpace=!autoSpace;
           break;
       }
    }
@@ -390,36 +366,30 @@ public class StudyMgr implements SerialListener{
                         NowLevel=0;
                         NowBend=false;
                         TransFlg=true;
-                        NowStudyStage=5;
+//                        NowStudyStage=0;
 
-                        if(NowFinger>0){
+                        if(NowFinger>1){
                           NowFinger--;
                         }
                         else{
                           NowFinger=NUM_OF_FINGERS-1;
                           
-                          if(NowRow1>0){
+                          if(NowRow1>1){
                             NowRow1--;
-                            NowRow2++;
                           }
                           else{
                             NowRow1=NUM_OF_HAND_ROWS-1;
-                            NowRow2=0;
-
-                            if(NowCol1>0){
+                            if(NowCol1>1){
                               NowCol1--;
-                              NowCol2++;
                             }
                             else{
                               NowCol1=NUM_OF_HAND_COLS-1;
-                              NowCol2=0;
-
-                              if(NowDegree>0){
+                              if(NowDegree>1){
                                 NowDegree--;
                               }
                               else{
-                                NowMainStage=1;
-                                autoL=false;
+                                NowMainStage=NUM_OF_Degree-1;
+                                
                               }
                             }
                           }
@@ -563,7 +533,7 @@ public class StudyMgr implements SerialListener{
                       NowFinger=0;
                       
                       if(NowRow1<NUM_OF_HAND_ROWS-1){
-                        if(NowCol1 >= floor((float)(NUM_OF_HAND_COLS-1)/2) && NowRow1 >= NUM_OF_HAND_ROWS-3 ){
+                        if(NowCol1 >= floor((float)(NUM_OF_HAND_COLS-1)/2) && NowRow1 >= floor((float)(NUM_OF_HAND_ROWS-1)/2) ){
                             if(NowDegree < NUM_OF_Degree-1){
                               NowDegree++;
 
@@ -580,10 +550,6 @@ public class StudyMgr implements SerialListener{
                               saveTable(table, "StudyData/User"+StudyID+".csv");
                             }
                         }
-                        else if(NowCol1 >= floor((float)(NUM_OF_HAND_COLS-1)/2)){
-                          NowRow1++;
-                          NowRow2++;
-                        }
                         else{
                           NowRow1++;
                           NowRow2--;
@@ -591,12 +557,7 @@ public class StudyMgr implements SerialListener{
                       }
                       else{
                         NowRow1=0;
-                        if(NowCol1+1 >= floor((float)(NUM_OF_HAND_COLS-1)/2)){
-                          NowRow2=NowRow1+2;
-                        }
-                        else{
-                          NowRow2=NUM_OF_HAND_ROWS-1-NowRow1;
-                        }
+                        NowRow2=NUM_OF_HAND_ROWS-1-NowRow1;
                         if(NowCol1< ceil((float)(NUM_OF_HAND_COLS)/2)){
                           NowCol1++;
                           NowCol2--;
@@ -908,31 +869,6 @@ public class StudyMgr implements SerialListener{
 
      }
     
-   }
-   public void showSGPos(){
-     final int SG_dist = 30;
-     final int SG_X = 350;
-     final int SG_Y = 130;
-     
-     for(int i=0; i<NUM_OF_HAND_COLS ; i++){
-       for(int j=0; j<NUM_OF_HAND_ROWS ; j++){
-          
-           if(NowRow1==j && NowCol1==i){
-              fill(255,0,0);
-              ellipse(SG_X+SG_dist*i, SG_Y+SG_dist*j, 20, 20);
-           }
-           else if(NowRow2==j && NowCol2==i){
-              fill(0,0,255);
-              ellipse(SG_X+SG_dist*i, SG_Y+SG_dist*j, 20, 20);
-           }
-           else{
-              fill(0,0,0);
-              ellipse(SG_X+SG_dist*i, SG_Y+SG_dist*j, 5, 5);
-           }
-          
-       }
-     }
-   
    }
    public void showImage(){
       if(NowStudyStage>0){

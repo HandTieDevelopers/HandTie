@@ -39,10 +39,11 @@ void setup() {
   cp5 = new ControlP5(this);
   
   r1 = cp5.addRadioButton("Finger")
-     .setPosition(330,30)
+     .setPosition(350,30)
      .setSize(50,150)
-     .setColorForeground(color(120))
-     .setColorActive(color(255))
+     .setColorForeground(color(251,220,201))
+     .setColorBackground(color(247,187,141))
+     .setColorActive(color(186,115,34))
      .setColorLabel(color(0))
      .setItemsPerRow(5)
      .setSpacingColumn(40)
@@ -54,9 +55,9 @@ void setup() {
      ;
      
      for(Toggle t:r1.getItems()) {
-       t.captionLabel().setColorBackground(color(255,80));
-       t.captionLabel().style().moveMargin(-90,0,0,-60);
-       t.captionLabel().style().movePadding(0,0,6,10);
+       t.captionLabel().setColorBackground(color(252,224,198));
+       t.captionLabel().style().moveMargin(-80,0,0,-60);
+       t.captionLabel().style().movePadding(6,-10,25,4);
        t.captionLabel().setSize(16);
        t.captionLabel().style().backgroundWidth = 45;
        t.captionLabel().style().backgroundHeight = 13;
@@ -71,11 +72,18 @@ void setup() {
      .setColorActive(color(255))
      .setColorLabel(color(0))
      .setItemsPerRow(5)
-     .setSpacingColumn(30)
+     .setSpacingColumn(40)
      .addItem("Mid",1)
      .addItem("High",2)
      .addItem("Low",3)
      ;
+     
+     for(Toggle t:r2.getItems()) {
+       t.captionLabel().setSize(16);
+       t.captionLabel().style().backgroundWidth = 45;
+       t.captionLabel().style().backgroundHeight = 13;
+     }
+     
    r3 = cp5.addRadioButton("BendStraight")
      .setPosition(ButtonPosX,ButtonPosY+60)
      .setSize(60,40)
@@ -83,10 +91,16 @@ void setup() {
      .setColorActive(color(255))
      .setColorLabel(color(0))
      .setItemsPerRow(5)
-     .setSpacingColumn(30)
+     .setSpacingColumn(40)
      .addItem("Bend",1)
      .addItem("Straight",2)
      ;  
+     
+     for(Toggle t:r3.getItems()) {
+       t.captionLabel().setSize(16);
+       t.captionLabel().style().backgroundWidth = 45;
+       t.captionLabel().style().backgroundHeight = 13;
+     }
    r4 = cp5.addRadioButton("ShowData")
      .setPosition(ButtonPosX,ButtonPosY+200)
      .setSize(60,40)
@@ -94,10 +108,16 @@ void setup() {
      .setColorActive(color(255))
      .setColorLabel(color(0))
      .setItemsPerRow(5)
-     .setSpacingColumn(30)
+     .setSpacingColumn(40)
      .addItem("Raw",1)
      .addItem("Sub",2)
      ; 
+     
+     for(Toggle t:r4.getItems()) {
+       t.captionLabel().setSize(16);
+       t.captionLabel().style().backgroundWidth = 45;
+       t.captionLabel().style().backgroundHeight = 13;
+     }
      
    r1.activate(0);
    r2.activate(0);
@@ -111,25 +131,25 @@ void setup() {
 }
 
 void draw() { 
-  background(200,200,200); 
+  background(243,243,240); 
   for(int i =0; i < NUM_OF_HAND_ROWS; i++){
     for(int j=0; j < NUM_OF_HAND_COLS; j++){
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,0)):getSubRGB(calSGValue(j,i,0)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,1)):getSubRGB(calSGValue(j,i,1)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,2)):getSubRGB(calSGValue(j,i,2)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,3)):getSubRGB(calSGValue(j,i,3)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,4)):getSubRGB(calSGValue(j,i,4)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,5)):getSubRGB(calSGValue(j,i,5)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
         fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,6)):getSubRGB(calSGValue(j,i,6)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,7)):getSubRGB(calSGValue(j,i,7)));
-        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y);
+        rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
     }
   }
 }
@@ -263,8 +283,8 @@ public color getHeatmapRGB(float value){
      return heatmapRGB;
 }
 public color getSubRGB(float value){
-     float minimum=-0.4;
-     float maximum=0.4;
+     float minimum=-0.2;
+     float maximum=0.2;
      float ratio = 2 * (value-minimum) / (maximum - minimum);
      
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)), 255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );
