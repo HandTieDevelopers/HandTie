@@ -22,7 +22,7 @@
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
-#define WIPER0_INIT_POS 255
+#define WIPER0_INIT_POS 1
 #define WIPER1_INIT_POS 255
 
 // #define TARGET_NO_AMP 20
@@ -51,6 +51,7 @@ public:
    void sendStoredValues(int);
 
    void allCalibration();
+   void allCalibrationAtConstAmp();
 
    void manualAssignBridgePotPosForOneGauge(uint8_t, uint8_t);
    void manualAssignAmpPotPosForOneGauge(uint8_t, uint8_t);
@@ -69,13 +70,19 @@ private:
 
    #ifdef AC_CALIBRATION
    void calibration();
-   boolean calibrateBridgePot(int);
+   boolean calibrateBridgePotNoAmp(int);
+   boolean calibrateBridgePotWithAmp(int i);
+
+   void calibrationAtConstAmp();
    boolean calibrateAmpPot(int);
+
    #else
    void calibration(int);
-   void calibrateBridgePot(int);
+   void calibrateBridgePotNoAmp(int);
    void calibrateAmpPot(int);
    #endif
+
+   void sendCalibratedInfo();
 
 };
 
