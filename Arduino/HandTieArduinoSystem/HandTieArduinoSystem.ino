@@ -9,7 +9,7 @@ RecordButton recordButton;
 
 void setup(){
    Serial.begin(115200);
-   sgManager.allCalibration();
+   sgManager.allCalibrationAtConstAmp();
 }
 
 void loop(){
