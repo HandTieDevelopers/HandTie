@@ -27,6 +27,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
 
    // buttons
    public final static String CALIBRATE = "calibrate";
+   public final static String CALIBRATE_CONST_AMP = "calibrate (const amp)";
    public final static String REQUEST_TARGET_VAL_NO_AMP="get targets (no amp)";
    public final static String REQUEST_TARGET_VAL_AMP = "get targets (amp)";
 
@@ -151,14 +152,19 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setPosition(width*0.2, height*0.93)
          .setSize(95,20)
       ;
-      cp5.addButton(REQUEST_TARGET_VAL_NO_AMP)
+      cp5.addButton(CALIBRATE_CONST_AMP)
          .setValue(0)
          .setPosition(width*0.2 + 100, height*0.93)
          .setSize(95,20)
       ;
-      cp5.addButton(REQUEST_TARGET_VAL_AMP)
+      cp5.addButton(REQUEST_TARGET_VAL_NO_AMP)
          .setValue(0)
          .setPosition(width*0.2 + 200, height*0.93)
+         .setSize(95,20)
+      ;
+      cp5.addButton(REQUEST_TARGET_VAL_AMP)
+         .setValue(0)
+         .setPosition(width*0.2 + 300, height*0.93)
          .setSize(95,20)
       ;
    }

@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 115200;
 
-   final static int SERIAL_PORT_NUM = 2;
+   final static int SERIAL_PORT_NUM = 5;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -18,6 +18,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int REQUEST_FOR_TARGET_VALS_WITH_AMP = 6;
    public final static int MANUAL_CHANGE_TO_ONE_GAUGE_BRIDGE_POT_POS = 7;
    public final static int MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS = 8;
+   public final static int ALL_CALIBRATION_CONST_AMP = 9;
 
 
    //receive from arduino protocol
@@ -201,6 +202,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
       }
       else if (theEvent.getName().equals(UIInteractionMgr.REQUEST_TARGET_VAL_AMP)){
          sendToArduino(Integer.toString(REQUEST_FOR_TARGET_VALS_WITH_AMP));
+      }
+      else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE_CONST_AMP)){
+         sendToArduino(Integer.toString(ALL_CALIBRATION_CONST_AMP));
       }
       else if (theEvent.getName().contains(UIInteractionMgr.SLIDERS_BRIDGE_TARGET)){
          manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_NO_AMP, theEvent,

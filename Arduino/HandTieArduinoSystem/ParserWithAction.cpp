@@ -39,6 +39,8 @@ void ParserWithAction::parse(){
       case MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS:
          parseForManualChangeToOneGaugeAmpPotPos();
          break;
+      case ALL_CALIBRATION_CONST_AMP:
+         sgManager->allCalibrationAtConstAmp();
    }
 }
 
