@@ -45,7 +45,6 @@ public class StudyMgr implements SerialListener{
 
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
-      
       // RowCount = 0;
       
    }
@@ -889,8 +888,30 @@ public class StudyMgr implements SerialListener{
   @Override
   public void updateCalibratingValsWithAmp(int [] values){}
 
+  StringBuffer strBuffer = new StringBuffer();
+
+  private String getImageFileName() {
+    strBuffer.setLength(0);
+    strBuffer.append(StudyID);
+    strBuffer.append("_");
+    strBuffer.append(NowFinger);
+    strBuffer.append("_");
+    strBuffer.append(NowLevel);
+    strBuffer.append("_");
+    strBuffer.append(NowBend);
+    strBuffer.append("_");
+    strBuffer.append(NowCol1);
+    strBuffer.append("_");
+    strBuffer.append(NowRow1);
+    strBuffer.append("_");
+    strBuffer.append(NowDegree);
+    return strBuffer.toString();
+  }
+
   @Override
   public void updateReceiveRecordSignal(){
     performKeyPress(' ');
+    mainClass.expImgManager.captureImage(getImageFileName());
   }
+
 }
