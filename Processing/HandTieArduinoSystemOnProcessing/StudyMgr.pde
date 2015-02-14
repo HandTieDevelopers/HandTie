@@ -64,6 +64,7 @@ public class StudyMgr implements SerialListener{
             textSize(40);
             fill(0, 102, 153);
             text("Study One", width*0.39, height*0.45); 
+            
            break;
         case 2 :      //
             
@@ -143,7 +144,7 @@ public class StudyMgr implements SerialListener{
              text("Stage: 1   2   3   4   5", 10, height*0.32); 
              for(int st=1; st<=5; st++){
                 if(NowStudyStage==st){
-                    fill(color(0,255));
+                    fill(color(0,255,0));
                 }
                 else{
                     fill(color(255));
@@ -180,7 +181,14 @@ public class StudyMgr implements SerialListener{
             NowMainStage=1;
            break;
         case '2' :
-            
+            if(!loadedImgFlg){
+         
+                for(int i=86; i<86+30;i++){
+                      imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+                  }
+                imgArray[30]=loadImage("Photo/blank.jpg");
+                loadedImgFlg=true;
+            }
             autoSpace=false;
             NewTable(); 
             NowMainStage=2;
@@ -966,14 +974,14 @@ public class StudyMgr implements SerialListener{
   public void updateAmpPotPosVals(int [] values){}
   @Override
   public void updateCalibratingValsNoAmp(int [] values){
-      if(!loadedImgFlg){
+      // if(!loadedImgFlg){
          
-          for(int i=86; i<86+30;i++){
-                imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
-            }
-          imgArray[30]=loadImage("Photo/blank.jpg");
-          loadedImgFlg=true;
-      }
+      //     for(int i=86; i<86+30;i++){
+      //           imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+      //       }
+      //     imgArray[30]=loadImage("Photo/blank.jpg");
+      //     loadedImgFlg=true;
+      // }
   }
   @Override
   public void updateCalibratingValsWithAmp(int [] values){}
