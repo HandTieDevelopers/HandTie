@@ -126,13 +126,14 @@ public class ExperimentImageManager{
 				break;
 			case '2':
 				showCameraVideo = false;
+				showCameraStateText = false;
 				break;
 			case '/':
 				showCameraVideo = !showCameraVideo;
 				break;
-			case '.': //for testing
-				captureImage("QAQ_Test"); 
-				break;
+			// case '.': //for testing
+			// 	captureImage("QAQ_Test"); 
+			// 	break;
 			case ',':
 				showCameraStateText = !showCameraStateText;
 				break;
