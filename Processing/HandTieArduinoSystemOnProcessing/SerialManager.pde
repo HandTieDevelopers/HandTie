@@ -108,7 +108,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public void performKeyPress(char k){
       switch (k) {
          case 'c' :
-            sendToArduino(Integer.toString(ALL_CALIBRATION));
+            sendToArduino(Integer.toString(ALL_CALIBRATION_CONST_AMP));
             break;
       }
    }
