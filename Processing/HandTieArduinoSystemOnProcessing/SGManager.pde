@@ -115,7 +115,7 @@ public class SGManager implements ControlListener, SerialListener{
    }
 
    @Override
-   public void updateTargetAnalogValsNoAmp(int [] values){}
+   public void updateTargetAnalogValsMinAmp(int [] values){}
    @Override
    public void updateTargetAnalogValsWithAmp(int [] values){}
    @Override
@@ -123,7 +123,7 @@ public class SGManager implements ControlListener, SerialListener{
    @Override
    public void updateAmpPotPosVals(int [] values){}
    @Override
-   public void updateCalibratingValsNoAmp(int [] values){
+   public void updateCalibratingValsMinAmp(int [] values){
       hideCalibratingText = hideBar;
       for (int i = 0; i < NUM_OF_GAUGES; ++i) {
          gauges[i].setCalibratingValue(values[i]);

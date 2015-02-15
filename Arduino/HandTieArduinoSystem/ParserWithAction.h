@@ -16,13 +16,19 @@ public:
 private:
    SGManager * sgManager;
 
-   void parseForManualChangeToOneGaugeTargetValNoAmp();
+   void parseForManualChangeToOneGaugeTargetValMinAmp();
    void parseForManualChangeToOneGaugeTargetValWithAmp();
+   void parseForManualChangeToOneGaugeTargetValAtConstAmp();
+
    void parseForManualChangeToOneGaugeBridgePotPos();
    void parseForManualChangeToOneGaugeAmpPotPos();
 
-   void parseForManualChangeToAllGaugesTargetValsNoAmp();
+   void parseForManualChangeToAllGaugesTargetValsMinAmp();
    void parseForManualChangeToAllGaugesTargetValsWithAmp();
+   void parseForManualChangeToAllGaugesTargetValsAtConstAmp();
+
+   void parseForManualChangeToAllGaugesBridgePotPos();
+   void parseForManualChangeToAllGaugesAmpPotPos();
 };
 
 #endif
