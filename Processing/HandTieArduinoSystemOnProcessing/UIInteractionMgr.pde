@@ -233,6 +233,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          manualChangeToAllGaugesAmpTargetConstBridge(theEvent);
       } else if (theEvent.getName().equals(SLIDER_BRIDGE_TARGET_CONST_AMP_ALL)){
          manualChangeToAllGaugesBridgeTargetAtConstAmp(theEvent);
+      } else if (theEvent.getName().equals(SLIDER_BRIDGE_POT_ALL)){
+         manualChangeToAllGaugesBridgePot(theEvent);
+      } else if (theEvent.getName().equals(SLIDER_AMP_POT_ALL)) {
+         manualChangeToAllGaugesAmpPot(theEvent);
       } else if (theEvent.getName().equals(RADIO_DISPLAY)){
          changeDisplay(theEvent.getValue());
       }
@@ -253,6 +257,18 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    private void manualChangeToAllGaugesBridgeTargetAtConstAmp(ControlEvent theEvent){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          cp5.controller(SLIDERS_BRIDGE_TARGET_CONST_AMP+i).setValue(theEvent.getValue());
+      }
+   }
+
+   private void manualChangeToAllGaugesBridgePot(ControlEvent theEvent){
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_BRIDGE_POT+i).setValue(theEvent.getValue());
+      }
+   }
+
+   private void manualChangeToAllGaugesAmpPot(ControlEvent theEvent){
+      for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
+         cp5.controller(SLIDERS_AMP_POT+i).setValue(theEvent.getValue());
       }
    }
 
