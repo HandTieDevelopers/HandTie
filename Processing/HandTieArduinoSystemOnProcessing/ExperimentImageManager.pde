@@ -21,63 +21,77 @@ public class ExperimentImageManager{
 	public ExperimentImageManager(PApplet parent, int cameraIndex, int resWidth, int resHeight, int frameRateIndex) { 
 		currentSketchPath = parent.sketchPath("");
 		imagesDirPath =  currentSketchPath + "/" + imageDirName + "/";
-		try {
-			File dir = new File(imagesDirPath);
-			if(!dir.exists()) {
-				if(!dir.mkdirs()) {
-					println("making dir " + imageDirName + " failed");
-					return;
-				}
-			}
-		}
-		catch(Exception e) {
-
-		}
-
-		camIsReady = false;
-        String[] availableCameraConfig = Capture.list();
-		boolean camExisted = false;
-		println("available cameras:");
-		for(String camConfig : availableCameraConfig) {
-			println(camConfig);
-			if(!camExisted && camConfig.contains(cameraNames[cameraIndex])) {
-				camExisted = true;
-			}
-		}
-
-		if(!camExisted) {
-			println("chosen camera doesn't available right now");
-			return;
-		}
-
 		mResWidth = resWidth;
 		mResHeight = resHeight;
-
-		int frameRateToUse = frameRates[0];
+		final PApplet parentToUse = parent;
+		final String cameraNameBeChosen = cameraNames[cameraIndex];
+		int temp = frameRates[0];
 		if(frameRateIndex < frameRates.length && frameRateIndex >= 0) {
-			frameRateToUse = frameRates[frameRateIndex];
+			temp = frameRates[frameRateIndex];
 		}
 		else {
-			println("illegal frame rate index has been given, use default frame rate : " + frameRateToUse);
+			println("illegal frame rate index has been given, use default frame rate : " + temp);
 		}
-		
-		try {
-			cam = new Capture(parent, resWidth, resHeight, cameraNames[cameraIndex], frameRateToUse);
-			cam.start();
+		final int frameRateToUse = temp;
 
-			camForShowingOnUI = new Capture(parent, 480, 360, cameraNames[cameraIndex], frameRateToUse);
-            camForShowingOnUI.start();
-		}
-		catch(Exception e) {
+		(new Thread(new Runnable() {
+			public void run() {
 
-		}
+				try {
+					File dir = new File(imagesDirPath);
+					if(!dir.exists()) {
+						if(!dir.mkdirs()) {
+							println("making dir " + imageDirName + " failed");
+							return;
+						}
+					}
+				}
+				catch(Exception e) {
+
+				}
+
+				camIsReady = false;
+		        String[] availableCameraConfig = Capture.list();
+				boolean camExisted = false;
+				println("available cameras:");
+				for(String camConfig : availableCameraConfig) {
+					println(camConfig);
+					if(!camExisted && camConfig.contains(cameraNameBeChosen)) {
+						camExisted = true;
+					}
+				}
+
+				if(!camExisted) {
+					println("chosen camera doesn't available right now");
+					return;
+				}
+
+				
+				
+				try {
+					cam = new Capture(parentToUse, mResWidth, mResHeight, cameraNameBeChosen, frameRateToUse);
+					cam.start();
+
+					camForShowingOnUI = new Capture(parentToUse, 480, 360, cameraNameBeChosen, frameRateToUse);
+		            camForShowingOnUI.start();
+				}
+				catch(Exception e) {
+
+				}
+
+			}
+		})).start();
 
 	}
     
 	public void setIndividualImageDirPath(String userDirName) {
 		imagesDirPath = currentSketchPath + "/" + imageDirName + "/" + userDirName + "/";
 		try {
-			(new File(imagesDirPath)).mkdirs();
+			File dir = new File(imagesDirPath);
+			if(!dir.exists()) {
+				dir.mkdirs();
+			}
+			dir = null;
 		}
 		catch(Exception e) {
 			println(e.getLocalizedMessage());
@@ -101,24 +115,38 @@ public class ExperimentImageManager{
 		textToShowOnUI = text;
 	}
 
-	String textToShowOnUI = "";
+	String textToShowOnUI = "camera not ready";
+	boolean showCameraStateText = true;
 	boolean showCameraVideo = false;
 	
 	public void performKeyPress(char k) {
 		switch(k) {
+			case '1':
+				showCameraVideo = true;
+				break;
+			case '2':
+				showCameraVideo = false;
+				break;
 			case '/':
 				showCameraVideo = !showCameraVideo;
 				break;
 			case '.': //for testing
 				captureImage("QAQ_Test"); 
 				break;
+			case ',':
+				showCameraStateText = !showCameraStateText;
+				break;
+
 		}
 	}
 
 	public void draw() {
-		textSize(32);
-		text(textToShowOnUI, 10, 60);
-		fill(0, 102, 153, 51);
+		if(showCameraStateText) {
+			textSize(32);
+			text(textToShowOnUI, 10, 60);
+			fill(0, 102, 153, 51);
+		}
+
 		if(showCameraVideo) {
 			if(camForShowingOnUI != null) {
 				image(camForShowingOnUI, 0, 0);
