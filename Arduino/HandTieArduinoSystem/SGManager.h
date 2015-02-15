@@ -33,7 +33,6 @@
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
 // #define BROKEN_OMIT
-#define AC_CALIBRATION
 
 // ------------- SGManager class ------------ //
 
@@ -46,8 +45,6 @@ public:
    void serialPrint();
    void serialPrint(int);
 
-   void sendTargetValsNoAmp();
-   void sendTargetValsWithAmp();
    void sendStoredValues(int);
 
    void allCalibration();
@@ -56,11 +53,16 @@ public:
    void manualAssignBridgePotPosForOneGauge(uint8_t, uint8_t);
    void manualAssignAmpPotPosForOneGauge(uint8_t, uint8_t);
 
-   void manualAssignTargetValNoAmpForOneGauge(uint8_t, uint16_t);
-   void manualAssignTargetValWithAmpForOneGauge(uint8_t, uint16_t);
+   void manualAssignBridgePotPosForAllGauges(uint8_t);
+   void manualAssignAmpPotPosForAllGauges(uint8_t);
 
-   void manualAssignTargetValNoAmpForAllGauges(uint16_t);
+   void manualAssignTargetValMinAmpForOneGauge(uint8_t, uint16_t);
+   void manualAssignTargetValWithAmpForOneGauge(uint8_t, uint16_t);
+   void manualAssignTargetValAtConstAmpForOneGauge(uint8_t, uint16_t);
+
+   void manualAssignTargetValMinAmpForAllGauges(uint16_t);
    void manualAssignTargetValWithAmpForAllGauges(uint16_t);
+   void manualAssignTargetValAtConstAmpForAllGauges(uint16_t);
 
 private:
    AnalogMux * analogMux;
@@ -68,19 +70,13 @@ private:
    StrainGauge * gauges[NUM_OF_GAUGES];
    FilterConfig* config;
 
-   #ifdef AC_CALIBRATION
-   void calibration();
-   boolean calibrateBridgePotNoAmp(int);
-   boolean calibrateBridgePotWithAmp(int i);
+   void calibrateBridgeAtMinAmp();
+   void calibrateAmpAtConstBridge();
+   void calibrateBridgeAtConstAmp();
 
-   void calibrationAtConstAmp();
-   boolean calibrateAmpPot(int);
-
-   #else
-   void calibration(int);
-   void calibrateBridgePotNoAmp(int);
-   void calibrateAmpPot(int);
-   #endif
+   boolean calibrateBridgePotMinAmp(int);
+   boolean calibrateAmpPotAtConstBridge(int);
+   boolean calibrateBridgePotAtConstAmp(int);
 
    void sendCalibratedInfo();
 

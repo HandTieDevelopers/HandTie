@@ -885,7 +885,7 @@ public class StudyMgr implements SerialListener{
   @Override
   public void updateCaliVals(int [] values){}
   @Override
-  public void updateTargetAnalogValsNoAmp(int [] values){}
+  public void updateTargetAnalogValsMinAmp(int [] values){}
   @Override
   public void updateTargetAnalogValsWithAmp(int [] values){}
   @Override
@@ -893,7 +893,7 @@ public class StudyMgr implements SerialListener{
   @Override
   public void updateAmpPotPosVals(int [] values){}
   @Override
-  public void updateCalibratingValsNoAmp(int [] values){
+  public void updateCalibratingValsMinAmp(int [] values){
       if(!loadedImgFlg){
          loadedImgFlg=true;
           for(int i=86; i<86+30;i++){
