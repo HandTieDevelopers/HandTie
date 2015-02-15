@@ -19,6 +19,7 @@ public final static int ButtonPosX = 10;
 public final static int ButtonPosY = 250;
 
 public final static int UserNum = 1;
+public final static int UserStartFrom = 0;
 
 Table[] tableArray = new Table[UserNum];
 
@@ -142,10 +143,10 @@ void setup() {
    r1.activate(0);
    r2.activate(0);
    r3.activate(0);
-   r4.activate(0);
+   r4.activate(1);
    r5.activate(0);
    
-   for(int i = 0; i < UserNum; i++){
+   for(int i = UserStartFrom; i < UserNum; i++){
      tableArray[i]=loadTable("StudyData/User"+i+".csv","header");
    }
  
@@ -282,6 +283,7 @@ public float calSGValue(int Col, int Row, int index){
   float allValue3 =0;
   int count3 =0;
     
+  
     if(ShowingType==0 || NowLevel!=0){
       for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
          
@@ -298,11 +300,7 @@ public float calSGValue(int Col, int Row, int index){
           }
       }
     }
-    
-    if(ShowingType==0){
-      return allValue/count;
-    }
-    else{
+    if(ShowingType!=0){
         if(NowLevel==0){
           for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
               if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
@@ -326,7 +324,7 @@ public float calSGValue(int Col, int Row, int index){
                   count3++;
               }
           }
-          return allValue2/count2-allValue3/count3;
+          
         }
         else if(NowLevel==1){
             for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
@@ -341,7 +339,7 @@ public float calSGValue(int Col, int Row, int index){
                     count2++;
                 }
             }
-            return allValue/count-allValue2/count2;
+            
         }
         else if(NowLevel==2){
             for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
@@ -356,10 +354,28 @@ public float calSGValue(int Col, int Row, int index){
                     count2++;
                 }
             }
-            return allValue2/count2-allValue/count;
+            
         }
-      return allValue;
+    
     }
+    if(ShowingType==0){
+      return allValue/count;
+    }
+    else{
+      if(NowLevel==0){
+        return allValue2/count2-allValue3/count3;
+      }
+      else if(NowLevel==1){
+        return allValue/count-allValue2/count2;
+      }
+      else if(NowLevel==2){
+        return allValue2/count2-allValue/count;
+      }
+      else{
+        return allValue;
+      }
+    }
+  
     
 }
 public color getHeatmapRGB(float value){
