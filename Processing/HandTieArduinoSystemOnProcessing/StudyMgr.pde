@@ -76,9 +76,9 @@ public class StudyMgr implements SerialListener{
             else{
               text("Loading Images...", width*0.7, height*0.5); 
             }
-            
-            
-            text("Degree: "+ ((NowDegree==0)?"0":"90")+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger+"\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), 10, 30);
+           
+            text("Degree: "+ ((NowDegree==0)?"0":"90")+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger, 10, 30);
+            text("\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), width-170, 100);
             text("Col2: "+NowCol2+" Row2: "+NowRow2, width-170, 60);
 //            rect(width*0.1,height*(0.1),200,200);
             //text("Stage:"+NowStudyStage, 10, height*0.45); 
