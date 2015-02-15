@@ -8,12 +8,11 @@ ExperimentImageManager expImgManager;
 
 void setup() {
    size(900, 600);
-
+   expImgManager = new ExperimentImageManager(this, 0, 640, 480, 0);
    sgManager = new SGManager();
    serialManager = new SerialManager(this);
    uiInteractionMgr = new UIInteractionMgr(this);
    studyMgr = new StudyMgr(this);
-   expImgManager = new ExperimentImageManager(this, 0, 640, 480, 0);
 
    listenerRegistrations();
 }
