@@ -22,7 +22,7 @@
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
-#define WIPER0_INIT_POS 1
+#define WIPER0_INIT_POS 2
 #define WIPER1_INIT_POS 255
 
 // #define TARGET_NO_AMP 20
@@ -32,6 +32,7 @@
 
 // -------- StrainGauge Macro Define -------- //
 #define NUM_OF_GAUGES 16
+#define CALI_TIMEOUT ((unsigned long)10000)
 // #define BROKEN_OMIT
 
 // ------------- SGManager class ------------ //

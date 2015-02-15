@@ -112,7 +112,8 @@ void SGManager::allCalibrationAtConstAmp(){
 
 void SGManager::calibrateBridgeAtMinAmp(){
    boolean complete = false;
-   while(!complete){
+   unsigned long startCaliTime = millis();
+   while(!complete && ((millis() - startCaliTime) < CALI_TIMEOUT)) {
       complete = true;
       for (int i = 0; i < NUM_OF_GAUGES; ++i){
          if (!calibrateBridgePotMinAmp(i))
@@ -125,7 +126,8 @@ void SGManager::calibrateBridgeAtMinAmp(){
 
 void SGManager::calibrateAmpAtConstBridge(){
    boolean complete = false;
-   while(!complete){
+   unsigned long startCaliTime = millis();
+   while(!complete && ((millis() - startCaliTime) < CALI_TIMEOUT)) {
       complete = true;
       for (int i = 0; i < NUM_OF_GAUGES; ++i){
          if (!calibrateAmpPotAtConstBridge(i))
@@ -138,7 +140,8 @@ void SGManager::calibrateAmpAtConstBridge(){
 
 void SGManager::calibrateBridgeAtConstAmp(){
    boolean complete = false;
-   while(!complete){
+   unsigned long startCaliTime = millis();
+   while(!complete && ((millis() - startCaliTime) < CALI_TIMEOUT)) {
       complete = true;
       for (int i = 0; i < NUM_OF_GAUGES; ++i){
          if (!calibrateBridgePotAtConstAmp(i))
