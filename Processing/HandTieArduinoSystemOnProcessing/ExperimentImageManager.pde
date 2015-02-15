@@ -11,6 +11,7 @@ public class ExperimentImageManager{
 	int mResHeight = 0;
 	int mResWidth = 0;
     boolean camIsReady = false;
+    String currentSketchPath = null;
     String imageDirName = "ExperimentImages";
     String imagesDirPath;
 
@@ -18,13 +19,19 @@ public class ExperimentImageManager{
 
 	//use camera index to choose camera in cameraNames
 	public ExperimentImageManager(PApplet parent, int cameraIndex, int resWidth, int resHeight, int frameRateIndex) { 
-		imagesDirPath = parent.sketchPath("") + "/" + imageDirName + "/";
-		File dir = new File(imagesDirPath);
-		if(!dir.exists()) {
-			if(!dir.mkdirs()) {
-				println("making dir " + imageDirName + " failed");
-				return;
+		currentSketchPath = parent.sketchPath("");
+		imagesDirPath =  currentSketchPath + "/" + imageDirName + "/";
+		try {
+			File dir = new File(imagesDirPath);
+			if(!dir.exists()) {
+				if(!dir.mkdirs()) {
+					println("making dir " + imageDirName + " failed");
+					return;
+				}
 			}
+		}
+		catch(Exception e) {
+
 		}
 
 		camIsReady = false;
@@ -66,7 +73,17 @@ public class ExperimentImageManager{
 		}
 
 	}
-     
+    
+	public void setIndividualImageDirPath(String userDirName) {
+		imagesDirPath = currentSketchPath + "/" + imageDirName + "/" + userDirName + "/";
+		try {
+			(new File(imagesDirPath)).mkdirs();
+		}
+		catch(Exception e) {
+			println(e.getLocalizedMessage());
+		}
+	}
+
 	public void captureImage(String imgFileName) {
 		if(cam == null) {
 	    	println("camera hasn't been correctly initialized");
@@ -96,7 +113,6 @@ public class ExperimentImageManager{
 				captureImage("QAQ_Test"); 
 				break;
 		}
-
 	}
 
 	public void draw() {

@@ -50,7 +50,7 @@ public class StudyMgr implements SerialListener{
 
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
-       
+      mainClass.expImgManager.setIndividualImageDirPath(StudyID);
 //      for(int i=86; i<86+30;i++){
 //          imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
 //      }
