@@ -4,10 +4,11 @@ SGManager sgManager;
 SerialManager serialManager;
 UIInteractionMgr uiInteractionMgr;
 StudyMgr studyMgr;
+ExperimentImageManager expImgManager;
 
 void setup() {
    size(900, 600);
-
+   expImgManager = new ExperimentImageManager(this, 0, 640, 480, 0);
    sgManager = new SGManager();
    serialManager = new SerialManager(this);
    uiInteractionMgr = new UIInteractionMgr(this);
@@ -20,6 +21,7 @@ void draw() {
    background(255, 255, 255, 0);
    studyMgr.start();
    sgManager.draw();
+   expImgManager.draw();
 }
 
 void listenerRegistrations(){
@@ -33,6 +35,7 @@ void keyPressed(){
    studyMgr.performKeyPress(key);
    serialManager.performKeyPress(key);
    sgManager.performKeyPress(key);
+   expImgManager.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
@@ -42,3 +45,9 @@ void serialEvent(Serial port){
       println(e.getMessage());
    }
 }
+
+void captureEvent(Capture c) {
+   c.read();
+   expImgManager.updateUIText("camera ready");
+}
+
