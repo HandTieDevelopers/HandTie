@@ -6,6 +6,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    HandTieArduinoSystemOnProcessing mainClass;
 
    ControlP5 cp5;
+   boolean launchComplete = false;
 
    // RadioButton properties
    RadioButton radioButton;
@@ -217,11 +218,12 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setPosition(width*0.2 + 120, height*0.94)
          .setSize(100,20)
       ;
+      launchComplete = true;
    }
 
    @Override
    public void controlEvent(ControlEvent theEvent){
-      if (millis() < 1500) return;
+      if (!launchComplete)  return;
       println("performControlEvent: " + theEvent.getName());
       println("event value: " + theEvent.getValue());
 
