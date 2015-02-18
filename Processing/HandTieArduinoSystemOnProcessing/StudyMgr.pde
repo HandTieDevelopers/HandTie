@@ -103,7 +103,7 @@ public class StudyMgr implements SerialListener{
              for(int i=0; i < 4; i++ ){
                 for(int j=0; j < 2; j++ ){
                    if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(i%2*2+j%2)));
+                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(floor((i*2+j)/2))));
                    }
                    else{
                       fill(255);
@@ -111,7 +111,7 @@ public class StudyMgr implements SerialListener{
                      rect( ShowGauge_x+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    
                    if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(8+i%2*2+j%2)));
+                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(8+floor((i*2+j)/2))));
                    }
                    else{
                       fill(255);
@@ -119,7 +119,7 @@ public class StudyMgr implements SerialListener{
                      rect( ShowGauge_x+ShowGauge_x2_dist+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    
                    if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(4+i%2*2+j%2)));
+                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(4+floor((i*2+j)/2))));
                    }
                    else{
                       fill(255);
@@ -127,7 +127,7 @@ public class StudyMgr implements SerialListener{
                      rect( ShowGauge_x+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_y2_dist+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
                    
                    if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(12+i%2*2+j%2)));
+                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(12+floor((i*2+j)/2))));
                    }
                    else{
                       fill(255);
