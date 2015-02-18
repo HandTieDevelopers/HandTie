@@ -7,10 +7,10 @@ public class StudyMgr implements SerialListener{
    public final static int NUM_OF_Degree = 2;
    
    public final static int ShowGauge_x = 630;
-   public final static int ShowGauge_y = 350;
+   public final static int ShowGauge_y = 400;
 
    public final static int ShowGauge_x2_dist = 140;
-   public final static int ShowGauge_y2_dist = 110;   
+   public final static int ShowGauge_y2_dist = 0;   
    
    public final static int ShowGauge_dist = 25;
    
@@ -54,7 +54,7 @@ public class StudyMgr implements SerialListener{
 //      for(int i=86; i<86+30;i++){
 //          imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
 //      }
-//      RowCount = 0;
+      // RowCount = 0;
       
    }
    public void start(){
@@ -77,7 +77,7 @@ public class StudyMgr implements SerialListener{
               text("Loading Images...", width*0.7, height*0.5); 
             }
            
-            text("Col1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger, 10, 30);
+            text("Degree: "+ ((NowDegree==0)?"0":"90")+"\nCol1: "+NowCol1+", Row1: "+NowRow1+"\nFinger: "+NowFinger, 10, 30);
             text("\nLevel: "+((NowLevel==0)?"Mid":((NowLevel==1)?"High":"Low"))+"\nBend: "+((NowBend==false)?"Straight":"Bend"), width-170, 100);
             text("Col2: "+NowCol2+" Row2: "+NowRow2, width-170, 60);
 //            rect(width*0.1,height*(0.1),200,200);
@@ -102,38 +102,30 @@ public class StudyMgr implements SerialListener{
              
              for(int i=0; i < 4; i++ ){
                 for(int j=0; j < 2; j++ ){
-                   if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(floor((i*2+j)/2))));
+                   fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(i*2+j)));
+                   pushMatrix();
+                   if(NowDegree==0){
+                     translate(ShowGauge_x, ShowGauge_y);
                    }
-                   else{
-                      fill(255);
-                   }              
-                     rect( ShowGauge_x+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
-                   
-                   if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(8+floor((i*2+j)/2))));
+                   else if(NowDegree==1){
+                     translate(ShowGauge_x,ShowGauge_y+160);
+                     
                    }
-                   else{
-                      fill(255);
-                   }       
-                     rect( ShowGauge_x+ShowGauge_x2_dist+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
-                   
-                   if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(4+floor((i*2+j)/2))));
+                   rotate(radians(-90*NowDegree));
+                     rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
+                   popMatrix();
+
+                   fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(8+i*2+j)));
+                   pushMatrix();
+                   if(NowDegree==0){
+                     translate(ShowGauge_x+ShowGauge_x2_dist, ShowGauge_y+ShowGauge_y2_dist);
                    }
-                   else{
-                      fill(255);
-                   }       
-                     rect( ShowGauge_x+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_y2_dist+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
-                   
-                   if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
-                      fill(getHeatmapRGB(mainClass.sgManager.getOneElongationValsOfGauges(12+floor((i*2+j)/2))));
+                   else if(NowDegree==1){
+                     translate(ShowGauge_x+ShowGauge_x2_dist,ShowGauge_y+ShowGauge_y2_dist+160);
                    }
-                   else{
-                      fill(255);
-                   }       
-                     rect( ShowGauge_x+ShowGauge_x2_dist+ShowGauge_dist*2*j, ShowGauge_y+ShowGauge_y2_dist+ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
-                   
+                   rotate(radians(-90*NowDegree));
+                     rect( ShowGauge_dist*2*j, ShowGauge_dist*i,ShowGauge_dist*2,ShowGauge_dist);
+                   popMatrix();
                 }
              }
 
@@ -1000,7 +992,7 @@ public class StudyMgr implements SerialListener{
     strBuffer.append("_");
     strBuffer.append(NowRow1);
     strBuffer.append("_");
-    strBuffer.append(0);
+    strBuffer.append(NowDegree);
     return strBuffer.toString();
   }
 
