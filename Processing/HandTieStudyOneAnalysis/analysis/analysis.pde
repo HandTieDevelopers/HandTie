@@ -32,6 +32,8 @@ Table[] tableArray = new Table[UserNum];
  public int ShowingType = 0;
  public int InterpolateType =0;  //0:origin , 1:bilinear
 
+ public boolean assignSGcolorArrayFlg = false; 
+ public float[][] SGcolorArray = new float[NUM_OF_HAND_COLS*NUM_OF_SG_COLS][NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS];
 ControlP5 cp5;
 RadioButton r1, r2, r3, r4, r5;
 
@@ -156,48 +158,56 @@ void setup() {
 void draw() { 
   background(243,243,240); 
   if(InterpolateType==1){
-      color[][] SGcolorArray = new color[NUM_OF_HAND_COLS*NUM_OF_SG_COLS][NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS];
-      color interX, interY;
+      
+      float interX, interY;
       //assign color to main point
-      for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
-        for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
-            if(i%NUM_OF_SG_ROWS%2==0 && j%NUM_OF_SG_COLS%2==0 || i%NUM_OF_SG_ROWS%2==1 && j%NUM_OF_SG_COLS%2==1){
-              SGcolorArray[j][i] = color((ShowingType==0)?getHeatmapRGB(calSGValue(floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),floor(((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2))):getSubRGB(calSGValue(floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),floor((float)((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2))));
+      if(assignSGcolorArrayFlg){
+        assignSGcolorArrayFlg = false;
+          for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
+            for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
+                if((i%NUM_OF_SG_ROWS%2==0 && j%NUM_OF_SG_COLS%2==0) || (i%NUM_OF_SG_ROWS%2==1 && j%NUM_OF_SG_COLS%2==1)){
+                  SGcolorArray[j][i] = calSGValue(floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),floor(((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2));
+                }
             }
-            else{
-
-              if(j>0 && j<NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
-                interX = lerpColor(SGcolorArray[j-1][i], SGcolorArray[j+1][i], .5); 
-              }
-              else if(j==NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
-                interX = SGcolorArray[j-1][i]; 
-              }
-              else{
-                interX = SGcolorArray[j+1][i]; 
-              }
-              if(i>0 && i<NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
-                interY = lerpColor(SGcolorArray[j][i-1], SGcolorArray[j][i+1], .5); 
-              }
-              else if(i==NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
-                interY = SGcolorArray[j][i-1]; 
-              }
-              else{
-                interY = SGcolorArray[j][i+1]; 
-              }
-              SGcolorArray[j][i] = lerpColor(interX, interY, .5); 
+          }
+          for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
+            for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
+                if((i%NUM_OF_SG_ROWS%2!=0 || j%NUM_OF_SG_COLS%2!=0) && (i%NUM_OF_SG_ROWS%2!=1 || j%NUM_OF_SG_COLS%2!=1)){
+    
+                  if(j>0 && j<NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                    interX = lerp(SGcolorArray[j-1][i], SGcolorArray[j+1][i], .5); 
+                  }
+                  else if(j==NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                    interX = SGcolorArray[j-1][i]; 
+                  }
+                  else{
+                    interX = SGcolorArray[j+1][i]; 
+                  }
+                  if(i>0 && i<NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                    interY = lerp(SGcolorArray[j][i-1], SGcolorArray[j][i+1], .5); 
+                  }
+                  else if(i==NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                    interY = SGcolorArray[j][i-1]; 
+                  }
+                  else{
+                    interY = SGcolorArray[j][i+1]; 
+                  }
+                  SGcolorArray[j][i] = lerp(interX, interY, .5); 
+                }
             }
-        }
+          }
       }
       //draw every pixel
-      color interX1,interX2;
+      float interX1,interX2;
       noStroke();
       for(int i =0; i < ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1); i++){
         for(int j=0 ; j < ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1); j++){
           // if(i%ShowGauge_dist_y==0 && j%ShowGauge_dist_x==0){
-            interX1 = lerpColor(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
-            interX2 = lerpColor(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)+1],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)+1],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+            interX1 = lerp(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+            interX2 = lerp(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)+1],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)+1],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
             
-            stroke(lerpColor(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y));
+            interY = lerp(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y);
+            stroke((ShowingType==0)?getHeatmapRGB(interY):getSubRGB(interY));
             // fill(lerpColor(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y));
             // fill(interX1);
             point(ShowGauge_x+ShowGauge_dist_x/2+j,ShowGauge_y+ShowGauge_dist_y/2+i);
@@ -215,6 +225,7 @@ void draw() {
       }
   }
   else{
+    stroke(color(0));
       for(int i =0; i < NUM_OF_HAND_ROWS; i++){
         for(int j=0; j < NUM_OF_HAND_COLS; j++){
               //c0_r0  ->0
@@ -319,6 +330,7 @@ public void controlEvent(ControlEvent theEvent) {
     InterpolateType = (int)theEvent.getValue()-1;
     println("InterpolateType="+InterpolateType);
   }
+  assignSGcolorArrayFlg = true;
 }
 void Finger(int a) {
   println("a radio Button event: "+a);
