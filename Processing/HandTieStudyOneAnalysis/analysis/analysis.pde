@@ -5,7 +5,7 @@ public final static int NUM_OF_SG_COLS = 2;
 
 public final static int NUM_OF_HAND_ROWS = 4;
 public final static int NUM_OF_HAND_COLS = 5;
-public final static int NUM_OF_Degree = 3;
+// public final static int NUM_OF_Degree = 3;
  
 public final static int ShowGauge_x = 350;
 public final static int ShowGauge_y = 220;
@@ -23,14 +23,15 @@ public int UserStartFrom = 0;
 
 Table[] tableArray = new Table[UserNum];
 
- public int NowDegree = 0;      //3
+ // public int NowDegree = 0;      //3
  public int NowCol = 0;         //5
  public int NowRow = 0;          //6  =90
  public int NowFinger = 0;      //5
  public int NowLevel = 0;      //0: mid 1:high 2:low
  public boolean NowBend = false; 
  public int ShowingType = 0;
- 
+ public int InterpolateType =0;  //0:origin , 1:bilinear
+
 ControlP5 cp5;
 RadioButton r1, r2, r3, r4, r5;
 
@@ -121,7 +122,7 @@ void setup() {
        t.captionLabel().style().backgroundWidth = 45;
        t.captionLabel().style().backgroundHeight = 13;
      }
-   r5 = cp5.addRadioButton("Degree0_90")
+   r5 = cp5.addRadioButton("interpolation")
      .setPosition(ButtonPosX,50)
      .setSize(60,40)
      .setColorForeground(color(120))
@@ -130,8 +131,8 @@ void setup() {
      .setColorLabel(color(0))
      .setItemsPerRow(5)
      .setSpacingColumn(100)
-     .addItem("Degree_0",1)
-     .addItem("Degree_90",2)
+     .addItem("Origin",1)
+     .addItem("Bilinear",2)
      ; 
      
      for(Toggle t:r5.getItems()) {
@@ -154,47 +155,95 @@ void setup() {
 
 void draw() { 
   background(243,243,240); 
-  for(int i =0; i < NUM_OF_HAND_ROWS; i++){
-    for(int j=0; j < NUM_OF_HAND_COLS; j++){
-        if(NowDegree>0){
-          
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,0)):getSubRGB(calSGValue(j,i,0)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,1)):getSubRGB(calSGValue(j,i,1)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,2)):getSubRGB(calSGValue(j,i,2)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,3)):getSubRGB(calSGValue(j,i,3)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,4)):getSubRGB(calSGValue(j,i,4)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,5)):getSubRGB(calSGValue(j,i,5)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,6)):getSubRGB(calSGValue(j,i,6)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-            fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,7)):getSubRGB(calSGValue(j,i,7)));
-            rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_x*(NUM_OF_SG_COLS*i),ShowGauge_dist_y, ShowGauge_dist_x, 5);
-          
+  if(InterpolateType==1){
+      color[][] SGcolorArray = new color[NUM_OF_HAND_COLS*NUM_OF_SG_COLS][NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS];
+      color interX, interY;
+      //assign color to main point
+      for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
+        for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
+            if(i%NUM_OF_SG_ROWS%2==0 && j%NUM_OF_SG_COLS%2==0 || i%NUM_OF_SG_ROWS%2==1 && j%NUM_OF_SG_COLS%2==1){
+              SGcolorArray[j][i] = color((ShowingType==0)?getHeatmapRGB(calSGValue(floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),floor(((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2))):getSubRGB(calSGValue(floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),floor((float)((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2))));
+            }
+            else{
+
+              if(j>0 && j<NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                interX = lerpColor(SGcolorArray[j-1][i], SGcolorArray[j+1][i], .5); 
+              }
+              else if(j==NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                interX = SGcolorArray[j-1][i]; 
+              }
+              else{
+                interX = SGcolorArray[j+1][i]; 
+              }
+              if(i>0 && i<NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                interY = lerpColor(SGcolorArray[j][i-1], SGcolorArray[j][i+1], .5); 
+              }
+              else if(i==NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                interY = SGcolorArray[j][i-1]; 
+              }
+              else{
+                interY = SGcolorArray[j][i+1]; 
+              }
+              SGcolorArray[j][i] = lerpColor(interX, interY, .5); 
+            }
         }
-        else{
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,0)):getSubRGB(calSGValue(j,i,0)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,1)):getSubRGB(calSGValue(j,i,1)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,2)):getSubRGB(calSGValue(j,i,2)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,3)):getSubRGB(calSGValue(j,i,3)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,4)):getSubRGB(calSGValue(j,i,4)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,5)):getSubRGB(calSGValue(j,i,5)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,6)):getSubRGB(calSGValue(j,i,6)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
-          fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,7)):getSubRGB(calSGValue(j,i,7)));
-          rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+      }
+      //draw every pixel
+      color interX1,interX2;
+      noStroke();
+      for(int i =0; i < ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1); i++){
+        for(int j=0 ; j < ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1); j++){
+          // if(i%ShowGauge_dist_y==0 && j%ShowGauge_dist_x==0){
+            interX1 = lerpColor(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+            interX2 = lerpColor(SGcolorArray[floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)+1],SGcolorArray[floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)+1],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+            
+            stroke(lerpColor(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y));
+            // fill(lerpColor(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y));
+            // fill(interX1);
+            point(ShowGauge_x+ShowGauge_dist_x/2+j,ShowGauge_y+ShowGauge_dist_y/2+i);
+          // }
         }
-    }
+      }
+      // draw border
+      noFill();
+      stroke(color(0,0,255));
+      for(int i =0; i < NUM_OF_HAND_ROWS; i++){
+        for(int j=0; j < NUM_OF_HAND_COLS; j++){
+            rect(ShowGauge_x+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x*NUM_OF_SG_COLS,ShowGauge_dist_y*NUM_OF_SG_ROWS);
+
+        }
+      }
+  }
+  else{
+      for(int i =0; i < NUM_OF_HAND_ROWS; i++){
+        for(int j=0; j < NUM_OF_HAND_COLS; j++){
+              //c0_r0  ->0
+              fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,0)):getSubRGB(calSGValue(j,i,0)));
+              rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c1_r0  ->1
+              // fill(color(255));
+              // rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c0_r1  ->2
+              // fill(color(255));
+              // rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c1_r1  ->3
+              fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,1)):getSubRGB(calSGValue(j,i,1)));
+              rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(1+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c0_r2  ->4
+              fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,2)):getSubRGB(calSGValue(j,i,2)));
+              rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c1_r2  ->5
+              // fill(color(255));
+              // rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              // //c0_r3  ->6
+              // fill(color(255));
+              // rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+              //c1_r3  ->7
+              fill((ShowingType==0)?getHeatmapRGB(calSGValue(j,i,3)):getSubRGB(calSGValue(j,i,3))); 
+              rect(ShowGauge_x+ShowGaugeGroup_dist*j+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGaugeGroup_dist*i+ShowGauge_dist_y*(3+NUM_OF_SG_ROWS*i),ShowGauge_dist_x,ShowGauge_dist_y, 5);
+            
+        }
+      }
   }
 }
 
@@ -267,8 +316,8 @@ public void controlEvent(ControlEvent theEvent) {
     println("ShowingType="+ShowingType);
   }
    if(theEvent.isFrom(r5)) {
-    NowDegree = (int)theEvent.getValue()-1;
-    println("NowDegree="+NowDegree);
+    InterpolateType = (int)theEvent.getValue()-1;
+    println("InterpolateType="+InterpolateType);
   }
 }
 void Finger(int a) {
@@ -285,72 +334,124 @@ public float calSGValue(int Col, int Row, int index){
     
   
     if(ShowingType==0 || NowLevel!=0){
-      for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
+      for(TableRow row : tableArray[0].findRows(str(NowFinger), "Finger")){
          
           
-          if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
+          if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
               
               allValue+=row.getFloat("SG1_"+index);
               count++;
           }
-          else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
+          else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
                
               allValue+=row.getFloat("SG2_"+index);
+              count++;
+          }
+          else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols3")==Col && row.getInt("Rows3")==Row){
+               
+              allValue+=row.getFloat("SG3_"+index);
+              count++;
+          }
+          else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==NowLevel && row.getInt("Cols4")==Col && row.getInt("Rows4")==Row){
+               
+              allValue+=row.getFloat("SG4_"+index);
               count++;
           }
       }
     }
     if(ShowingType!=0){
         if(NowLevel==0){
-          for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
-              if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
+          for(TableRow row : tableArray[0].findRows(str(NowFinger), "Finger")){
+              /////////----------------------------v high
+              if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                   
                   allValue2+=row.getFloat("SG1_"+index);
                   count2++;
               }
-              else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
+              else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
                    
                   allValue2+=row.getFloat("SG2_"+index);
                   count2++;
               }
-              else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
+              else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols3")==Col && row.getInt("Rows3")==Row){
+                  
+                  allValue2+=row.getFloat("SG3_"+index);
+                  count2++;
+              }
+              else if(boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==1 && row.getInt("Cols4")==Col && row.getInt("Rows4")==Row){
+                   
+                  allValue2+=row.getFloat("SG4_"+index);
+                  count2++;
+              }
+              /////////----------------------------v low
+              else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                   
                   allValue3+=row.getFloat("SG1_"+index);
                   count3++;
               }
-              else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
+              else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
                    
                   allValue3+=row.getFloat("SG2_"+index);
+                  count3++;
+              }
+              else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols3")==Col && row.getInt("Rows3")==Row){
+                  
+                  allValue3+=row.getFloat("SG3_"+index);
+                  count3++;
+              }
+              else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==2 && row.getInt("Cols4")==Col && row.getInt("Rows4")==Row){
+                   
+                  allValue3+=row.getFloat("SG4_"+index);
                   count3++;
               }
           }
           
         }
         else if(NowLevel==1){
-            for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
-                if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
+            for(TableRow row : tableArray[0].findRows(str(NowFinger), "Finger")){
+                if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                     
                     allValue2+=row.getFloat("SG1_"+index);
                     count2++;
                 }
-                else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
                      
                     allValue2+=row.getFloat("SG2_"+index);
+                    count2++;
+                }
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols3")==Col && row.getInt("Rows3")==Row){
+                    
+                    allValue2+=row.getFloat("SG3_"+index);
+                    count2++;
+                }
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols4")==Col && row.getInt("Rows4")==Row){
+                     
+                    allValue2+=row.getFloat("SG4_"+index);
                     count2++;
                 }
             }
             
         }
         else if(NowLevel==2){
-            for(TableRow row : tableArray[0].findRows(str(NowDegree), "Degree")){
-                if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
+            for(TableRow row : tableArray[0].findRows(str(NowFinger), "Finger")){
+                if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                     
                     allValue2+=row.getFloat("SG1_"+index);
                     count2++;
                 }
-                else if(row.getInt("Finger")==NowFinger && boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols2")==Col && row.getInt("Rows2")==Row){
                      
                     allValue2+=row.getFloat("SG2_"+index);
+                    count2++;
+                }
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols3")==Col && row.getInt("Rows3")==Row){
+                    
+                    allValue2+=row.getFloat("SG3_"+index);
+                    count2++;
+                }
+                else if( boolean(row.getString("Bend"))==NowBend && row.getInt("Level")==0 && row.getInt("Cols4")==Col && row.getInt("Rows4")==Row){
+                     
+                    allValue2+=row.getFloat("SG4_"+index);
                     count2++;
                 }
             }
