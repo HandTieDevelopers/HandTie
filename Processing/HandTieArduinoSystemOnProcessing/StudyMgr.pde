@@ -14,7 +14,7 @@ public class StudyMgr implements SerialListener{
    
    public final static int ShowGauge_dist = 25;
    
-   public final static String StudyID = "1";
+   public final static String StudyID = "2";
    
    public String ShowText = "Study #1";
    public int NowMainStage = 1;
@@ -175,6 +175,41 @@ public class StudyMgr implements SerialListener{
             text("Done", width*0.39, height*0.45); 
 
           break;
+        case 4:
+             textSize(40);
+            fill(0, 0, 0);
+            text("One More Thing...", width*0.3, height*0.45); 
+
+          break;
+        case 5:
+            if(loadedImgFlg){
+              showImage();
+            }
+            else{
+              text("Loading Images...", width*0.7, height*0.5); 
+            }
+            fill(color(0,255));
+             textSize(16);
+            text("Stage: 1   2   3   4   5", 10, height*0.32); 
+             for(int st=1; st<=5; st++){
+                if(NowStudyStage==st){
+                    fill(color(0,255,0));
+                }
+                else{
+                    fill(color(255));
+                }
+                ellipse(66 + (st-1)*26, height*0.35, 10, 10);
+              }
+              if(autoSpace==true){
+               nextStepView(); 
+             }
+          break;
+        case 6:
+             textSize(40);
+            fill(0, 0, 0);
+            text("Thank You", width*0.32, height*0.45); 
+
+          break;
      }
 //     for(int k=0; k < 3; k++ ){
        
@@ -230,6 +265,14 @@ public class StudyMgr implements SerialListener{
 
            break;
         case '3' :
+            if(!loadedImgFlg){
+         
+                for(int i=86; i<86+30;i++){
+                      imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
+                  }
+                imgArray[30]=loadImage("Photo/blank.jpg");
+                loadedImgFlg=true;
+            }
             NowMainStage=3;
            break;
         case 's':
@@ -268,8 +311,24 @@ public class StudyMgr implements SerialListener{
             DeleteRow();
            break ;
         case ' ' :
-          if(loadedImgFlg){
+          if(loadedImgFlg && NowMainStage==2){
             nextStep();
+          }
+          else if(NowMainStage==3){
+              NowMainStage=4;
+          }
+          else if(NowMainStage==4){
+              NowMainStage=5;
+              NowStudyStage=0;
+              
+              NowFinger = 0;
+              NowLevel=0;      //mid
+              NowBend=false;     //s
+              nextStepView();
+              autoSpace=false;
+          }
+          else if(NowMainStage==5){
+              nextStepView();
           }
           break;
         case 'o' :
@@ -958,6 +1017,102 @@ public class StudyMgr implements SerialListener{
       if(NowStudyStage>0){
         image(imgArray[imgIndex], imgWidth, imgHeight, width/2 , height );
       }
+   }
+  public void nextStepView(){
+            if(NowMainStage==5){
+                if(NowStudyStage==0){
+                  NowStudyStage=1;
+                  NowLevel=0;      //mid
+                  NowBend=false;     //s
+                   
+                }
+                else if(NowStudyStage==1){
+                  if(NowLevel==0){   
+                      // AddNewRow();         
+                      NowLevel=1;  //high            
+                  }
+                  else if(NowLevel==1){
+                    // AddNewRow();
+                    NowLevel=2;  //low          
+                  }
+                  else if(NowLevel==2){
+                    // AddNewRow();
+                    NowLevel=0;  //mid
+                    NowStudyStage=2;
+                    NowBend=true;     //b          
+                  }
+                }
+                else if(NowStudyStage==2){
+                  if(NowLevel==0){
+                      // AddNewRow();
+                      NowLevel=1;  //high
+                  }
+                  else if(NowLevel==1){
+                    // AddNewRow();
+                    NowLevel=2;  //low
+                     
+                  }
+                  else if(NowLevel==2){
+                    // AddNewRow();
+                    NowLevel=1;  //high
+                    NowStudyStage=3;  
+                    NowBend=false;     //s
+                    
+                  }
+                }
+                else if(NowStudyStage==3){
+                  if(NowBend==false){
+                      // AddNewRow();
+                      NowBend=true;  //bend
+                       
+                  }
+                  else if(NowBend==true){
+                    // AddNewRow();
+                    NowBend=false;  //s
+                    NowLevel=0;  //mid
+                    NowStudyStage=4;
+                    NowBend=false;     //s
+                    
+                  }
+                  
+                }
+                else if(NowStudyStage==4){
+                  if(NowBend==false){
+                    // AddNewRow();
+                      NowBend=true;  //bend
+                 
+                  }
+                  else if(NowBend==true){
+                    // AddNewRow();
+                    NowBend=false;  //s
+                    NowLevel=2;  //low
+                    NowStudyStage=5;
+                    NowBend=false;     //s
+                   
+                  }
+                }
+                else if(NowStudyStage==5){
+                  if(NowBend==false){
+                    
+                      // AddNewRow();
+                      NowBend=true;  //bend
+                       
+                    
+                  }
+                  else if(NowBend==true){
+                    // AddNewRow();
+                    NowBend=false;  //s
+                    NowStudyStage=0;
+                    if(NowFinger<NUM_OF_FINGERS-1){
+                      NowFinger++;
+                    }
+                    else{
+                       NowMainStage=6;               
+                    }
+                  }
+                }
+            }
+            loadWhichImage();
    }
 
    // public void performMousePress(){
