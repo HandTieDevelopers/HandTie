@@ -14,7 +14,7 @@ public class StudyMgr implements SerialListener{
    
    public final static int ShowGauge_dist = 25;
    
-   public final static String StudyID = "2";
+   public final static String StudyID = "5";
    
    public String ShowText = "Study #1";
    public int NowMainStage = 1;
