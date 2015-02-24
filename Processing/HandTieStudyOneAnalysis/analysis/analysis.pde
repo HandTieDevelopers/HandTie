@@ -5,6 +5,9 @@ public final static int NUM_OF_SG_COLS = 2;
 
 public final static int NUM_OF_HAND_ROWS = 4;
 public final static int NUM_OF_HAND_COLS = 5;
+public final static int NUM_OF_LEVELS = 3;
+public final static int NUM_OF_BEND = 2;
+public final static int NUM_OF_INTERPOLATION_TYPE = 2;
 // public final static int NUM_OF_Degree = 3;
  
 public final static int ShowGauge_x = 350;
@@ -18,8 +21,7 @@ public final static int ShowGaugeGroup_dist = 4;
 public final static int ButtonPosX = 10;
 public final static int ButtonPosY = 250;
 
-public final static int UserNum = 1;
-public int UserStartFrom = 0;
+public final static int UserNum = 5;
 
 Table[] tableArray = new Table[UserNum];
 
@@ -31,16 +33,16 @@ Table[] tableArray = new Table[UserNum];
  public boolean NowBend = false; 
  public int ShowingType = 0;
  public int InterpolateType =0;  //0:origin , 1:bilinear
-
+ public int NowUser =1;
  // public boolean assignSGcolorArrayFlg = false; 
  public boolean showPointFlg = false;
- public float[][][][][][] SGcolorArray = new float[2][NUM_OF_FINGERS][3][2][NUM_OF_HAND_COLS*NUM_OF_SG_COLS][NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS];
- public float [][][][][][] interArray = new float[2][NUM_OF_FINGERS][3][2][ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1)][ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1)];
+ public float[][][][][][] SGcolorArray = new float[NUM_OF_INTERPOLATION_TYPE][NUM_OF_FINGERS][NUM_OF_LEVELS][NUM_OF_BEND][NUM_OF_HAND_COLS*NUM_OF_SG_COLS][NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS];
+ public color [][][][][][] interArray = new color[NUM_OF_INTERPOLATION_TYPE][NUM_OF_FINGERS][NUM_OF_LEVELS][NUM_OF_BEND][ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1)][ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1)];
 ControlP5 cp5;
-RadioButton r1, r2, r3, r4, r5;
+RadioButton r1, r2, r3, r4, r5, r6;
 
 void setup() {
-  size(800, 600);
+  size(800, 650);
   
   cp5 = new ControlP5(this);
   
@@ -144,79 +146,46 @@ void setup() {
        t.captionLabel().style().backgroundWidth = 45;
        t.captionLabel().style().backgroundHeight = 13;
      }
+
+    r6 = cp5.addRadioButton("user")
+     .setPosition(ButtonPosX,height*0.92)
+     .setSize(30,20)
+     .setColorForeground(color(120))
+     .setColorBackground(color(100,100,100))
+     .setColorActive(color(255))
+     .setColorLabel(color(0))
+     .setItemsPerRow(5)
+     .setSpacingColumn(50)
+     .addItem("user1",1)
+     .addItem("user2",2)
+     .addItem("user3",3)
+     .addItem("user4",4)
+     .addItem("user5",5)
+     .addItem("user6",6)
+     .addItem("user7",7)
+     .addItem("user8",8)
+     ; 
+     
+     for(Toggle t:r6.getItems()) {
+       t.captionLabel().setSize(12);
+       t.captionLabel().style().backgroundWidth = 45;
+       t.captionLabel().style().backgroundHeight = 13;
+     }
      
    r1.activate(0);
    r2.activate(0);
    r3.activate(0);
    r4.activate(1);
    r5.activate(0);
+   r6.activate(0);
    
-   for(int i = UserStartFrom; i < UserNum; i++){
-     tableArray[i]=loadTable("StudyData/User"+i+".csv","header");
+
+   for(int i = 0; i < UserNum; i++){
+     tableArray[i]=loadTable("StudyData/User"+(i+1)+".csv","header");
    }
 
-   float interX, interY;
-    for(int s=0; s<2;s++){
-      for(int f=0; f<NUM_OF_FINGERS; f++){
-         for(int l=0; l<3; l++){
-            for(int b=0; b<2; b++){
-                for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
-                  for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
-                      if((i%NUM_OF_SG_ROWS%2==0 && j%NUM_OF_SG_COLS%2==0) || (i%NUM_OF_SG_ROWS%2==1 && j%NUM_OF_SG_COLS%2==1)){
-                        SGcolorArray[s][f][l][b][j][i] = calSGValue(s,floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),f,l,b,floor(((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2));
-                      }
-                  }
-                }
-                for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
-                  for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
-                      if((i%NUM_OF_SG_ROWS%2!=0 || j%NUM_OF_SG_COLS%2!=0) && (i%NUM_OF_SG_ROWS%2!=1 || j%NUM_OF_SG_COLS%2!=1)){
-          
-                        if(j>0 && j<NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
-                          interX = lerp(SGcolorArray[s][f][l][b][j-1][i], SGcolorArray[s][f][l][b][j+1][i], .5); 
-                        }
-                        else if(j==NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
-                          interX = SGcolorArray[s][f][l][b][j-1][i]; 
-                        }
-                        else{
-                          interX = SGcolorArray[s][f][l][b][j+1][i]; 
-                        }
-                        if(i>0 && i<NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
-                          interY = lerp(SGcolorArray[s][f][l][b][j][i-1], SGcolorArray[s][f][l][b][j][i+1], .5); 
-                        }
-                        else if(i==NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
-                          interY = SGcolorArray[s][f][l][b][j][i-1]; 
-                        }
-                        else{
-                          interY = SGcolorArray[s][f][l][b][j][i+1]; 
-                        }
-                        SGcolorArray[s][f][l][b][j][i] = lerp(interX, interY, .5); 
-                      }
-                  }
-                }
-            }
-         }
-      }
-    }
-    float interX1,interX2;
-
-    for(int s=0; s<2;s++){
-      for(int f=0; f<NUM_OF_FINGERS; f++){
-         for(int l=0; l<3; l++){
-            for(int b=0; b<2; b++){
-                    for(int i =0; i < ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1); i++){
-                      for(int j=0 ; j < ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1); j++){
-                        // if(i%ShowGauge_dist_y==0 && j%ShowGauge_dist_x==0){
-                          interX1 = lerp(SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)],SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
-                          interX2 = lerp(SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)+1],SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)+1],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
-                          
-                          interArray[s][f][l][b][j][i] = lerp(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y);
-                      }
-                    }     
-
-            }
-          }
-      }
-    }
+   loadUserData();
+   
 
 }
 
@@ -231,7 +200,7 @@ void draw() {
       for(int i =0; i < ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1); i++){
         for(int j=0 ; j < ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1); j++){
           // if(i%ShowGauge_dist_y==0 && j%ShowGauge_dist_x==0){
-            stroke((ShowingType==0)?getHeatmapRGB(interArray[ShowingType][NowFinger][NowLevel][NowBend==true?1:0][j][i]):getSubRGB(interArray[ShowingType][NowFinger][NowLevel][NowBend==true?1:0][j][i]));
+            stroke(interArray[ShowingType][NowFinger][NowLevel][NowBend==true?1:0][j][i]);
             // fill(lerpColor(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y));
             // fill(interX1);
             point(ShowGauge_x+ShowGauge_dist_x/2+j,ShowGauge_y+ShowGauge_dist_y/2+i);
@@ -243,16 +212,18 @@ void draw() {
       stroke(color(0));
       for(int i =0; i < NUM_OF_HAND_ROWS; i++){
         for(int j=0; j < NUM_OF_HAND_COLS; j++){
-            rect(ShowGauge_x+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x*NUM_OF_SG_COLS,ShowGauge_dist_y*NUM_OF_SG_ROWS);
-            ellipse(ShowGauge_x+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i), 2, 2);
+            noFill();
+            rect(ShowGauge_x+ShowGauge_dist_x*NUM_OF_SG_COLS*j,ShowGauge_y+ShowGauge_dist_y*NUM_OF_SG_ROWS*i,ShowGauge_dist_x*NUM_OF_SG_COLS,ShowGauge_dist_y*NUM_OF_SG_ROWS);   
+            ellipse(ShowGauge_x+ShowGauge_dist_x*(1+NUM_OF_SG_COLS*j),ShowGauge_y+ShowGauge_dist_y*(2+NUM_OF_SG_ROWS*i), 4, 4);
         }
       }
+      fill(color(0));
       if(showPointFlg){
           for(int i =0; i < NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS); i++){
             for(int j=0 ; j < NUM_OF_SG_COLS*(NUM_OF_HAND_COLS); j++){
-              
+                  if((i%2==0 && j%2==0) || (i%2==1 && j%2==1)){
                   ellipse(ShowGauge_x+ShowGauge_dist_x/2+ShowGauge_dist_x*j,ShowGauge_y+ShowGauge_dist_y/2+ShowGauge_dist_y*i, 3, 3);
-              
+                  }
             }
           }
       }
@@ -296,8 +267,7 @@ void keyPressed() {
   switch(key){
     case 'p':
       showPointFlg=!showPointFlg;
-      break;
-
+      break;      
     case '9':
       r5.activate(0);
       break;
@@ -344,29 +314,57 @@ void keyPressed() {
     case 'x':
       r4.activate(1);
       break;
+
+    case ',':
+      if(NowUser>1){
+        r6.activate(NowUser-2);
+      }
+      break;
+    case '.':
+      if(NowUser < UserNum){
+         r6.activate(NowUser);
+      }
+      break;
   }
 }
 
 public void controlEvent(ControlEvent theEvent) {
   if(theEvent.isFrom(r1)) {
+    if(theEvent.getValue()>0){
     NowFinger = (int)theEvent.getValue()-1;
     println("NowFinger="+NowFinger);
+    }
   }
   if(theEvent.isFrom(r2)) {
+    if(theEvent.getValue()>0){
     NowLevel = (int)theEvent.getValue()-1;
     println("NowLevel="+NowLevel);
+    }
   }
   if(theEvent.isFrom(r3)) {
+    if(theEvent.getValue()>0){
     NowBend = (boolean)((theEvent.getValue()-1)<1)?true:false;
     println("NowBend="+NowBend);
+    }
   }
   if(theEvent.isFrom(r4)) {
-    ShowingType = (int)theEvent.getValue()-1;
-    println("ShowingType="+ShowingType);
+    if(theEvent.getValue()>0){
+      ShowingType = (int)theEvent.getValue()-1;
+      println("ShowingType="+ShowingType);
+    }
   }
    if(theEvent.isFrom(r5)) {
+    if(theEvent.getValue()>0){
     InterpolateType = (int)theEvent.getValue()-1;
     println("InterpolateType="+InterpolateType);
+    }
+  }
+   if(theEvent.isFrom(r6)) {
+    if(theEvent.getValue()>0){
+    NowUser = (int)theEvent.getValue();
+    loadUserData();
+    println("NowUser="+NowUser);
+     }
   }
   // assignSGcolorArrayFlg = true;
 }
@@ -385,7 +383,7 @@ public float calSGValue(int showtype, int Col, int Row, int Finger, int Level, i
   boolean Bend = tmpBend==0?false:true;
 
     if(showtype==0 ||  Level!=0){
-      for(TableRow row : tableArray[0].findRows(str( Finger), "Finger")){
+      for(TableRow row : tableArray[NowUser-1].findRows(str( Finger), "Finger")){
          
           
           if(boolean(row.getString("Bend"))== Bend && row.getInt("Level")== Level && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
@@ -412,7 +410,7 @@ public float calSGValue(int showtype, int Col, int Row, int Finger, int Level, i
     }
     if(showtype!=0){
         if( Level==0){
-          for(TableRow row : tableArray[0].findRows(str( Finger), "Finger")){
+          for(TableRow row : tableArray[NowUser-1].findRows(str( Finger), "Finger")){
               /////////----------------------------v high
               if(boolean(row.getString("Bend"))== Bend && row.getInt("Level")==1 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                   
@@ -459,7 +457,7 @@ public float calSGValue(int showtype, int Col, int Row, int Finger, int Level, i
           
         }
         else if( Level==1){
-            for(TableRow row : tableArray[0].findRows(str( Finger), "Finger")){
+            for(TableRow row : tableArray[NowUser-1].findRows(str( Finger), "Finger")){
                 if( boolean(row.getString("Bend"))== Bend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                     
                     allValue2+=row.getFloat("SG1_"+index);
@@ -484,7 +482,7 @@ public float calSGValue(int showtype, int Col, int Row, int Finger, int Level, i
             
         }
         else if( Level==2){
-            for(TableRow row : tableArray[0].findRows(str( Finger), "Finger")){
+            for(TableRow row : tableArray[NowUser-1].findRows(str( Finger), "Finger")){
                 if( boolean(row.getString("Bend"))== Bend && row.getInt("Level")==0 && row.getInt("Cols1")==Col && row.getInt("Rows1")==Row){
                     
                     allValue2+=row.getFloat("SG1_"+index);
@@ -547,6 +545,78 @@ public color getSubRGB(float value){
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)), 255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );
      
      return heatmapRGB;
+}
+public void loadUserData(){
+
+
+
+   float interX, interY;
+    for(int s=0; s<NUM_OF_INTERPOLATION_TYPE;s++){
+      for(int f=0; f<NUM_OF_FINGERS; f++){
+         for(int l=0; l<NUM_OF_LEVELS; l++){
+            for(int b=0; b<NUM_OF_BEND; b++){
+                for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
+                  for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
+                      if((i%NUM_OF_SG_ROWS%2==0 && j%NUM_OF_SG_COLS%2==0) || (i%NUM_OF_SG_ROWS%2==1 && j%NUM_OF_SG_COLS%2==1)){
+                        SGcolorArray[s][f][l][b][j][i] = calSGValue(s,floor((float)j/NUM_OF_SG_COLS),floor((float)i/NUM_OF_SG_ROWS),f,l,b,floor(((i%NUM_OF_SG_ROWS)*2+(j%NUM_OF_SG_COLS))/2));
+                      }
+                  }
+                }
+                for(int i =0; i < NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS; i++){
+                  for(int j=0; j < NUM_OF_HAND_COLS*NUM_OF_SG_COLS; j++){
+                      if((i%NUM_OF_SG_ROWS%2!=0 || j%NUM_OF_SG_COLS%2!=0) && (i%NUM_OF_SG_ROWS%2!=1 || j%NUM_OF_SG_COLS%2!=1)){
+          
+                        if(j>0 && j<NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                          interX = lerp(SGcolorArray[s][f][l][b][j-1][i], SGcolorArray[s][f][l][b][j+1][i], .5); 
+                        }
+                        else if(j==NUM_OF_HAND_COLS*NUM_OF_SG_COLS-1){
+                          interX = SGcolorArray[s][f][l][b][j-1][i]; 
+                        }
+                        else{
+                          interX = SGcolorArray[s][f][l][b][j+1][i]; 
+                        }
+                        if(i>0 && i<NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                          interY = lerp(SGcolorArray[s][f][l][b][j][i-1], SGcolorArray[s][f][l][b][j][i+1], .5); 
+                        }
+                        else if(i==NUM_OF_HAND_ROWS*NUM_OF_SG_ROWS-1){
+                          interY = SGcolorArray[s][f][l][b][j][i-1]; 
+                        }
+                        else{
+                          interY = SGcolorArray[s][f][l][b][j][i+1]; 
+                        }
+                        SGcolorArray[s][f][l][b][j][i] = lerp(interX, interY, .5); 
+                      }
+                  }
+                }
+            }
+         }
+      }
+    }
+    float interX1,interX2;
+
+    for(int s=0; s<NUM_OF_INTERPOLATION_TYPE;s++){
+      for(int f=0; f<NUM_OF_FINGERS; f++){
+         for(int l=0; l<NUM_OF_LEVELS; l++){
+            for(int b=0; b<NUM_OF_BEND; b++){
+                    for(int i =0; i < ShowGauge_dist_y*(NUM_OF_SG_ROWS*(NUM_OF_HAND_ROWS)-1); i++){
+                      for(int j=0 ; j < ShowGauge_dist_x*(NUM_OF_SG_COLS*(NUM_OF_HAND_COLS)-1); j++){
+                        // if(i%ShowGauge_dist_y==0 && j%ShowGauge_dist_x==0){
+                          interX1 = lerp(SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)],SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+                          interX2 = lerp(SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)][floor((float)i/ShowGauge_dist_y)+1],SGcolorArray[s][f][l][b][floor((float)j/ShowGauge_dist_x)+1][floor((float)i/ShowGauge_dist_y)+1],(float)(j-ShowGauge_dist_x*floor((float)j/ShowGauge_dist_x))/ShowGauge_dist_x);
+                          
+                          interY = lerp(interX1,interX2,(float)(i-ShowGauge_dist_y*floor((float)i/ShowGauge_dist_y))/ShowGauge_dist_y);
+                      
+
+                          interArray[s][f][l][b][j][i] = (s==0)?getHeatmapRGB(interY):getSubRGB(interY);
+                          
+                      }
+                    }     
+
+            }
+          }
+      }
+    }
+
 }
 
 
