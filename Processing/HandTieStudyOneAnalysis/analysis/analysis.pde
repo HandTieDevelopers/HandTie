@@ -21,7 +21,7 @@ public final static int ShowGaugeGroup_dist = 4;
 public final static int ButtonPosX = 10;
 public final static int ButtonPosY = 250;
 
-public final static int UserNum = 5;
+public final static int UserNum = 9;
 
 Table[] tableArray = new Table[UserNum];
 
@@ -164,6 +164,7 @@ void setup() {
      .addItem("user6",6)
      .addItem("user7",7)
      .addItem("user8",8)
+     .addItem("user9",9)
      ; 
      
      for(Toggle t:r6.getItems()) {
