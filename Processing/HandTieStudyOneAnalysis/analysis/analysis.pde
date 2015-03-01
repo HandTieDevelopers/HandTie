@@ -10,8 +10,10 @@ public final static int NUM_OF_BEND = 2;
 public final static int NUM_OF_INTERPOLATION_TYPE = 2;
 // public final static int NUM_OF_Degree = 3;
  
-public final static int ShowGauge_x = 350;
-public final static int ShowGauge_y = 220;
+public final static int ShowGauge_x = 350;   //350
+public final static int ShowGauge_y = 220;   //220
+//public final static int ShowGauge_x = 20;   //350
+//public final static int ShowGauge_y = 20;   //220
 
 public final static int ShowGauge_dist_x = 40;
 public final static int ShowGauge_dist_y = 20;
@@ -43,7 +45,7 @@ RadioButton r1, r2, r3, r4, r5, r6;
 
 void setup() {
   size(800, 650);
-  
+//   size(480, 400);
   cp5 = new ControlP5(this);
   
   r1 = cp5.addRadioButton("Finger")
@@ -266,6 +268,9 @@ void draw() {
 
 void keyPressed() {
   switch(key){
+    case ' ':
+      saveFrame("user"+NowUser+"/"+"F"+NowFinger+"_L"+NowLevel+"_B"+((NowBend==true)?1:0)+".png");
+      break;
     case 'p':
       showPointFlg=!showPointFlg;
       break;      
@@ -509,21 +514,22 @@ public float calSGValue(int showtype, int Col, int Row, int Finger, int Level, i
         }
     
     }
+    float mainAvg = allValue/count;
     if(showtype==0){
-      return allValue/count;
+      return mainAvg;
     }
     else{
-      if( Level==0){
+      if( Level==0){                  //mid
         return allValue2/count2-allValue3/count3;
       }
-      else if( Level==1){
-        return allValue/count-allValue2/count2;
+      else if( Level==1){                //high
+        return mainAvg-allValue2/count2;
       }
-      else if( Level==2){
-        return allValue2/count2-allValue/count;
+      else if( Level==2){                //low
+        return mainAvg-allValue2/count2;
       }
       else{
-        return allValue;
+        return mainAvg;
       }
     }
   
@@ -539,8 +545,8 @@ public color getHeatmapRGB(float value){
      return heatmapRGB;
 }
 public color getSubRGB(float value){
-     float minimum=-0.3;
-     float maximum=0.3;
+     float minimum=-0.25;
+     float maximum=0.25;
      float ratio = 2 * (value-minimum) / (maximum - minimum);
      
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)), 255-(int)max(0, 255*(1 - ratio))-(int)max(0, 255*(ratio - 1)), (int)max(0, 255*(1 - ratio)) );
@@ -585,7 +591,7 @@ public void loadUserData(){
                         else{
                           interY = SGcolorArray[s][f][l][b][j][i+1]; 
                         }
-                        SGcolorArray[s][f][l][b][j][i] = lerp(interX, interY, .5); 
+                        SGcolorArray[s][f][l][b][j][i] = lerp(interX, interY, .9); 
                       }
                   }
                 }
