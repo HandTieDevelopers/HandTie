@@ -2,9 +2,9 @@ public class StudyMgr implements SerialListener{
   
    HandTieArduinoSystemOnProcessing mainClass;
    // public final static int NUM_OF_FINGERS = 5;
-   public final static int NUM_OF_GESTURE_SET = 20;
-   public final static int NUM_OF_EACH_TRAINING_TIMES = 5;
-   public final static int NUM_OF_EACH_TRAINING_DATA = 100;
+   public final static int NUM_OF_GESTURE_SET = 10;
+   public final static int NUM_OF_EACH_TRAINING_TIMES = 3;
+   public final static int NUM_OF_EACH_TRAINING_DATA = 50;
 
    public final static int NUM_OF_SG = 19;
    public final static int NUM_OF_SG_FIRSTROW = 9;
@@ -48,12 +48,12 @@ public class StudyMgr implements SerialListener{
    Table table;
    
    // PImage img;
-   // int imgIndex =30;
-   // PImage[] imgArray = new PImage[31];
-   // boolean loadedImgFlg = false;
+   int imgIndex =10;
+   PImage[] imgArray = new PImage[NUM_OF_GESTURE_SET+1];
+   boolean loadedImgFlg = false;
 
-   public final static int imgWidth = 450;
-   public final static int imgHeight = -30;
+   public final static int imgWidth = 600;
+   public final static int imgHeight = 100;
 
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
@@ -80,6 +80,12 @@ public class StudyMgr implements SerialListener{
             
            break;
         case 2 :      //
+            if(loadedImgFlg){
+              showImage();
+            }
+            else{
+              text("Loading Images...", width*0.7, height*0.5); 
+            }
             textSize(26);
             fill(0, 102, 153);
             text("Gesture:"+NowGesture+"\nRow:"+NowRow, width*0.02, height*0.1); 
@@ -143,21 +149,25 @@ public class StudyMgr implements SerialListener{
                 else{
                     PeriodRecordFlg=false;
                     TransFlg=true;
+
                     if(randNextGes()){
                       if(NowRow+2 < NUM_OF_HAND_ROWS){
                               NowRow+=2;
                               tCfinishRound=0;
+                              NowStudyStage=0;
                               for(int i=0; i< NUM_OF_GESTURE_SET; i++){
                       
                                         tCountArray[i]=0;  
-                                    
+                                       
                               }
                           }
                           else{
                               NowMainStage=3;
+                              saveTable(table, "StudyData/User"+StudyID+".csv");
                           }
 
                     }
+                    loadWhichImage();
                 }
             }
             if(autoSpace==true && PeriodRecordFlg==false){
@@ -227,14 +237,14 @@ public class StudyMgr implements SerialListener{
             NowMainStage=1;
            break;
         case '2' :
-            // if(!loadedImgFlg){
-         
-            //     for(int i=86; i<86+30;i++){
-            //           imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
-            //       }
-            //     imgArray[30]=loadImage("Photo/blank.jpg");
-            //     loadedImgFlg=true;
-            // }
+            if(!loadedImgFlg){
+                for(int i=1; i<=NUM_OF_GESTURE_SET;i++){
+                      imgArray[i]=loadImage("GestureSet/"+i+".jpg");
+                  }
+                imgArray[0]=loadImage("Photo/blank.jpg");
+                loadedImgFlg=true;
+            }
+
             for(int i=0; i< NUM_OF_GESTURE_SET; i++){
                 tCountArray[i]=0;  
             }
@@ -253,14 +263,13 @@ public class StudyMgr implements SerialListener{
 
            break;
         case '3' :
-            // if(!loadedImgFlg){
-         
-            //     for(int i=86; i<86+30;i++){
-            //           imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
-            //       }
-            //     imgArray[30]=loadImage("Photo/blank.jpg");
-            //     loadedImgFlg=true;
-            // }
+            if(!loadedImgFlg){
+                for(int i=1; i<=NUM_OF_GESTURE_SET;i++){
+                      imgArray[i]=loadImage("GestureSet/"+i+".JPG");
+                  }
+                imgArray[0]=loadImage("Photo/blank.jpg");
+                loadedImgFlg=true;
+            }
             NowMainStage=3;
            break;
         case 's':
@@ -360,9 +369,10 @@ public class StudyMgr implements SerialListener{
           }
           
           if(!fillYet){
-              tCountArray[randGes]++;
-              NowGesture = randGes;
+             
               if(tCfinishRound+1<NUM_OF_EACH_TRAINING_TIMES){
+                 tCountArray[randGes]++;
+                NowGesture = randGes;
                 tCfinishRound++;
               }
               else{
@@ -461,11 +471,15 @@ public class StudyMgr implements SerialListener{
                 NowStudyStage=1;
                 TransFlg=true;
                 PeriodRecordFlg = false;
+                PeriodRecordCounter = 0;
                 randNextGes();
+                tCfinishRound=0;
+                   
             }
             else if(NowStudyStage==1){
                 if(TransFlg){
-                  TransFlg=false;                 
+                  TransFlg=false;  
+
                 }
                 else{
                   
@@ -477,270 +491,13 @@ public class StudyMgr implements SerialListener{
             }
 
         }
+        loadWhichImage();
    }
-   // public void loadWhichImage(){
-    
-   //   if(TransFlg){
-
-   //      imgIndex = 30;
-   //   }
-   //   else{
-       
-   //        if(NowStudyStage == 1){
-   //          if(NowLevel==0){
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 0;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 6;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 12;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 18;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 24;
-   //                  break;
-   //            }
-              
-   //          }
-   //          else if(NowLevel==1){
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 1;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 7;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 13;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 19;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 29;
-   //                  break;
-   //            }
-               
-   //          }
-   //          else{
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 2;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 8;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 14;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 20;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 25;
-   //                  break;
-   //            }
-               
-   //          }
-   //        }
-   //        else if(NowStudyStage == 2){
-   //          if(NowLevel==0){
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 3;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 9;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 15;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 21;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 26;
-   //                  break;
-   //            }
-              
-   //          }
-   //          else if(NowLevel==1){
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 4;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 10;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 16;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 22;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 27;
-   //                  break;
-   //            }
-               
-   //          }
-   //          else{
-   //            switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 5;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 11;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 17;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 23;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 28;
-   //                  break;
-   //            }
-               
-   //          }
-   //        }
-   //        else if(NowStudyStage == 3){
-   //            if(NowBend==true){
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 4;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 10;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 16;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 22;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 27;
-   //                  break;
-   //              }
-                
-   //            }
-   //            else{
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 1;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 7;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 13;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 19;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 29;
-   //                  break;
-   //              }
-                
-   //            }
-   //        }
-   //        else if(NowStudyStage == 4){
-   //            if(NowBend==true){
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 3;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 9;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 15;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 21;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 26;
-   //                  break;
-   //              }
-                
-   //            }
-   //            else{
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 0;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 6;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 12;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 18;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 24;
-   //                  break;
-   //              }
-                
-   //            }
-   //        }
-   //        else if(NowStudyStage == 5){
-   //            if(NowBend==true){
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 5;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 11;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 17;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 23;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 28;
-   //                  break;
-   //              }
-                
-   //            }
-   //            else{
-   //              switch (NowFinger) {
-   //               case 0:
-   //                 imgIndex = 2;
-   //                  break;
-   //               case 1:
-   //                 imgIndex = 8;
-   //                  break;
-   //               case 2:
-   //                 imgIndex = 14;
-   //                  break;
-   //               case 3:
-   //                 imgIndex = 20;
-   //                  break;
-   //               case 4:
-   //                 imgIndex = 25;
-   //                  break;
-   //              }
-                
-   //            }
-   //        }
-       
-
-   //   }
-    
-   // }
+   public void loadWhichImage(){
+            
+       imgIndex = NowGesture+1;
+     
+   }
    // public void showSGPos(){
    //   final int SG_dist = 30;
    //   final int SG_X = 350;
@@ -774,11 +531,11 @@ public class StudyMgr implements SerialListener{
    //   }
    
    // }
-   // public void showImage(){
-   //    if(NowStudyStage>0){
-   //      image(imgArray[imgIndex], imgWidth, imgHeight, width/2 , height );
-   //    }
-   // }
+   public void showImage(){
+      if(NowStudyStage>0){
+        image(imgArray[imgIndex], imgWidth, imgHeight, floor(width/4) , floor(height/2) );
+      }
+   }
   public void nextStepView(){
            
    }
