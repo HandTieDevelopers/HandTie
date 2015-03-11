@@ -3,8 +3,10 @@ public class StudyMgr implements SerialListener{
    HandTieArduinoSystemOnProcessing mainClass;
    // public final static int NUM_OF_FINGERS = 5;
    public final static int NUM_OF_GESTURE_SET = 10;
-   public final static int NUM_OF_EACH_TRAINING_TIMES = 3;
-   public final static int NUM_OF_EACH_TRAINING_DATA = 50;
+   public final static int NUM_OF_EACH_TRAINING_TIMES = 10;
+   public final static int NUM_OF_EACH_TRAINING_DATA = 20;
+   public final static int SAMPLING_FPS = 20;
+   public final static int SAMPLING_PERIOD = 1000/SAMPLING_FPS;
 
    public final static int NUM_OF_SG = 19;
    public final static int NUM_OF_SG_FIRSTROW = 9;
@@ -40,6 +42,8 @@ public class StudyMgr implements SerialListener{
    
    public boolean autoSpace = false;
    public boolean autoL = false;
+
+   private int millis;
    // public int RowCount;
 
    int tCountArray[] = new int[NUM_OF_GESTURE_SET]; 
@@ -140,34 +144,38 @@ public class StudyMgr implements SerialListener{
                  
              }
             if(PeriodRecordFlg){
+
                 text(PeriodRecordCounter, width*0.1, height*0.44);
 
-                if(PeriodRecordCounter+1<NUM_OF_EACH_TRAINING_DATA){
-                  PeriodRecordCounter++;
-                  AddNewRow();
-                }
-                else{
-                    PeriodRecordFlg=false;
-                    TransFlg=true;
-
-                    if(randNextGes()){
-                      if(NowRow+2 < NUM_OF_HAND_ROWS){
-                              NowRow+=2;
-                              tCfinishRound=0;
-                              NowStudyStage=0;
-                              for(int i=0; i< NUM_OF_GESTURE_SET; i++){
-                      
-                                        tCountArray[i]=0;  
-                                       
-                              }
-                          }
-                          else{
-                              NowMainStage=3;
-                              saveTable(table, "StudyData/User"+StudyID+".csv");
-                          }
-
+                if(millis()-millis>=SAMPLING_PERIOD){
+                    if(PeriodRecordCounter+1<NUM_OF_EACH_TRAINING_DATA){
+                      PeriodRecordCounter++;
+                      AddNewRow();
+                      millis = millis();
                     }
-                    loadWhichImage();
+                    else{
+                        PeriodRecordFlg=false;
+                        TransFlg=true;
+
+                        if(randNextGes()){
+                          if(NowRow+2 < NUM_OF_HAND_ROWS){
+                                  NowRow+=2;
+                                  tCfinishRound=0;
+                                  NowStudyStage=0;
+                                  for(int i=0; i< NUM_OF_GESTURE_SET; i++){
+                          
+                                            tCountArray[i]=0;  
+                                           
+                                  }
+                              }
+                              else{
+                                  NowMainStage=3;
+                                  saveTable(table, "StudyData/User"+StudyID+".csv");
+                              }
+
+                        }
+                        loadWhichImage();
+                    }
                 }
             }
             if(autoSpace==true && PeriodRecordFlg==false){
@@ -335,12 +343,12 @@ public class StudyMgr implements SerialListener{
               autoSpace=!autoSpace;
             }
           break;
-        case 'p' :
-            if(!autoSpace){
-              autoL=!autoL;
-            }
+        // case 'p' :
+        //     if(!autoSpace){
+        //       autoL=!autoL;
+        //     }
            
-          break;
+        //   break;
       }
    }
    public boolean randNextGes(){
@@ -396,6 +404,7 @@ public class StudyMgr implements SerialListener{
 
       // tmpNewRow.setString("Degree",str(NowDegree));
       tmpNewRow.setString("Gesture", str(NowGesture));
+      tmpNewRow.setString("Times", str(tCfinishRound));
      
       tmpNewRow.setString("Line1", str(NowRow));
       tmpNewRow.setString("SG1_0",str(mainClass.sgManager.getOneElongationValsOfGauges(0)));
@@ -437,6 +446,7 @@ public class StudyMgr implements SerialListener{
       
       // table.addColumn("Degree");
       table.addColumn("Gesture");
+      table.addColumn("Times");
     
       table.addColumn("Line1");
       table.addColumn("SG1_0");
@@ -485,6 +495,7 @@ public class StudyMgr implements SerialListener{
                   
                   PeriodRecordFlg = true;
                   PeriodRecordCounter = 0;
+                  millis = millis();
                   
                 }
 
