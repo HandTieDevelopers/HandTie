@@ -2,7 +2,7 @@ public class StudyMgr implements SerialListener{
   
    HandTieArduinoSystemOnProcessing mainClass;
    // public final static int NUM_OF_FINGERS = 5;
-   public final static int NUM_OF_GESTURE_SET = 10;
+   public final static int NUM_OF_GESTURE_SET = 17;
    public final static int NUM_OF_EACH_TRAINING_TIMES = 10;
    public final static int NUM_OF_EACH_TRAINING_DATA = 20;
    public final static int SAMPLING_FPS = 20;
@@ -93,6 +93,13 @@ public class StudyMgr implements SerialListener{
             textSize(26);
             fill(0, 102, 153);
             text("Gesture:"+NowGesture+"\nRow:"+NowRow, width*0.02, height*0.1); 
+
+            textSize(10);
+            for(int nn=0; nn<NUM_OF_GESTURE_SET; nn++){
+              text(nn, width*0.01, 126+nn*8.3);
+            }
+             
+
             for(int i=0; i< NUM_OF_GESTURE_SET; i++){
                for(int j=0; j<NUM_OF_EACH_TRAINING_TIMES; j++){
                   if(NowGesture == i && tCountArray[i]-1==j){
@@ -101,7 +108,7 @@ public class StudyMgr implements SerialListener{
                   else{
                     fill((tCountArray[i]>j)?color(0):color(255));
                   }
-                  rect(10+j*GestureGrid,height*0.2+i*GestureGrid+2*i,GestureGrid,GestureGrid);
+                  rect(25+j*GestureGrid,height*0.2+i*GestureGrid+2*i,GestureGrid,GestureGrid);
                }
             }
             for(int r=0; r< NUM_OF_HAND_ROWS/2; r++){
@@ -129,23 +136,23 @@ public class StudyMgr implements SerialListener{
             fill(0,0,0);
             if(NowStudyStage==0){
                textSize(40);
-               text("Press <BUTTON> to start", width*0.1, height*0.4); 
+               text("Press <BUTTON> to start", width*0.15, height*0.4); 
              }
              else{
                fill(255, 102, 153);
                textSize(40);
                
                if(TransFlg==false && PeriodRecordFlg==false){  
-                 text("Record? <BUTTON>", width*0.1, height*0.4); 
+                 text("Record? <BUTTON>", width*0.15, height*0.4); 
                }
                else if(TransFlg){
-                 text("ready? <BUTTON>", width*0.1, height*0.4); 
+                 text("ready? <BUTTON>", width*0.15, height*0.4); 
                } 
                  
              }
             if(PeriodRecordFlg){
-
-                text(PeriodRecordCounter, width*0.1, height*0.44);
+              
+                text(PeriodRecordCounter, width*0.15, height*0.44);
 
                 if(millis()-millis>=SAMPLING_PERIOD){
                     if(PeriodRecordCounter+1<NUM_OF_EACH_TRAINING_DATA){
@@ -246,10 +253,10 @@ public class StudyMgr implements SerialListener{
            break;
         case '2' :
             if(!loadedImgFlg){
-                for(int i=1; i<=NUM_OF_GESTURE_SET;i++){
+                for(int i=0; i<NUM_OF_GESTURE_SET;i++){
                       imgArray[i]=loadImage("GestureSet/"+i+".jpg");
                   }
-                imgArray[0]=loadImage("Photo/blank.jpg");
+                imgArray[NUM_OF_GESTURE_SET]=loadImage("Photo/blank.jpg");
                 loadedImgFlg=true;
             }
 
@@ -272,10 +279,10 @@ public class StudyMgr implements SerialListener{
            break;
         case '3' :
             if(!loadedImgFlg){
-                for(int i=1; i<=NUM_OF_GESTURE_SET;i++){
+                for(int i=0; i<=NUM_OF_GESTURE_SET;i++){
                       imgArray[i]=loadImage("GestureSet/"+i+".JPG");
                   }
-                imgArray[0]=loadImage("Photo/blank.jpg");
+                imgArray[NUM_OF_GESTURE_SET]=loadImage("Photo/blank.jpg");
                 loadedImgFlg=true;
             }
             NowMainStage=3;
@@ -506,7 +513,7 @@ public class StudyMgr implements SerialListener{
    }
    public void loadWhichImage(){
             
-       imgIndex = NowGesture+1;
+       imgIndex = NowGesture;
      
    }
    // public void showSGPos(){
