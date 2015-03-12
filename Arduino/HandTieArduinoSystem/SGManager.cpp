@@ -1,17 +1,17 @@
 #include "SGManager.h"
 
 SGManager::SGManager(){
-   uint16_t targetValMinAmp[] = {15,15,15,15,15,15,15,15,
-                                15,15,15,15,15,15,15,15};
-   uint16_t targetValWithAmp[] = {300,300,300,300,300,300,300,300,
-                                  300,300,300,300,300,300,300,300};
+   // uint16_t targetValMinAmp[] = {15,15,15,15,15,15,15,15,
+   //                              15,15,15,15,15,15,15,15};
+   // uint16_t targetValWithAmp[] = {300,300,300,300,300,300,300,300,
+   //                                300,300,300,300,300,300,300,300};
 
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);
    
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       gauges[i] = new StrainGauge(WIPER0_INIT_POS, WIPER1_INIT_POS,
-                                  targetValMinAmp[i], targetValWithAmp[i]);
+                                  TARGET_VAL_MIN_AMP, TARGET_VAL_WITH_AMP);
    }
 
    mcp4251->wiper0_pos(WIPER0_INIT_POS);
