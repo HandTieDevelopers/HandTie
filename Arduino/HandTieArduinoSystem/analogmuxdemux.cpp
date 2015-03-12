@@ -67,8 +67,20 @@ void AnalogMux::SelectPin(uint8_t pin) {
         // of the slave 4051s to route to, after that it's simply determining
         // which pin on the slave IC needs to be switched to and then do with
         // it what you will.        
-        WriteSelectionPins(_MS0, _MS1, _MS2, (pin / 8));
+        // WriteSelectionPins(_MS0, _MS1, _MS2, (pin / 8));
         WriteSelectionPins(_SS0, _SS1, _SS2, (pin % 8));
+        uint8_t muxNum = (uint8_t) pin/8;
+        switch(muxNum){
+          case 0:
+            digitalWrite(_MS0, LOW); digitalWrite(_MS1, HIGH); digitalWrite(_MS2, HIGH);
+            break;
+          case 1:
+            digitalWrite(_MS0, HIGH); digitalWrite(_MS1, LOW); digitalWrite(_MS2, HIGH);
+            break;
+          case 2:
+            digitalWrite(_MS0, HIGH); digitalWrite(_MS1, HIGH); digitalWrite(_MS2, LOW);
+            break;
+        }
     } else {
         WriteSelectionPins(_MS0, _MS1, _MS2, pin);
     }

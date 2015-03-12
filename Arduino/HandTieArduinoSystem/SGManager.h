@@ -13,8 +13,8 @@
 #define SS1 3
 #define SS2 4
 #define MS0 5
-#define MS1 255
-#define MS2 255
+#define MS1 7
+#define MS2 8
 #define READPIN A0
 
 // ---------   MCP4251 Macro Define --------- //
@@ -31,9 +31,12 @@
 #define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
-#define NUM_OF_GAUGES 16
+#define NUM_OF_GAUGES 19
 #define CALI_TIMEOUT ((unsigned long)10000)
 // #define BROKEN_OMIT
+
+#define TARGET_VAL_MIN_AMP 15
+#define TARGET_VAL_WITH_AMP 300
 
 // ------------- SGManager class ------------ //
 
