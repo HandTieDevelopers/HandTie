@@ -34,7 +34,7 @@ public:
    boolean isBroken();
 
    uint16_t* getInputVals();
-   const static uint32_t numValsToCached = 5;
+   const static uint32_t numValsToCached = 9;
 
    void updateInputVals(uint16_t val);
 

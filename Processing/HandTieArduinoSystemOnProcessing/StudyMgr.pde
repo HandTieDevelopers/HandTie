@@ -23,7 +23,7 @@ public class StudyMgr implements SerialListener{
    
    public final static int ShowGauge_dist = 30;
    
-   public final static String StudyID = "10";
+   public final static String StudyID = "0";
    
    public String ShowText = "Study #2";
 
@@ -46,7 +46,7 @@ public class StudyMgr implements SerialListener{
    private int millis;
    // public int RowCount;
 
-   int tCountArray[] = new int[NUM_OF_GESTURE_SET]; 
+   int tCountArray[] = new int[NUM_OF_GESTURE_SET+1]; 
    int tCfinishRound;
 
    Table table;
