@@ -23,7 +23,7 @@ public class StudyMgr implements SerialListener{
    
    public final static int ShowGauge_dist = 30;
    
-   public final static String StudyID = "0";
+   public final static String StudyID = "1";
    
    public String ShowText = "Study #2";
 
@@ -32,6 +32,7 @@ public class StudyMgr implements SerialListener{
    
 
    public int NowGesture = 0;      
+   public int LastGesture = 0;   
 
    public int NowRow = 0;        
              
@@ -52,7 +53,7 @@ public class StudyMgr implements SerialListener{
    Table table;
    
    // PImage img;
-   int imgIndex =10;
+   int imgIndex =16;
    PImage[] imgArray = new PImage[NUM_OF_GESTURE_SET+1];
    boolean loadedImgFlg = false;
 
@@ -73,6 +74,7 @@ public class StudyMgr implements SerialListener{
 //          imgArray[i-86]=loadImage("Photo/IMG_0"+(i<100?("0"+i):i)+".JPG");
 //      }
 //      RowCount = 0;
+      println("SAMPLING_PERIOD:"+SAMPLING_PERIOD);
       
    }
    public void start(){
@@ -84,15 +86,41 @@ public class StudyMgr implements SerialListener{
             
            break;
         case 2 :      //
+
             if(loadedImgFlg){
               showImage();
+              textSize(35);
+              fill(color(200));
+              if(imgIndex<=10){
+
+                  text("Number:"+imgIndex, width*0.75, height*0.95);
+              }
+              else{
+                  switch (imgIndex) {
+                      case 11:
+                        text("Y", width*0.85, height*0.95);
+                        break;
+                      case 12:
+                        text("L", width*0.85, height*0.95);
+                        break;
+                      case 13:
+                        text("S", width*0.85, height*0.95);
+                        break;
+                      case 14:
+                        text("Fuxk", width*0.8, height*0.95);
+                        break;
+                      case 15:
+                        text("Rock", width*0.8, height*0.95);
+                        break;
+                  }
+              }
             }
             else{
               text("Loading Images...", width*0.7, height*0.5); 
             }
             textSize(26);
             fill(0, 102, 153);
-            text("Gesture:"+NowGesture+"\nRow:"+NowRow, width*0.02, height*0.1); 
+            text("Gesture:"+NowGesture+"\nRow:"+NowRow+"\nLast:"+LastGesture, width*0.02, height*0.06); 
 
             textSize(10);
             for(int nn=0; nn<NUM_OF_GESTURE_SET; nn++){
@@ -155,10 +183,12 @@ public class StudyMgr implements SerialListener{
                 text(PeriodRecordCounter, width*0.15, height*0.44);
 
                 if(millis()-millis>=SAMPLING_PERIOD){
-                    if(PeriodRecordCounter+1<NUM_OF_EACH_TRAINING_DATA){
+                  // println("period:"+(millis()-millis));
+                  millis = millis();
+                  
+                    if(PeriodRecordCounter+1<=NUM_OF_EACH_TRAINING_DATA){
                       PeriodRecordCounter++;
-                      AddNewRow();
-                      millis = millis();
+                      AddNewRow();        
                     }
                     else{
                         PeriodRecordFlg=false;
@@ -174,6 +204,7 @@ public class StudyMgr implements SerialListener{
                                             tCountArray[i]=0;  
                                            
                                   }
+                                  saveTable(table, "StudyData/User"+StudyID+"_tmp.csv");
                               }
                               else{
                                   NowMainStage=3;
@@ -293,34 +324,24 @@ public class StudyMgr implements SerialListener{
         case ESC:
             saveTable(table, "StudyData/User"+StudyID+".csv");
            break;
-        case '~':
-            // println("Loading Table...");
-            // table = loadTable("StudyData/User"+StudyID+".csv","header");
-            // int lastRow = table.getRowCount()-1;
-            // // NowDegree = table.getInt(lastRow,"Degree");
-            // NowCol1 = table.getInt(lastRow,"Cols1");        
-            // NowRow1 = table.getInt(lastRow,"Rows1"); 
-            // NowCol2 = table.getInt(lastRow,"Cols2");        
-            // NowRow2 = table.getInt(lastRow,"Rows2"); 
-            // NowCol3 = table.getInt(lastRow,"Cols3");        
-            // NowRow3 = table.getInt(lastRow,"Rows3");
-            // NowCol4 = table.getInt(lastRow,"Cols4");        
-            // NowRow4 = table.getInt(lastRow,"Rows4");
-            // NowFinger = table.getInt(lastRow,"Finger"); 
-            // NowStudyStage = table.getInt(lastRow,"Stage"); 
-            // NowLevel = table.getInt(lastRow,"Level");
-            // NowBend = (table.getInt(lastRow,"Bend")==1)?true:false;
-            // TransFlg=false;
-            // loadTableFlg = true;
-            // lastStep();
-           break;
-        case 'l':
-              lastStep();
-              DeleteRow();
-           break;
-        case RETURN:
-            text("Delete", width*0.39, height*0.45);
-            DeleteRow();
+        // case '~':
+        //     println("Loading Table...");
+        //     table = loadTable("StudyData/User"+StudyID+"_tmp.csv","header");
+        //     int lastRow = table.getRowCount()-1;
+        //     // NowDegree = table.getInt(lastRow,"Degree");      
+        //     NowRow = table.getInt(lastRow,"Line1");
+        //     NowGesture = table.getInt(lastRow,"Gesture"); 
+        //     TransFlg=false;
+        //     loadTableFlg = true;
+        //     // lastStep();
+        //    break;
+        // case 'l':
+        //       lastStep();
+        //       DeleteRow();
+        //    break;
+        case '\\':
+            println("Delete");
+            lastStep();
            break ;
         case ' ' :
           nextStep();
@@ -369,6 +390,7 @@ public class StudyMgr implements SerialListener{
           while (tmpi!=randGes) {
             if(tCountArray[tmpi]<=tCfinishRound){
                   tCountArray[tmpi]++;
+                  LastGesture = NowGesture;
                   NowGesture = tmpi;
                   // println("randGes: "+randGes+", tmpi: "+ tmpi);
                   fillYet = true;           
@@ -387,6 +409,7 @@ public class StudyMgr implements SerialListener{
              
               if(tCfinishRound+1<NUM_OF_EACH_TRAINING_TIMES){
                  tCountArray[randGes]++;
+                 LastGesture = NowGesture;
                 NowGesture = randGes;
                 tCfinishRound++;
               }
@@ -398,6 +421,7 @@ public class StudyMgr implements SerialListener{
         }
         else{
           tCountArray[randGes]++;
+          LastGesture = NowGesture;
           NowGesture = randGes;
         }
         return false;
@@ -480,6 +504,23 @@ public class StudyMgr implements SerialListener{
 
    }
    public void lastStep(){
+        if(NowGesture != LastGesture){
+          tCountArray[NowGesture]--;
+          boolean subRoundFlg = false;
+          for(int j =0; j<NUM_OF_GESTURE_SET; j++){
+              if(tCountArray[j]>tCfinishRound){
+                    subRoundFlg = true;
+              }
+          }
+          if(!subRoundFlg){
+              tCfinishRound--;
+
+          }
+          for(int i =0; i<NUM_OF_EACH_TRAINING_DATA; i++){
+              DeleteRow();
+          }
+          NowGesture = LastGesture;
+        }
 
    }
    public void nextStep(){
