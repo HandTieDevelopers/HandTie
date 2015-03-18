@@ -1,11 +1,12 @@
 import controlP5.*;
+import java.util.Random;
 
 final int windowWidth = 1100;
 final int windowHeight = 700;
 
 final int NumGestures = 17;
 final int NumRowsPerRound = 2;
-final int NumRepeatedTimes = 4;
+final int NumRepeatedTimes = 4; //put strain gages at different positions
 final int NumTrialsPerGesture = 10;
 final int NumSamplesPerTrial = 20;
 final int TotalNumRows = NumRowsPerRound * NumRepeatedTimes;
@@ -39,9 +40,13 @@ void setup() {
   
   new DisposeHandler(this); //exit handler
   
-  
-  
   initView();
+  
+  new ControlEventHandler(this);
+  
+  for(int i = 0;i < NumTrialsPerGesture;i++) {
+    trialNumsForShuffle[i] = i;
+  }
 }
 
 void draw() {
@@ -76,6 +81,17 @@ void keyPressed() {
         controlCheckBoxDataIndex = 0;
       }
     }
+    else if(key == 'q') {
+      changeCheckBoxAllStatus(false);
+    }
+    else if(key == 'w') {
+      changeCheckBoxAllStatus(true);
+    }
+    else if(key == 'r') {
+      randomSelectTrialNums(numTrialsToUse);
+    }
+    
+    
   }
 
 }
@@ -93,12 +109,13 @@ Textlabel inputDataFilePath_textlabel;
 Textlabel outputDataDirPath_textlabel;
 Textlabel inputDataDirPath_textlabel;
 Textlabel messageText = null;
+Textlabel systemStatus_textlabel;
 
 //Textfield numTrialsToUse_textfield;
-//Slider numTrialsToUse_slider;
+Slider numTrialsToUse_slider;
 RadioButton inputDataSource_radioButton;
 Button inputDataFileSelector, inputDataDirSelector, outputDataDirSelector, generatingDataButton;
-
+String generateDataButtonName = "Generate_Button";
 
 //-- View --
 final int buttonWidth = 250,buttonHeight = 30;
@@ -133,7 +150,10 @@ void initView() {
   int firstTextY = 28;
   int textSpaceHeight = 120 -28;
   int textAndButtonHeight = firstButtonY - firstTextY;
-
+  int genDataBtnX = windowWidth/2 - buttonWidth/2;
+  int genDataBtnY = windowHeight - 70;
+  
+  
   //Text labels
   String textToBeSet = null;
   if(inputDataFile == null) {
@@ -185,7 +205,7 @@ void initView() {
   
   cp5.addTextlabel("Output Dir Label")
      .setText("Output Dir")
-     .setPosition(textLabelAlignX,firstTextY + textSpaceHeight * 2)
+     .setPosition(textLabelAlignX, firstTextY + textSpaceHeight * 2)
      .setColorValue(color(238,115,54))
      .setFont(createFont("Georgia",textFontSize));
   
@@ -195,14 +215,20 @@ void initView() {
                                    //.setWidth(textBoxWidth)
                                    .setColorValue(color(238,115,54))
                                    .setFont(createFont("Georgia",textFontSize));
-
+  
+  systemStatus_textlabel = cp5.addTextlabel("System Status")
+     .setText(SystemStatus.Idle.toString())
+     .setPosition(genDataBtnX, genDataBtnY - 60)
+     .setColorValue(color(49,171,47))
+     .setFont(createFont("Georgia",20));
+  
   //Buttons
   inputDataFileSelector = cp5.addButton("To_Select_Input_File")
      .setPosition(buttonAlignX,firstButtonY)
-     .setSize(buttonWidth,buttonHeight)
-     .setBroadcast(false)
-     .setValue(ButtonEventCode.InputDataFileSelectorPressed.ordinal())
-     .setBroadcast(true);
+     .setSize(buttonWidth,buttonHeight);
+//     .setBroadcast(false)
+//     .setValue(ButtonEventCode.InputDataFileSelectorPressed.ordinal())
+//     .setBroadcast(true);
 
   inputDataDirSelector = cp5.addButton("To_Select_Input_Directory")
      .setPosition(buttonAlignX,firstTextY + textSpaceHeight + textAndButtonHeight)
@@ -219,12 +245,18 @@ void initView() {
      .setBroadcast(true);
   
   // TODO:generating data button
-  generatingDataButton = cp5.addButton("Generate_Button")
-     .setPosition(windowWidth/2 - buttonWidth/2,windowHeight - 70)
+  generatingDataButton = cp5.addButton("Generating_Button")
+     .setPosition(genDataBtnX,genDataBtnY)
      .setSize(buttonWidth,buttonHeight)
      .setBroadcast(false)
      .setValue(ButtonEventCode.GeneratingDataButtonPressed.ordinal())
      .setBroadcast(true);
+
+//  CustomizedButton genDataButton = new CustomizedButton(, 
+//                                                        windowWidth/2 - buttonWidth/2, 
+//                                                        windowHeight - 70, 
+//                                                        buttonWidth, 
+//                                                        buttonHeight);
 
   //Text fields
   // numTrialsToUse_textfield = cp5.addTextfield("numTrialsToUse")
@@ -233,12 +265,13 @@ void initView() {
   //                               .setFont(createFont("Arial",20))
   //                               .setColor(color(255,0,0));
 
-  // //Sliders
-  // numTrialsToUse_slider = cp5.addSlider("numTrialsToUse") //linked with variable "numTrialsToUse"
-  //                            .setRange(1, NumTrialsPerGesture)
-  //                            .setPosition(140, 200)
-  //                            .setSize(10, 100)
-  //                            .setNumberOfTickMarks(NumTrialsPerGesture);
+  //Sliders
+  numTrialsToUse_slider = cp5.addSlider("numTrialsToUse") //linked with variable "numTrialsToUse"
+                             .setRange(1, NumTrialsPerGesture)
+                             .setPosition(50, 200)
+                             .setSize(50, 100)
+                             .setCaptionLabel("number trials to random")
+                             .setNumberOfTickMarks(NumTrialsPerGesture);
 
   int certainY = firstTextY + textSpaceHeight*2 + textAndButtonHeight + 60;
   int uiSpaceColumn = 60;
@@ -305,7 +338,24 @@ void initView() {
   
   createMessageBox("init message");
   messageBox.hide();
+  
 }
+
+//class CustomizedButton {
+//
+//  Button cp5Btn = null;
+//  public String btnName;
+//  CustomizedButton(String buttonName, int x_pos, int y_pos, int uiWidth, int uiHeight) {
+//    btnName = buttonName;
+//    cp5Btn = cp5.addButton(buttonName)
+//                .setPosition(x_pos, y_pos)
+//                .setSize(uiWidth, uiHeight);
+//                //setBroadcast(false)
+//                //setValue()
+//                //setBroadcast(true)
+//  }
+//  
+//}
 
 Button messageBoxButton;
 
@@ -347,33 +397,27 @@ void setMessageText(String contentStr) {
 
 //-- Event Handler --
 
-// void controlEvent(ControlEvent theEvent) {
-//   if (theEvent.isFrom(usedRow_checkBox)) {
-     
-//   }
-// }
+public class ControlEventHandler implements ControlListener{
+  
+  ControlEventHandler(PApplet pa) {
+    cp5.addListener(this);
+  }
+  
+  @Override
+  public void controlEvent(ControlEvent ctrlEvent) {
+    if(ctrlEvent.isFrom(generatingDataButton.getName())) {
+      generatingDataButton.setBroadcast(false);
+      systemStatus_textlabel.setText(SystemStatus.Generating_Data.toString());
+      println("start generating data");
+      generateData();
+      println("finish generating data");
+      systemStatus_textlabel.setText(SystemStatus.Idle.toString());
+      generatingDataButton.setBroadcast(true);
+    }
+  }
+  
+}
 
-// function buttonOK will be triggered when pressing
-// the OK button of the messageBox.
-// void buttonEventHandler(int theValue) {
-//   if(theValue == ButtonEventCode.MessageBoxButtonPressed.ordinal()) {
-//     println("a button event from button OK.");
-//     messageBox.hide();
-//   }
-//   else if(theValue == ButtonEventCode.InputDataFileSelectorPressed.ordinal()) {
-//     selectInput("Select a file to be input data:", "inputDataFileSelected");
-//   }
-//   else if(theValue == ButtonEventCode.OutputDataDirSelectorPressed.ordinal()) {
-//     selectFolder("Select a folder to be output directory", "outputDataFolderSelected");
-//   }
-//   else if(theValue == ButtonEventCode.InputDataDirSelectorPressed.ordinal()) {
-//     selectFolder("Select a folder to be input data directory", "inputDataFolderSelected");
-//   }
-//   else if(theValue == ButtonEventCode.GeneratingDataButtonPressed.ordinal()){
-//     generateData();
-//   }
-
-// }
 
 void MessageBoxButtonPressed(int value) {
   
@@ -397,12 +441,6 @@ void To_Select_Output_Directory(int value) {
 void To_Select_Input_Directory(int value) {
   
   selectFolder("Select a folder to be input data directory", "inputDataFolderSelected");  
-  
-} 
-
-void Generate_Button(int value) {
-  
-  generateData();  
   
 }
 
@@ -603,6 +641,27 @@ void loadConfig() {
 
 }
 
+void changeCheckBoxAllStatus(boolean activate) {
+  CheckBox cb = cbArray[controlCheckBoxDataIndex];
+  if(activate) {
+    cb.activateAll();
+  }
+  else {
+    cb.deactivateAll();
+  }
+}
+
+int[] trialNumsForShuffle = new int[NumTrialsPerGesture];
+
+void randomSelectTrialNums(int numValsToSelect) {
+  RandomizeArray(trialNumsForShuffle);
+  RandomizeArray(trialNumsForShuffle);
+  usedTrials_checkBox.deactivateAll();
+  for(int i = 0;i < numValsToSelect;i++) {
+    usedTrials_checkBox.activate(trialNumsForShuffle[i]);
+  }
+}
+
 //-- Utility --
 
 String getOutputFileName(File inputFile, DataType dataType) {
@@ -614,10 +673,8 @@ String getOutputFileName(File inputFile, DataType dataType) {
   outputFileName = outputFileName + 
                    "_" + dataTypes[dataTypeIdx] + 
                    "_rows" + getCheckBoxNumsString(CheckBoxData.rowNums, 1) +  
-                   "_trials" + getCheckBoxNumsString(CheckBoxData.trialNums , 1 - DataType.Training.ordinal()) +
+                   "_trials" + getCheckBoxNumsString(CheckBoxData.trialNums , 1 - dataType.ordinal()) +
                    fileExtensionName;
-                 
-                   
                    
   return outputFileName;
 }
@@ -693,6 +750,16 @@ public class DisposeHandler {
   }
 }
 
-void initKeysForKeyPressed() {
-
+void RandomizeArray(int[] inputArray){
+    Random rgen = new Random(millis());  // Random number generator    
+    int numElement = inputArray.length;
+    
+    for (int i = 0; i < numElement; i++) {
+        int randomPosition = rgen.nextInt(numElement);
+        int temp = inputArray[i];
+        inputArray[i] = inputArray[randomPosition];
+        inputArray[randomPosition] = temp;
+    }
+ 
+    return;
 }

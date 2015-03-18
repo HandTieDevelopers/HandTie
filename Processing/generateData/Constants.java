@@ -22,3 +22,8 @@ enum CheckBoxData {
   trialNums,
   numDataType
 };
+
+enum SystemStatus {
+  Idle,
+  Generating_Data
+};
