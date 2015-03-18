@@ -19,7 +19,7 @@ public final static int ButtonPosX = 10;
 public final static int ButtonPosY = 250;
 
 public final static int UserNum = 1;
-public final static int UserStartFrom = 0;
+public int UserStartFrom = 0;
 
 Table[] tableArray = new Table[UserNum];
 
