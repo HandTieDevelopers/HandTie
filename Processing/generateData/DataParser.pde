@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 class DataParser {
   int mNumGestures;
-  int mNumSamplePerGesture;
+  int mNumSamplesPerTrial;
   int mNumMaxTrialsPerGesture;
   final char delimeter = ' ';
   final int GestureIdx = 0;
@@ -15,16 +15,40 @@ class DataParser {
   final int[] NumGages = new int[]{ 9, 10 };
   final int bufferSize = 300;
   boolean[] rowIsChosen = new boolean[RowIdxs.length];
-  StringBuffer[][] dataInstances;
+  StringBuffer[][][] dataInstances;
   int[] trainingTrialNums;
   int[] testingTrialNums;
   int numTrainingTrials;
   int numTestingTrials;
+  int[][][] vecNum;
+  DataFormat mDataFormat;
 
-  public DataParser(int numGestures, int numSamplesPerGesture, int numMaxTrialsPerGesture) {
+  public DataParser(int numGestures, int numSamplesPerTrial, int numMaxTrialsPerGesture) {
     mNumGestures = numGestures;
-    mNumSamplePerGesture = numSamplesPerGesture;
+    mNumSamplesPerTrial = numSamplesPerTrial;
     mNumMaxTrialsPerGesture = numMaxTrialsPerGesture;
+    vecNum = new int[numGestures][numMaxTrialsPerGesture][numSamplesPerTrial];
+    dataInstances = new StringBuffer[mNumGestures][mNumMaxTrialsPerGesture][mNumSamplesPerTrial];
+    for(int i = 0;i < mNumGestures;i++) {
+      for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
+        for(int k = 0;k < mNumSamplesPerTrial;k++) {
+          dataInstances[i][j][k] = new StringBuffer();
+        }
+      }
+    }
+  }
+
+  void initVariables() {
+    for(int i = 0;i < mNumGestures;i++) {
+      for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
+        for(int k = 0;k < mNumSamplesPerTrial;k++) {
+          vecNum[i][j][k] = 1;  
+          dataInstances[i][j][k].setLength(0);
+          dataInstances[i][j][k].append(i);
+          dataInstances[i][j][k].append(delimeter); 
+        }
+      }
+    }
   }
 
   public void parse(File dataFile, ParseCondition condition) {
@@ -32,9 +56,11 @@ class DataParser {
       println("dataFile is null, unable to parse");
       return;
     }
+    initVariables();
 
     int[] selectedRows = condition.selectedRows;
     trainingTrialNums = condition.trialNums;
+    mDataFormat = condition.dataFormat;
     numTrainingTrials = trainingTrialNums.length;
     numTestingTrials = mNumMaxTrialsPerGesture - numTrainingTrials;
     testingTrialNums = new int[numTestingTrials];
@@ -53,16 +79,6 @@ class DataParser {
       }
     }
 
-    dataInstances = new StringBuffer[mNumGestures][mNumMaxTrialsPerGesture];
-
-    for(int i = 0;i < mNumGestures;i++) {
-      for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
-        dataInstances[i][j] = new StringBuffer();
-        dataInstances[i][j].append(i);
-        dataInstances[i][j].append(delimeter);
-      }
-    }
-
     HashSet<Integer> selectedRowsSet = new HashSet<Integer>();
     for(int rowNum : selectedRows) {
       selectedRowsSet.add(rowNum);
@@ -75,10 +91,10 @@ class DataParser {
       if(lineOfData == null) {
         return;
       } 
-      int numGesturesNeedToBeCollected = mNumGestures * mNumMaxTrialsPerGesture * selectedRows.length; //early stop mechanism
+      int numDataNeedToBeCollected = mNumGestures * mNumMaxTrialsPerGesture * selectedRows.length; //early stop mechanism
       while((lineOfData = reader.readLine()) != null ) {
         /*
-        if(numGesturesNeedToBeCollected == 0) {
+        if(numDataNeedToBeCollected == 0) {
           break;
         }
         */
@@ -88,7 +104,7 @@ class DataParser {
         for(int i = 0;i < RowIdxs.length;i++) {
           if(selectedRowsSet.contains(Integer.parseInt(splitedData[RowIdxs[i]]))) { //this gesture contains the desired row of data
             rowIsChosen[i] = true;
-            numGesturesNeedToBeCollected--;
+            numDataNeedToBeCollected--;
             toSkipThisGesture = false;
           }
           else {
@@ -96,7 +112,8 @@ class DataParser {
           }
         }
         
-        int remainNumSamples = mNumSamplePerGesture - 1;
+        int remainNumSamples = mNumSamplesPerTrial - 1;
+        int sampleIndex = 0;
         if(toSkipThisGesture) { // not in selected rows
           while(remainNumSamples > 0 && reader.readLine() != null) {
             remainNumSamples--;
@@ -106,13 +123,13 @@ class DataParser {
           while(true) {
             for(int i = 0;i < RowIdxs.length;i++) {
               if(rowIsChosen[i]) {
-                concatFeatureVector(splitedData, FirstGaugeIdxs[i], NumGages[i]);
+                concatFeatureVector(splitedData, FirstGaugeIdxs[i], NumGages[i], sampleIndex);
               }
             }
             
-            if(remainNumSamples > 0 && (lineOfData = reader.readLine()) != null) {
+            if(sampleIndex < remainNumSamples && (lineOfData = reader.readLine()) != null) {
               splitedData = lineOfData.split(",");
-              remainNumSamples--;
+              sampleIndex++;
             }
             else {
               break;
@@ -121,13 +138,13 @@ class DataParser {
           }          
         }
 
-        if(remainNumSamples > 0) {
+        if(remainNumSamples > 0 && sampleIndex < remainNumSamples) {
           println("number of samples record per gesture was wrong");
         }
       }
 
-      if(numGesturesNeedToBeCollected < 0 || numGesturesNeedToBeCollected > 0) {
-        println("numGesturesNeedToBeCollected is abnormal:" + numGesturesNeedToBeCollected);
+      if(numDataNeedToBeCollected < 0 || numDataNeedToBeCollected > 0) {
+        println("numDataNeedToBeCollected is abnormal:" + numDataNeedToBeCollected);
       }
       
 
@@ -141,16 +158,30 @@ class DataParser {
       }
     }
 
-
   }
 
-  public void concatFeatureVector(String[] splitedData, int startIndex, int numData) {
+
+  public void concatFeatureVector(String[] splitedData, int startIndex, int numDataPoints, int sampleIndex) {
     int gestureID = Integer.parseInt(splitedData[GestureIdx]);
     int trialNum = Integer.parseInt(splitedData[TrialIdx]);
-    for(int i = startIndex;i < numData;i++) {
-      dataInstances[gestureID][trialNum].append(splitedData[i]);  
-      dataInstances[gestureID][trialNum].append(delimeter);
+    int endIndex = startIndex + numDataPoints;
+    StringBuffer instance = dataInstances[gestureID][trialNum][sampleIndex];
+    if(mDataFormat == DataFormat.LibLinearAndSVM) { 
+      for(int i = startIndex;i < endIndex;i++) {
+        instance.append(vecNum[gestureID][trialNum][sampleIndex]);
+        instance.append(':');
+        vecNum[gestureID][trialNum][sampleIndex]++;
+        instance.append(splitedData[i]);
+        instance.append(delimeter);
+      }
     }
+    else {
+      for(int i = startIndex;i < endIndex;i++) {
+        instance.append(splitedData[i]);
+        instance.append(delimeter);
+      }
+    }
+    
   }
 
   public void outputToFile(File directory, String fileName, DataType dataType) {
@@ -158,20 +189,22 @@ class DataParser {
     PrintWriter pw = null;
     try {
       pw = new PrintWriter(outputFile);
+      int numTrials = 0;
+      int[] trialNumsArray = null;
       if(dataType == DataType.Training) {
-        for(int i = 0;i < mNumGestures;i++) {
-          for(int j = 0;j < numTrainingTrials;j++) {
-            pw.println(dataInstances[i][trainingTrialNums[j]].toString());
-          }
-        }  
-       
+        numTrials = numTrainingTrials;
+        trialNumsArray = trainingTrialNums;
       }
       else if(dataType == DataType.Testing) {
-        for(int i = 0;i < mNumGestures;i++) {
-          for(int j = 0;j < numTestingTrials;j++) {
-            pw.println(dataInstances[i][testingTrialNums[j]].toString());
+        numTrials = numTestingTrials;
+        trialNumsArray = testingTrialNums;  
+      }
+      for(int i = 0;i < mNumGestures;i++) {
+        for(int j = 0;j < numTrials;j++) {
+          for(int k = 0;k < mNumSamplesPerTrial;k++) {
+            pw.println(dataInstances[i][trialNumsArray[j]][k].toString());  
           }
-        }    
+        }
       }
     } catch (Exception e) {
       println(e.getLocalizedMessage());
@@ -187,4 +220,3 @@ class DataParser {
 
 
 };
-

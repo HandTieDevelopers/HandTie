@@ -27,3 +27,8 @@ enum SystemStatus {
   Idle,
   Generating_Data
 };
+
+enum DataFormat {
+  LibLinearAndSVM,
+  GRT
+};

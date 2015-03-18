@@ -114,6 +114,7 @@ Textlabel systemStatus_textlabel;
 //Textfield numTrialsToUse_textfield;
 Slider numTrialsToUse_slider;
 RadioButton inputDataSource_radioButton;
+RadioButton dataFormat_radioButton;
 Button inputDataFileSelector, inputDataDirSelector, outputDataDirSelector, generatingDataButton;
 String generateDataButtonName = "Generate_Button";
 
@@ -292,6 +293,20 @@ void initView() {
   
   inputDataSource_radioButton.activate(0);
   
+  dataFormat_radioButton = cp5.addRadioButton("dataFormatSelector")
+                              .setPosition(radioButtonsAlignX, windowHeight - 120)
+                              .setSize(40, 40)
+                              .setColorForeground(color(120))
+                              .setColorActive(color(255))
+                              .setColorLabel(0xffffff00)
+                              .setItemsPerRow(1)
+                              .setSpacingRow(20)
+                              .setSpacingColumn(uiSpaceColumn)
+                              .addItem("LibSVMAndLinear",DataFormat.LibLinearAndSVM.ordinal())
+                              .addItem("GRT",DataFormat.GRT.ordinal());
+
+  dataFormat_radioButton.activate(0);
+
   //check Boxes
   //checkbox.getItem(i).internalValue()
   //checkbox.getArrayValue()
@@ -479,7 +494,7 @@ void outputDataFolderSelected(File selectedFolder) {
 
 ParseCondition mCondition = new ParseCondition();
 DataParser parser = new DataParser(NumGestures, NumSamplesPerTrial, NumTrialsPerGesture);
-
+DataFormat[] dataFormatEnums = DataFormat.values();
 void generateData() {
   //feature vectors according to rows selected 
   //num Entries according to numTrialsToUse
@@ -511,6 +526,7 @@ void generateData() {
   
   mCondition.selectedRows = getCheckBoxStatusVals(CheckBoxData.rowNums, 1);
   mCondition.trialNums = getCheckBoxStatusVals(CheckBoxData.trialNums, 1 - DataType.Training.ordinal());
+  mCondition.dataFormat = dataFormatEnums[(int)dataFormat_radioButton.getValue()];
 
   //num trials
   for(File file : inputFilesToBeProcessed) {
