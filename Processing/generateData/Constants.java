@@ -18,6 +18,7 @@ enum DataSource {
 };
 
 enum CheckBoxData {
+  gestureNums,
   rowNums,
   trialNums,
   numDataType

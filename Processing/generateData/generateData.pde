@@ -16,7 +16,7 @@ final String buttonEventHandlerName = "buttonEventHandler";
 final String inputDataFilePath_Key = "inputDataFilePath";
 final String outputDataDirPath_Key = "outputDataDirPath";
 final String inputDataDirPath_Key = "inputDataDirPath";
-final String fileExtensionName = ".csv";
+final String fileExtensionName = ".txt";
 
 
 final String[] dataTypes = new String[] {"training" , "testing"};
@@ -523,7 +523,7 @@ void generateData() {
   else {
     inputFilesToBeProcessed = null;
   }
-  
+  //mCondition.selectedGestures = 
   mCondition.selectedRows = getCheckBoxStatusVals(CheckBoxData.rowNums, 1);
   mCondition.trialNums = getCheckBoxStatusVals(CheckBoxData.trialNums, 1 - DataType.Training.ordinal());
   mCondition.dataFormat = dataFormatEnums[(int)dataFormat_radioButton.getValue()];
@@ -734,6 +734,9 @@ String getCheckBoxNumsString(CheckBoxData cbData, int desireValToSelected) {
   else if(cbData == CheckBoxData.trialNums) {
     cb = usedTrials_checkBox;
   }
+  //else if(cbData == CheckBoxData.gestureNums) {
+
+  //}
   else {
     cb = null;
   }
@@ -764,6 +767,7 @@ public class DisposeHandler {
     // Place here the code you want to execute on exit
     saveConfig();
   }
+
 }
 
 void RandomizeArray(int[] inputArray){

@@ -48,7 +48,7 @@ class DataParser {
         for(int k = 0;k < mNumSamplesPerTrial;k++) {
           vecNum[i][j][k] = 1;  
           dataInstances[i][j][k].setLength(0);
-          dataInstances[i][j][k].append(i);
+          dataInstances[i][j][k].append(i + 1);
           dataInstances[i][j][k].append(delimeter); 
         }
       }
@@ -194,13 +194,6 @@ class DataParser {
     
   }
  
-// NumDimensions: 19
-// TotalNumExamples: 411
-// NumberOfClasses: 3
-// 1 214 NOT_SET
-// 3 66  NOT_SET
-// 2 131 NOT_SET
-// UseExternalRanges: 0
   StringBuffer tempStrBuf = new StringBuffer();
   public void writeHeader(PrintWriter pw) {
     if(mDataFormat == DataFormat.GRT) {
@@ -213,7 +206,7 @@ class DataParser {
       pw.println("ClassIDsAndCounters: ");
       for(int i = 0;i < mNumGestures;i++) {
         tempStrBuf.setLength(0);
-        tempStrBuf.append(i);
+        tempStrBuf.append(i + 1);
         tempStrBuf.append(' ');
         tempStrBuf.append(numInstancesPerClass);
         tempStrBuf.append(" NOT_SET");
