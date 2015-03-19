@@ -22,6 +22,10 @@ class DataParser {
   int numTestingTrials;
   int[][][] vecNum;
   DataFormat mDataFormat;
+  int numTotalInstances;
+  int numInstancesPerClass;
+  int numDimensions = 0;
+
 
   public DataParser(int numGestures, int numSamplesPerTrial, int numMaxTrialsPerGesture) {
     mNumGestures = numGestures;
@@ -64,6 +68,12 @@ class DataParser {
     numTrainingTrials = trainingTrialNums.length;
     numTestingTrials = mNumMaxTrialsPerGesture - numTrainingTrials;
     testingTrialNums = new int[numTestingTrials];
+
+    numDimensions = 0;
+    for(int rowNum : selectedRows) {
+      numDimensions += (((rowNum + 1) % 2) * 9 + (rowNum % 2) * 10);
+    }
+
     HashSet<Integer> trainingTrialNumsSet = new HashSet<Integer>();
     for(int trialNum : trainingTrialNums) {
       trainingTrialNumsSet.add(trialNum);
@@ -183,12 +193,43 @@ class DataParser {
     }
     
   }
+ 
+// NumDimensions: 19
+// TotalNumExamples: 411
+// NumberOfClasses: 3
+// 1 214 NOT_SET
+// 3 66  NOT_SET
+// 2 131 NOT_SET
+// UseExternalRanges: 0
+  StringBuffer tempStrBuf = new StringBuffer();
+  public void writeHeader(PrintWriter pw) {
+    if(mDataFormat == DataFormat.GRT) {
+      pw.println("GRT_LABELLED_CLASSIFICATION_DATA_FILE_V1.0");
+      pw.println("DatasetName: NOT_SET");
+      pw.println("InfoText: ");
+      pw.println("NumDimensions: " + numDimensions);
+      pw.println("TotalNumExamples: "  + numTotalInstances);
+      pw.println("NumberOfClasses: " + mNumGestures);
+      pw.println("ClassIDsAndCounters: ");
+      for(int i = 0;i < mNumGestures;i++) {
+        tempStrBuf.setLength(0);
+        tempStrBuf.append(i);
+        tempStrBuf.append(' ');
+        tempStrBuf.append(numInstancesPerClass);
+        tempStrBuf.append(" NOT_SET");
+        pw.println(tempStrBuf.toString());
+      }
+      pw.println("UseExternalRanges: 0");
+      pw.println("Data:");
+
+    }
+  }
 
   public void outputToFile(File directory, String fileName, DataType dataType) {
     File outputFile = new File(directory, fileName);
     PrintWriter pw = null;
     try {
-      pw = new PrintWriter(outputFile);
+      pw = new PrintWriter(outputFile); 
       int numTrials = 0;
       int[] trialNumsArray = null;
       if(dataType == DataType.Training) {
@@ -199,6 +240,12 @@ class DataParser {
         numTrials = numTestingTrials;
         trialNumsArray = testingTrialNums;  
       }
+
+      numTotalInstances = mNumGestures * numTrials * mNumSamplesPerTrial;
+      numInstancesPerClass = numTrials * mNumSamplesPerTrial;
+      
+      writeHeader(pw);
+
       for(int i = 0;i < mNumGestures;i++) {
         for(int j = 0;j < numTrials;j++) {
           for(int k = 0;k < mNumSamplesPerTrial;k++) {
