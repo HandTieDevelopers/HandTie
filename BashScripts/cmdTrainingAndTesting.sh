@@ -30,8 +30,8 @@ fi
 
 #-- train and then test
 cd $inputDataFolderPath
-allTrainingData=`ls . | grep 'training'`
-allTestingData=`ls . | grep 'testing'`
+allTrainingData=`ls . | grep -e 'training.*.txt'`
+allTestingData=`ls . | grep -e 'testing.*.txt'` 
 #echo $allTestingData
 #trainingOpts=''
 #testingOpts=''
