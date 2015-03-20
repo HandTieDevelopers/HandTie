@@ -18,6 +18,7 @@ class DataParser {
   StringBuffer[][][] dataInstances;
   int[] trainingTrialNums;
   int[] testingTrialNums;
+  int[] gestureNums;
   int numTrainingTrials;
   int numTestingTrials;
   int[][][] vecNum;
@@ -65,6 +66,7 @@ class DataParser {
     int[] selectedRows = condition.selectedRows;
     trainingTrialNums = condition.trialNums;
     mDataFormat = condition.dataFormat;
+    gestureNums = condition.selectedGestures;
     numTrainingTrials = trainingTrialNums.length;
     numTestingTrials = mNumMaxTrialsPerGesture - numTrainingTrials;
     testingTrialNums = new int[numTestingTrials];
@@ -231,21 +233,36 @@ class DataParser {
       }
       else if(dataType == DataType.Testing) {
         numTrials = numTestingTrials;
-        trialNumsArray = testingTrialNums;  
+        trialNumsArray = testingTrialNums;
       }
 
-      numTotalInstances = mNumGestures * numTrials * mNumSamplesPerTrial;
       numInstancesPerClass = numTrials * mNumSamplesPerTrial;
       
       writeHeader(pw);
 
-      for(int i = 0;i < mNumGestures;i++) {
-        for(int j = 0;j < numTrials;j++) {
-          for(int k = 0;k < mNumSamplesPerTrial;k++) {
-            pw.println(dataInstances[i][trialNumsArray[j]][k].toString());  
+      if(gestureNums == null || gestureNums.length == 0) {
+        numTotalInstances = mNumGestures * numTrials * mNumSamplesPerTrial;
+        for(int i = 0;i < mNumGestures;i++) {
+          for(int j = 0;j < numTrials;j++) {
+            for(int k = 0;k < mNumSamplesPerTrial;k++) {
+              pw.println(dataInstances[i][trialNumsArray[j]][k].toString());  
+            }
           }
         }
       }
+      else {
+        int numGesturesSelected = gestureNums.length;
+        numTotalInstances = numGesturesSelected * numTrials * mNumSamplesPerTrial;
+        for(int i = 0;i < numGesturesSelected;i++) {
+          for(int j = 0;j < numTrials;j++) {
+            for(int k = 0;k < mNumSamplesPerTrial;k++) {
+              pw.println(dataInstances[gestureNums[i]][trialNumsArray[j]][k].toString());  
+            }
+          }
+        }
+      }
+
+      
     } catch (Exception e) {
       println(e.getLocalizedMessage());
     } finally {

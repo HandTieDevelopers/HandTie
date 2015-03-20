@@ -26,7 +26,8 @@ enum CheckBoxData {
 
 enum SystemStatus {
   Idle,
-  Generating_Data
+  Generating_Data,
+  Do_Batching
 };
 
 enum DataFormat {

@@ -1,5 +1,9 @@
 import controlP5.*;
 import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ArrayList;
 
 final int windowWidth = 1100;
 final int windowHeight = 700;
@@ -18,6 +22,7 @@ final String outputDataDirPath_Key = "outputDataDirPath";
 final String inputDataDirPath_Key = "inputDataDirPath";
 final String fileExtensionName = ".txt";
 
+final String checkBatchingIntent = "start to batch?(y/n)";
 
 final String[] dataTypes = new String[] {"training" , "testing"};
 String currentSketchPath = null;
@@ -33,6 +38,8 @@ int numTrialsToUse = 1; //linked with slider
 
 //-- Processing State Machines --
 
+ArrayList<Integer[]> rowCombin = new ArrayList<Integer[]>();
+
 void setup() {
   currentSketchPath = sketchPath("");
 
@@ -47,6 +54,14 @@ void setup() {
   for(int i = 0;i < NumTrialsPerGesture;i++) {
     trialNumsForShuffle[i] = i;
   }
+  
+  for(int i = 0;i < TotalNumRows;i++) {
+    rowCombin.add(new Integer[]{i});
+  }
+  int numVals = TotalNumRows/2;
+  for(int i = 0;i < numVals;i++) {
+    rowCombin.add(new Integer[]{i * 2, i * 2 + 1});
+  }
 }
 
 void draw() {
@@ -56,6 +71,8 @@ void draw() {
 final int char0AsciiVal = (int)'0';
 final int char9AsciiVal = (int)'9';
 int controlCheckBoxDataIndex = 0;
+String statusTxt;
+
 void keyPressed() {
   //println(key);
   int asciiVal = key;
@@ -81,6 +98,7 @@ void keyPressed() {
         controlCheckBoxDataIndex = 0;
       }
     }
+    //TO DO : we should use label to indicate which checkbox is under control.
     else if(key == 'q') {
       changeCheckBoxAllStatus(false);
     }
@@ -90,8 +108,23 @@ void keyPressed() {
     else if(key == 'r') {
       randomSelectTrialNums(numTrialsToUse);
     }
-    
-    
+    else if(key == 'b') {
+      // may be we should use a message box to prevent falsely triggering.
+      systemStatus_textlabel.setText(checkBatchingIntent);
+    }
+    else if(key == 'y') {
+      statusTxt = systemStatus_textlabel.get().getText();
+      if(statusTxt.equals(checkBatchingIntent)) {
+        systemStatus_textlabel.setText(SystemStatus.Do_Batching.toString());
+        batchTasks();
+      }
+    }
+    else if(key == 'n') {
+      statusTxt = systemStatus_textlabel.get().getText();
+      if(statusTxt.equals(checkBatchingIntent)) {
+        systemStatus_textlabel.setText(SystemStatus.Idle.toString());
+      }
+    }
   }
 
 }
@@ -104,6 +137,7 @@ ControlGroup messageBox;
 //DropdownList dataType_dropdownList;
 CheckBox usedRow_checkBox;
 CheckBox usedTrials_checkBox;
+CheckBox usedGestures_checkBox;
 CheckBox[] cbArray;
 Textlabel inputDataFilePath_textlabel;
 Textlabel outputDataDirPath_textlabel;
@@ -219,7 +253,7 @@ void initView() {
   
   systemStatus_textlabel = cp5.addTextlabel("System Status")
      .setText(SystemStatus.Idle.toString())
-     .setPosition(genDataBtnX, genDataBtnY - 60)
+     .setPosition(genDataBtnX + 300, genDataBtnY)
      .setColorValue(color(49,171,47))
      .setFont(createFont("Georgia",20));
   
@@ -294,14 +328,14 @@ void initView() {
   inputDataSource_radioButton.activate(0);
   
   dataFormat_radioButton = cp5.addRadioButton("dataFormatSelector")
-                              .setPosition(radioButtonsAlignX, windowHeight - 120)
+                              .setPosition(radioButtonsAlignX, windowHeight - 70)
                               .setSize(40, 40)
                               .setColorForeground(color(120))
                               .setColorActive(color(255))
                               .setColorLabel(0xffffff00)
-                              .setItemsPerRow(1)
+                              .setItemsPerRow(2)
                               .setSpacingRow(20)
-                              .setSpacingColumn(uiSpaceColumn)
+                              .setSpacingColumn(uiSpaceColumn + 100)
                               .addItem("LibSVMAndLinear",DataFormat.LibLinearAndSVM.ordinal())
                               .addItem("GRT",DataFormat.GRT.ordinal());
 
@@ -319,8 +353,10 @@ void initView() {
   
   int uiSpaceHeight = 80;
   
+  int firstCheckBoxY = certainY + uiSpaceHeight - 50;
+
   usedRow_checkBox = cp5.addCheckBox("usedRow") 
-                        .setPosition(radioButtonsAlignX, certainY + uiSpaceHeight)
+                        .setPosition(radioButtonsAlignX, firstCheckBoxY)
                         .setColorForeground(color(120))
                         .setColorActive(color(255))
                         .setColorLabel(color(255))
@@ -329,13 +365,13 @@ void initView() {
                         .setSpacingRow(20)
                         .setSpacingColumn(uiSpaceColumn);
 
-  final String usedRowPrefixName = "Row_";
+  String prefixName = "Row_";
   for(int i = 0;i < TotalNumRows;i++) {
-    usedRow_checkBox.addItem(usedRowPrefixName + i, i);
+    usedRow_checkBox.addItem(prefixName + i, i);
   }
 
   usedTrials_checkBox = cp5.addCheckBox("usedTrial")
-                           .setPosition(radioButtonsAlignX, certainY + uiSpaceHeight * 2)
+                           .setPosition(radioButtonsAlignX, firstCheckBoxY + uiSpaceHeight)
                            .setColorForeground(color(120))
                            .setColorActive(color(255))
                            .setColorLabel(color(255))
@@ -344,40 +380,41 @@ void initView() {
                            .setSpacingRow(20)
                            .setSpacingColumn(uiSpaceColumn);
 
-  final String usedTrialPrefixName = "Trial_";
+  prefixName = "Trial_";
   for(int i = 0;i < NumTrialsPerGesture;i++) {
-    usedTrials_checkBox.addItem(usedTrialPrefixName + i, i);
+    usedTrials_checkBox.addItem(prefixName + i, i);
   }
   
-  cbArray = new CheckBox[]{usedRow_checkBox, usedTrials_checkBox};
+  usedGestures_checkBox =  cp5.addCheckBox("usedGesture")
+                             .setPosition(radioButtonsAlignX, firstCheckBoxY + uiSpaceHeight * 2)
+                             .setColorForeground(color(120))
+                             .setColorActive(color(255))
+                             .setColorLabel(color(255))
+                             .setSize(40, 40)
+                             .setItemsPerRow(10)
+                             .setSpacingRow(20)
+                             .setSpacingColumn(uiSpaceColumn);
+
+  prefixName = "G_";
+  for(int i = 0;i < NumGestures;i++) {
+    usedGestures_checkBox.addItem(prefixName + i, i);
+  }
+  
+  
+
+  cbArray = new CheckBox[]{usedRow_checkBox, usedTrials_checkBox, usedGestures_checkBox};
   
   createMessageBox("init message");
   messageBox.hide();
   
 }
 
-//class CustomizedButton {
-//
-//  Button cp5Btn = null;
-//  public String btnName;
-//  CustomizedButton(String buttonName, int x_pos, int y_pos, int uiWidth, int uiHeight) {
-//    btnName = buttonName;
-//    cp5Btn = cp5.addButton(buttonName)
-//                .setPosition(x_pos, y_pos)
-//                .setSize(uiWidth, uiHeight);
-//                //setBroadcast(false)
-//                //setValue()
-//                //setBroadcast(true)
-//  }
-//  
-//}
-
 Button messageBoxButton;
 
 void createMessageBox(String message) {
 
   // create a group to store the messageBox elements
-  messageBox = cp5.addGroup("messageBox",width/2 - 150,100,300);
+  messageBox = cp5.addGroup("Message Box",width/2 - 150,100,300);
   messageBox.setBackgroundHeight(120);
   messageBox.setBackgroundColor(color(128));
   messageBox.hideBar();
@@ -495,6 +532,8 @@ void outputDataFolderSelected(File selectedFolder) {
 ParseCondition mCondition = new ParseCondition();
 DataParser parser = new DataParser(NumGestures, NumSamplesPerTrial, NumTrialsPerGesture);
 DataFormat[] dataFormatEnums = DataFormat.values();
+String fileIDForOutput = "";
+
 void generateData() {
   //feature vectors according to rows selected 
   //num Entries according to numTrialsToUse
@@ -523,7 +562,8 @@ void generateData() {
   else {
     inputFilesToBeProcessed = null;
   }
-  //mCondition.selectedGestures = 
+
+  mCondition.selectedGestures = getCheckBoxStatusVals(CheckBoxData.gestureNums, 1);
   mCondition.selectedRows = getCheckBoxStatusVals(CheckBoxData.rowNums, 1);
   mCondition.trialNums = getCheckBoxStatusVals(CheckBoxData.trialNums, 1 - DataType.Training.ordinal());
   mCondition.dataFormat = dataFormatEnums[(int)dataFormat_radioButton.getValue()];
@@ -533,6 +573,7 @@ void generateData() {
     try {
       //read file
       parser.parse(file, mCondition);
+      fileIDForOutput = String.valueOf(System.currentTimeMillis());
       parser.outputToFile(outputDataDir, getOutputFileName(file, DataType.Training), DataType.Training);
       parser.outputToFile(outputDataDir, getOutputFileName(file, DataType.Testing), DataType.Testing);
     } catch (Exception e) {
@@ -679,14 +720,14 @@ void randomSelectTrialNums(int numValsToSelect) {
 }
 
 //-- Utility --
-
 String getOutputFileName(File inputFile, DataType dataType) {
   String outputFileName = inputFile.getName();
   if(outputFileName.indexOf(".") > 0) { //trim file extension
     outputFileName = outputFileName.substring(0, outputFileName.lastIndexOf("."));
   }
   int dataTypeIdx = dataType.ordinal();
-  outputFileName = outputFileName + 
+  outputFileName = fileIDForOutput + 
+                   "_" + outputFileName + 
                    "_" + dataTypes[dataTypeIdx] + 
                    "_rows" + getCheckBoxNumsString(CheckBoxData.rowNums, 1) +  
                    "_trials" + getCheckBoxNumsString(CheckBoxData.trialNums , 1 - dataType.ordinal()) +
@@ -704,6 +745,9 @@ int[] getCheckBoxStatusVals(CheckBoxData cbData, int desireValToSelected) {
   else if(cbData == CheckBoxData.trialNums) {
     cb = usedTrials_checkBox;
   }
+  else if(cbData == CheckBoxData.gestureNums) {
+    cb = usedGestures_checkBox;
+  }
   else {
     cb = null;
   }
@@ -720,6 +764,7 @@ int[] getCheckBoxStatusVals(CheckBoxData cbData, int desireValToSelected) {
   for(int i = 0;i < numSelectedVals;i++) {
     mSelectedNums[i] = tempContainer.get(i);
   }
+  
   return mSelectedNums;
 }
 
@@ -734,12 +779,13 @@ String getCheckBoxNumsString(CheckBoxData cbData, int desireValToSelected) {
   else if(cbData == CheckBoxData.trialNums) {
     cb = usedTrials_checkBox;
   }
-  //else if(cbData == CheckBoxData.gestureNums) {
-
-  //}
+  else if(cbData == CheckBoxData.gestureNums) {
+    cb = usedGestures_checkBox;
+  }
   else {
     cb = null;
   }
+
   float[] values = cb.getArrayValue();
   int numVals = values.length;
   for(int i = 0;i < numVals;i++) {
@@ -771,15 +817,71 @@ public class DisposeHandler {
 }
 
 void RandomizeArray(int[] inputArray){
-    Random rgen = new Random(millis());  // Random number generator    
-    int numElement = inputArray.length;
-    
-    for (int i = 0; i < numElement; i++) {
-        int randomPosition = rgen.nextInt(numElement);
-        int temp = inputArray[i];
-        inputArray[i] = inputArray[randomPosition];
-        inputArray[randomPosition] = temp;
+  Random rgen = new Random(millis());  // Random number generator    
+  int numElement = inputArray.length;
+  
+  for (int i = 0; i < numElement; i++) {
+      int randomPosition = rgen.nextInt(numElement);
+      int temp = inputArray[i];
+      inputArray[i] = inputArray[randomPosition];
+      inputArray[randomPosition] = temp;
+  }
+
+  return;
+}
+
+Set<Set<Integer>> powerSet(Set<Integer> originalSet) {
+  Set<Set<Integer>> sets = new HashSet<Set<Integer>>();
+  if (originalSet.isEmpty()) {
+    sets.add(new HashSet<Integer>());
+    return sets;
+  }
+  List<Integer> list = new ArrayList<Integer>(originalSet);
+  Integer head = list.get(0);
+  Set<Integer> rest = new HashSet<Integer>(list.subList(1, list.size())); 
+  for (Set<Integer> set : powerSet(rest)) {
+    Set<Integer> newSet = new HashSet<Integer>();
+    newSet.add(head);
+    newSet.addAll(set);
+    sets.add(newSet);
+    sets.add(set);
+  }   
+  return sets;
+}
+
+//void testPwSet() {
+//  Set<Integer> mySet = new HashSet<Integer>();
+//  mySet.add(1);
+//  mySet.add(2);
+//  mySet.add(3);
+//  Set<Set<Integer>> results = powerSet(mySet);
+//  for (Set<Integer> s : results) {
+//    for(Integer w : s) {
+//      println(w);
+//    }
+//  }
+//}
+
+//-- others
+
+
+void batchTasks() {
+  //CheckBox usedRow_checkBox;
+  //CheckBox usedTrials_checkBox;
+  
+  usedTrials_checkBox.deactivateAll();
+  for(int i = 0;i < 3;i++) {
+    usedTrials_checkBox.activate(i);
+  }
+  
+  for(Integer[] rowConfig : rowCombin) {
+    usedRow_checkBox.deactivateAll();
+    for(Integer rowNum : rowConfig) {
+      usedRow_checkBox.activate(rowNum);
     }
- 
-    return;
+    generateData();
+  }
+  
+  //done
+  systemStatus_textlabel.setText(SystemStatus.Idle.toString());
 }
