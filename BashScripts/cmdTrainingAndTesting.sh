@@ -50,9 +50,9 @@ for trainingFile in $allTrainingData; do
       resultFile=$pureTestFileName'.result'
       #echo $resultFile >>"$accuracyFile"
       #$predict $testingFile $modelFile $resultFile >>"$accuracyFile" 2>&1
-      #$predict $testingFile $modelFile $resultFile
-      rowNums=`echo $resultFile | cut -d'_' -f4`
-      $predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
+      #rowNums=`echo $resultFile | cut -d'_' -f4`
+      #$predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
+      $predict $testingFile $modelFile $resultFile | awk '{print $3}' >>"$accuracyFile"
       break
     fi
   done
@@ -64,8 +64,6 @@ fi
 #if [ $3 == '-v' ]; then
 #-- do cross validation
 #numFold=$4.
-
-
 #fi
 
 

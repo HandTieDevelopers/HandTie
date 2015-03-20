@@ -151,12 +151,12 @@ class DataParser {
         }
 
         if(remainNumSamples > 0 && sampleIndex < remainNumSamples) {
-          println("number of samples record per gesture was wrong");
+          println("number of samples record per gesture was wrong:" + sampleIndex + "," + remainNumSamples + ",fileName:" + dataFile.getName() );
         }
       }
 
       if(numDataNeedToBeCollected < 0 || numDataNeedToBeCollected > 0) {
-        println("numDataNeedToBeCollected is abnormal:" + numDataNeedToBeCollected);
+        println("numDataNeedToBeCollected is abnormal:" + numDataNeedToBeCollected + ",fileName:" + dataFile.getName());
       }
       
 

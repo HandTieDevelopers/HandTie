@@ -24,6 +24,8 @@ final String fileExtensionName = ".txt";
 
 final String checkBatchingIntent = "start to batch?(y/n)";
 
+final String[] fileNameToIgnore = new String[] {".DS_Store", "User0"};
+
 final String[] dataTypes = new String[] {"training" , "testing"};
 String currentSketchPath = null;
 
@@ -38,7 +40,7 @@ int numTrialsToUse = 1; //linked with slider
 
 //-- Processing State Machines --
 
-ArrayList<Integer[]> rowCombin = new ArrayList<Integer[]>();
+
 
 void setup() {
   currentSketchPath = sketchPath("");
@@ -53,14 +55,6 @@ void setup() {
   
   for(int i = 0;i < NumTrialsPerGesture;i++) {
     trialNumsForShuffle[i] = i;
-  }
-  
-  for(int i = 0;i < TotalNumRows;i++) {
-    rowCombin.add(new Integer[]{i});
-  }
-  int numVals = TotalNumRows/2;
-  for(int i = 0;i < numVals;i++) {
-    rowCombin.add(new Integer[]{i * 2, i * 2 + 1});
   }
 }
 
@@ -570,6 +564,9 @@ void generateData() {
 
   //num trials
   for(File file : inputFilesToBeProcessed) {
+    if(filterThisFile(file)) {
+      continue;
+    }
     try {
       //read file
       parser.parse(file, mCondition);
@@ -581,6 +578,15 @@ void generateData() {
     }
   }
 
+}
+
+boolean filterThisFile(File file) {
+  for(String name : fileNameToIgnore) {
+    if(file.getName().contains(name)) {
+      return true;
+    }
+  }
+  return false; 
 }
 
 void updateUI(String uiID) {
@@ -868,7 +874,15 @@ Set<Set<Integer>> powerSet(Set<Integer> originalSet) {
 void batchTasks() {
   //CheckBox usedRow_checkBox;
   //CheckBox usedTrials_checkBox;
-  
+  ArrayList<Integer[]> rowCombin = new ArrayList<Integer[]>();
+  for(int i = 0;i < TotalNumRows;i++) {
+    rowCombin.add(new Integer[]{i});
+  }
+  int numVals = TotalNumRows/2;
+  for(int i = 0;i < numVals;i++) {
+    rowCombin.add(new Integer[]{i * 2, i * 2 + 1});
+  }
+
   usedTrials_checkBox.deactivateAll();
   for(int i = 0;i < 3;i++) {
     usedTrials_checkBox.activate(i);
