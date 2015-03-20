@@ -2,3 +2,4 @@
 **/node_modules/*
 Processing/generateData/outputData
 Processing/generateData/config.json
+**/result
