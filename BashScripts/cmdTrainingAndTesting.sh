@@ -3,7 +3,6 @@
 #-- config --
 
 usingTool='linear'
-emptyResultFolder=true
 #usingTool='nonLinear'
 
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
