@@ -7,6 +7,8 @@ class DataParser {
   int mNumGestures;
   int mNumSamplesPerTrial;
   int mNumMaxTrialsPerGesture;
+  int mNumTotalRows;
+  int mNumHalfTotalRows;
   final char delimeter = ' ';
   final int GestureIdx = 0;
   final int TrialIdx = 1;
@@ -26,14 +28,18 @@ class DataParser {
   int numTotalInstances;
   int numInstancesPerClass;
   int numDimensions = 0;
+  int[][][] sampleIdx;
+  //int offSet = 5;
 
-
-  public DataParser(int numGestures, int numSamplesPerTrial, int numMaxTrialsPerGesture) {
+  public DataParser(int numGestures, int numSamplesPerTrial, int numMaxTrialsPerGesture, int numTotalRows) {
     mNumGestures = numGestures;
     mNumSamplesPerTrial = numSamplesPerTrial;
     mNumMaxTrialsPerGesture = numMaxTrialsPerGesture;
+    mNumTotalRows = numTotalRows;
+    mNumHalfTotalRows = mNumTotalRows/2;
     vecNum = new int[numGestures][numMaxTrialsPerGesture][numSamplesPerTrial];
     dataInstances = new StringBuffer[mNumGestures][mNumMaxTrialsPerGesture][mNumSamplesPerTrial];
+    sampleIdx = new int[numGestures][numMaxTrialsPerGesture][mNumHalfTotalRows];
     for(int i = 0;i < mNumGestures;i++) {
       for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
         for(int k = 0;k < mNumSamplesPerTrial;k++) {
@@ -52,15 +58,26 @@ class DataParser {
           dataInstances[i][j][k].append(i + 1);
           dataInstances[i][j][k].append(delimeter); 
         }
+        for(int k = 0;k < mNumHalfTotalRows;k++) {
+          sampleIdx[i][j][k] = 0;
+        }
       }
     }
   }
 
+  File currentFile;
+  int gestureID;
+  int trialNum;
+  int rowIdxForSampleIdx;
+  
   public void parse(File dataFile, ParseCondition condition) {
     if(dataFile == null) {
       println("dataFile is null, unable to parse");
       return;
     }
+
+    currentFile = dataFile;
+    
     initVariables();
 
     int[] selectedRows = condition.selectedRows;
@@ -95,6 +112,8 @@ class DataParser {
     for(int rowNum : selectedRows) {
       selectedRowsSet.add(rowNum);
     }
+    //println(selectedRowsSet);
+
     BufferedReader reader = null;
     try {
       reader = new BufferedReader(new FileReader(dataFile), bufferSize);
@@ -103,65 +122,35 @@ class DataParser {
       if(lineOfData == null) {
         return;
       } 
-      int numDataNeedToBeCollected = mNumGestures * mNumMaxTrialsPerGesture * selectedRows.length; //early stop mechanism
+      //int numDataNeedToBeCollected = mNumGestures * mNumMaxTrialsPerGesture * selectedRows.length; //early stop mechanism
       while((lineOfData = reader.readLine()) != null ) {
-        /*
-        if(numDataNeedToBeCollected == 0) {
-          break;
-        }
-        */
+          
         String[] splitedData = lineOfData.split(",");
-        boolean toSkipThisGesture = true;
-
+        //boolean toSkipThisGesture = true;
+        gestureID = Integer.parseInt(splitedData[GestureIdx]);
+        trialNum = Integer.parseInt(splitedData[TrialIdx]);
+        rowIdxForSampleIdx = Integer.parseInt(splitedData[RowIdxs[0]])/2;
+        
         for(int i = 0;i < RowIdxs.length;i++) {
           if(selectedRowsSet.contains(Integer.parseInt(splitedData[RowIdxs[i]]))) { //this gesture contains the desired row of data
-            rowIsChosen[i] = true;
-            numDataNeedToBeCollected--;
-            toSkipThisGesture = false;
-          }
-          else {
-            rowIsChosen[i] = false;
+            //numDataNeedToBeCollected--; 
+            concatFeatureVector(splitedData, FirstGaugeIdxs[i], NumGages[i]);
           }
         }
+
+        sampleIdx[gestureID][trialNum][rowIdxForSampleIdx]++;
         
-        int remainNumSamples = mNumSamplesPerTrial - 1;
-        int sampleIndex = 0;
-        if(toSkipThisGesture) { // not in selected rows
-          while(remainNumSamples > 0 && reader.readLine() != null) {
-            remainNumSamples--;
-          }
-        }
-        else {
-          while(true) {
-            for(int i = 0;i < RowIdxs.length;i++) {
-              if(rowIsChosen[i]) {
-                concatFeatureVector(splitedData, FirstGaugeIdxs[i], NumGages[i], sampleIndex);
-              }
-            }
-            
-            if(sampleIndex < remainNumSamples && (lineOfData = reader.readLine()) != null) {
-              splitedData = lineOfData.split(",");
-              sampleIndex++;
-            }
-            else {
-              break;
-            }
-
-          }          
-        }
-
+        /*
         if(remainNumSamples > 0 && sampleIndex < remainNumSamples) {
           println("number of samples record per gesture was wrong:" + sampleIndex + "," + remainNumSamples + ",fileName:" + dataFile.getName() );
         }
+        */
       }
-
-      if(numDataNeedToBeCollected < 0 || numDataNeedToBeCollected > 0) {
-        println("numDataNeedToBeCollected is abnormal:" + numDataNeedToBeCollected + ",fileName:" + dataFile.getName());
-      }
-      
-
+      // if(numDataNeedToBeCollected < 0 || numDataNeedToBeCollected > 0) {
+      //   println("numDataNeedToBeCollected is abnormal:" + numDataNeedToBeCollected + ",fileName:" + dataFile.getName());
+      // }
     } catch (Exception e) {
-      println(e.getLocalizedMessage());
+      println("Exception:" + e.getLocalizedMessage());
     } finally {
       try {
         reader.close();
@@ -173,18 +162,25 @@ class DataParser {
   }
 
 
-  public void concatFeatureVector(String[] splitedData, int startIndex, int numDataPoints, int sampleIndex) {
-    int gestureID = Integer.parseInt(splitedData[GestureIdx]);
-    int trialNum = Integer.parseInt(splitedData[TrialIdx]);
+  public void concatFeatureVector(String[] splitedData, int startIndex, int numDataPoints) {
+    
     int endIndex = startIndex + numDataPoints;
-    StringBuffer instance = dataInstances[gestureID][trialNum][sampleIndex];
+    int localSampleIdx = sampleIdx[gestureID][trialNum][rowIdxForSampleIdx];
+    StringBuffer instance = null;
+    
+    try {
+      instance = dataInstances[gestureID][trialNum][localSampleIdx];  
+    } catch (Exception e) {
+      println("exp5:" + currentFile.getName() + "," + gestureID + "," + trialNum + "," + localSampleIdx);
+    }
+
     if(mDataFormat == DataFormat.LibLinearAndSVM) { 
       for(int i = startIndex;i < endIndex;i++) {
-        instance.append(vecNum[gestureID][trialNum][sampleIndex]);
+        instance.append(vecNum[gestureID][trialNum][localSampleIdx]);
         instance.append(':');
-        vecNum[gestureID][trialNum][sampleIndex]++;
         instance.append(splitedData[i]);
         instance.append(delimeter);
+        vecNum[gestureID][trialNum][localSampleIdx]++;
       }
     }
     else {
@@ -193,6 +189,7 @@ class DataParser {
         instance.append(delimeter);
       }
     }
+    
     
   }
  

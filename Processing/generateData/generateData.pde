@@ -524,7 +524,7 @@ void outputDataFolderSelected(File selectedFolder) {
 //-- Controller --
 
 ParseCondition mCondition = new ParseCondition();
-DataParser parser = new DataParser(NumGestures, NumSamplesPerTrial, NumTrialsPerGesture);
+DataParser parser = new DataParser(NumGestures, NumSamplesPerTrial, NumTrialsPerGesture, TotalNumRows);
 DataFormat[] dataFormatEnums = DataFormat.values();
 String fileIDForOutput = "";
 

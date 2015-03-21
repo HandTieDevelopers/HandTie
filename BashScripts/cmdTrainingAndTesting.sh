@@ -40,7 +40,6 @@ for num in $numsForIter; do
   allTrainingData=`ls . | grep 'User'"$num"'.*training.*.txt'`
   allTestingData=`ls . | grep 'User'"$num"'.*testing.*.txt'` 
   accuracyFile='User'"$num"'.accuracy'
-  echo $accuracyFile
   for trainingFile in $allTrainingData; do
     modelFile=${trainingFile%%.*}'.model'
     $train -q $trainingFile $modelFile
@@ -48,7 +47,6 @@ for num in $numsForIter; do
     #echo $fileID
     for testingFile in $allTestingData; do
       if [[ $testingFile =~ ^"$fileID"_.* ]]; then #matching the first one
-        #echo $testingFile
         pureTestFileName=${testingFile%%.*}
         resultFile=$pureTestFileName'.result'
         #echo $resultFile >>"$accuracyFile"
