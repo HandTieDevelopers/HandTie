@@ -7,6 +7,7 @@ usingTool='linear'
 
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
 libSVMPath='/Users/lab430/Documents/SVM/libsvm-3.20'
+numsForIter=" 1 2 3 4 6 9 "
 
 #--
 
@@ -30,31 +31,34 @@ fi
 
 #-- train and then test
 cd $inputDataFolderPath
-allTrainingData=`ls . | grep -e 'training.*.txt'`
-allTestingData=`ls . | grep -e 'testing.*.txt'` 
 #echo $allTestingData
 #trainingOpts=''
 #testingOpts=''
+#accuracyFile=`date +"%Y-%m-%d_%k-%M-%S"`'.accuracy'
 
-accuracyFile=`date +"%Y-%m-%d_%k-%M-%S"`'.accuracy'
-
-for trainingFile in $allTrainingData; do
-  modelFile=${trainingFile%%.*}'.model'
-  $train -q $trainingFile $modelFile
-  fileID=${trainingFile%%_*} #use this fileID to find its complementary testing file
-  #echo $fileID
-  for testingFile in $allTestingData; do
-    if [[ $testingFile =~ ^"$fileID"_.* ]]; then #matching the first one
-      #echo $testingFile
-      pureTestFileName=${testingFile%%.*}
-      resultFile=$pureTestFileName'.result'
-      #echo $resultFile >>"$accuracyFile"
-      #$predict $testingFile $modelFile $resultFile >>"$accuracyFile" 2>&1
-      #rowNums=`echo $resultFile | cut -d'_' -f4`
-      #$predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
-      $predict $testingFile $modelFile $resultFile | awk '{print $3}' >>"$accuracyFile"
-      break
-    fi
+for num in $numsForIter; do
+  allTrainingData=`ls . | grep 'User'"$num"'.*training.*.txt'`
+  allTestingData=`ls . | grep 'User'"$num"'.*testing.*.txt'` 
+  accuracyFile='User'"$num"'.accuracy'
+  echo $accuracyFile
+  for trainingFile in $allTrainingData; do
+    modelFile=${trainingFile%%.*}'.model'
+    $train -q $trainingFile $modelFile
+    fileID=${trainingFile%%_*} #use this fileID to find its complementary testing file
+    #echo $fileID
+    for testingFile in $allTestingData; do
+      if [[ $testingFile =~ ^"$fileID"_.* ]]; then #matching the first one
+        #echo $testingFile
+        pureTestFileName=${testingFile%%.*}
+        resultFile=$pureTestFileName'.result'
+        #echo $resultFile >>"$accuracyFile"
+        #$predict $testingFile $modelFile $resultFile >>"$accuracyFile" 2>&1
+        #rowNums=`echo $resultFile | cut -d'_' -f4`
+        #$predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
+        $predict $testingFile $modelFile $resultFile | awk '{print $3}' >>"$accuracyFile"
+        break
+      fi
+    done
   done
 done
 if [ -d $outputResultFolderPath ] && [ "$outputResultFolderPath" != "$inputDataFolderPath" ]; then 
