@@ -3,6 +3,7 @@
 #-- config --
 
 usingTool='linear'
+emptyResultFolder=true
 #usingTool='nonLinear'
 
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
@@ -19,6 +20,9 @@ fi
 inputDataFolderPath=$1
 outputResultFolderPath=$2
 
+# if [ "$emptyResultFolder" ==  true ]; then
+#   rm -d $outputResultFolderPath
+# fi
 
 if [ $usingTool == 'linear' ]; then
   train=$liblinearPath'/train'
@@ -36,10 +40,12 @@ cd $inputDataFolderPath
 #testingOpts=''
 #accuracyFile=`date +"%Y-%m-%d_%k-%M-%S"`'.accuracy'
 
+
 for num in $numsForIter; do
   allTrainingData=`ls . | grep 'User'"$num"'.*training.*.txt'`
   allTestingData=`ls . | grep 'User'"$num"'.*testing.*.txt'` 
   accuracyFile='User'"$num"'.accuracy'
+  ls . | grep 'User'"$num"'.*testing.*.txt' | cut -d'_' -f4 >>"$accuracyFile"
   for trainingFile in $allTrainingData; do
     modelFile=${trainingFile%%.*}'.model'
     $train -q $trainingFile $modelFile

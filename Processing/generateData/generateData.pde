@@ -24,7 +24,7 @@ final String fileExtensionName = ".txt";
 
 final String checkBatchingIntent = "start to batch?(y/n)";
 
-final String[] fileNameToIgnore = new String[] {".DS_Store", "User0"};
+final String[] fileNameToIgnore = new String[] {".DS_Store"};
 
 final String[] dataTypes = new String[] {"training" , "testing"};
 String currentSketchPath = null;
@@ -875,12 +875,13 @@ void batchTasks() {
   //CheckBox usedRow_checkBox;
   //CheckBox usedTrials_checkBox;
   ArrayList<Integer[]> rowCombin = new ArrayList<Integer[]>();
+  
   for(int i = 0;i < TotalNumRows;i++) {
     rowCombin.add(new Integer[]{i});
   }
-  int numVals = TotalNumRows/2;
-  for(int i = 0;i < numVals;i++) {
-    rowCombin.add(new Integer[]{i * 2, i * 2 + 1});
+  
+  for(int i = 0;i < TotalNumRows - 1;i++) {
+    rowCombin.add(new Integer[]{i , i + 1});
   }
 
   usedTrials_checkBox.deactivateAll();

@@ -26,21 +26,25 @@ class DataParser {
   int[][][] vecNum;
   DataFormat mDataFormat;
   int numTotalInstances;
-  int numInstancesPerClass;
+  int[] numInstancesPerClass;
   int numDimensions = 0;
   int[][][] sampleIdx;
-  //int offSet = 5;
+  final int offSet = 2;
+  int[] allGestures;
+  int numGesturesSelected;
 
   public DataParser(int numGestures, int numSamplesPerTrial, int numMaxTrialsPerGesture, int numTotalRows) {
     mNumGestures = numGestures;
+    allGestures = new int[mNumGestures];
     mNumSamplesPerTrial = numSamplesPerTrial;
     mNumMaxTrialsPerGesture = numMaxTrialsPerGesture;
     mNumTotalRows = numTotalRows;
     mNumHalfTotalRows = mNumTotalRows/2;
-    vecNum = new int[numGestures][numMaxTrialsPerGesture][numSamplesPerTrial];
+    vecNum = new int[numGestures][numMaxTrialsPerGesture][mNumSamplesPerTrial];
     dataInstances = new StringBuffer[mNumGestures][mNumMaxTrialsPerGesture][mNumSamplesPerTrial];
     sampleIdx = new int[numGestures][numMaxTrialsPerGesture][mNumHalfTotalRows];
     for(int i = 0;i < mNumGestures;i++) {
+      allGestures[i] = i;
       for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
         for(int k = 0;k < mNumSamplesPerTrial;k++) {
           dataInstances[i][j][k] = new StringBuffer();
@@ -84,6 +88,10 @@ class DataParser {
     trainingTrialNums = condition.trialNums;
     mDataFormat = condition.dataFormat;
     gestureNums = condition.selectedGestures;
+    if(gestureNums == null || gestureNums.length == 0) {
+      gestureNums = allGestures;
+    }
+    numGesturesSelected = gestureNums.length;
     numTrainingTrials = trainingTrialNums.length;
     numTestingTrials = mNumMaxTrialsPerGesture - numTrainingTrials;
     testingTrialNums = new int[numTestingTrials];
@@ -126,14 +134,12 @@ class DataParser {
       while((lineOfData = reader.readLine()) != null ) {
           
         String[] splitedData = lineOfData.split(",");
-        //boolean toSkipThisGesture = true;
         gestureID = Integer.parseInt(splitedData[GestureIdx]);
         trialNum = Integer.parseInt(splitedData[TrialIdx]);
         rowIdxForSampleIdx = Integer.parseInt(splitedData[RowIdxs[0]])/2;
         
         for(int i = 0;i < RowIdxs.length;i++) {
           if(selectedRowsSet.contains(Integer.parseInt(splitedData[RowIdxs[i]]))) { //this gesture contains the desired row of data
-            //numDataNeedToBeCollected--; 
             concatFeatureVector(splitedData, FirstGaugeIdxs[i], NumGages[i]);
           }
         }
@@ -171,7 +177,8 @@ class DataParser {
     try {
       instance = dataInstances[gestureID][trialNum][localSampleIdx];  
     } catch (Exception e) {
-      println("exp5:" + currentFile.getName() + "," + gestureID + "," + trialNum + "," + localSampleIdx);
+      println("exception:" + currentFile.getName() + "," + gestureID + "," + trialNum + "," + localSampleIdx);
+      return;
     }
 
     if(mDataFormat == DataFormat.LibLinearAndSVM) { 
@@ -201,13 +208,13 @@ class DataParser {
       pw.println("InfoText: ");
       pw.println("NumDimensions: " + numDimensions);
       pw.println("TotalNumExamples: "  + numTotalInstances);
-      pw.println("NumberOfClasses: " + mNumGestures);
+      pw.println("NumberOfClasses: " + numGesturesSelected);
       pw.println("ClassIDsAndCounters: ");
-      for(int i = 0;i < mNumGestures;i++) {
+      for(int i = 0;i < numGesturesSelected;i++) {
         tempStrBuf.setLength(0);
-        tempStrBuf.append(i + 1);
+        tempStrBuf.append(gestureNums[i] + 1);
         tempStrBuf.append(' ');
-        tempStrBuf.append(numInstancesPerClass);
+        tempStrBuf.append(numInstancesPerClass[i]);
         tempStrBuf.append(" NOT_SET");
         pw.println(tempStrBuf.toString());
       }
@@ -233,33 +240,32 @@ class DataParser {
         trialNumsArray = testingTrialNums;
       }
 
-      numInstancesPerClass = numTrials * mNumSamplesPerTrial;
+      numTotalInstances = 0;
+      numInstancesPerClass = new int[numGesturesSelected];
+      for(int i = 0;i < numGesturesSelected;i++) {
+        numInstancesPerClass[i] = numTrials * mNumSamplesPerTrial;
+        for(int j = 0;j < numTrials;j++) {
+          for(int k = 0;k < mNumSamplesPerTrial;k++) {
+            if(dataInstances[gestureNums[i]][trialNumsArray[j]][k].length() <= 3) { //the length only containing label would be 3
+              numInstancesPerClass[i]--;
+            }
+          }
+        }
+        numTotalInstances += numInstancesPerClass[i];
+      }
       
       writeHeader(pw);
-
-      if(gestureNums == null || gestureNums.length == 0) {
-        numTotalInstances = mNumGestures * numTrials * mNumSamplesPerTrial;
-        for(int i = 0;i < mNumGestures;i++) {
-          for(int j = 0;j < numTrials;j++) {
-            for(int k = 0;k < mNumSamplesPerTrial;k++) {
-              pw.println(dataInstances[i][trialNumsArray[j]][k].toString());  
-            }
-          }
-        }
-      }
-      else {
-        int numGesturesSelected = gestureNums.length;
-        numTotalInstances = numGesturesSelected * numTrials * mNumSamplesPerTrial;
-        for(int i = 0;i < numGesturesSelected;i++) {
-          for(int j = 0;j < numTrials;j++) {
-            for(int k = 0;k < mNumSamplesPerTrial;k++) {
-              pw.println(dataInstances[gestureNums[i]][trialNumsArray[j]][k].toString());  
+      for(int i = 0;i < numGesturesSelected;i++) {
+        for(int j = 0;j < numTrials;j++) {
+          for(int k = 0;k < mNumSamplesPerTrial;k++) {
+            String outputStr = dataInstances[gestureNums[i]][trialNumsArray[j]][k].toString();
+            if(outputStr.length() > 3) { //the length only containing label would be 3
+              pw.println(outputStr);  
             }
           }
         }
       }
 
-      
     } catch (Exception e) {
       println(e.getLocalizedMessage());
     } finally {
