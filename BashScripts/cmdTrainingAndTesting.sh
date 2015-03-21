@@ -2,11 +2,11 @@
 
 #-- config --
 
-usingTool='linear'
-#usingTool='nonLinear'
+#usingTool='linear'
+usingTool='nonLinear'
 
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
-libSVMPath='/Users/lab430/Documents/SVM/libsvm-3.20'
+libSVMPath='/../libsvm-3.20'
 
 #--
 
