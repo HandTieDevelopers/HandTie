@@ -393,38 +393,38 @@ void keyPressed() {
 
 public void controlEvent(ControlEvent theEvent) {
   if(theEvent.isFrom(r1)) {
-    if(theEvent.getValue()>0){
+    if(theEvent.getValue()>=0){
     NowGesture = (int)theEvent.getValue()-1;
     println("NowGesture="+NowGesture);
     // loadUserData();
     }
   }
   if(theEvent.isFrom(r2)) {
-    if(theEvent.getValue()>0){
+    if(theEvent.getValue()>=0){
       if(!loadTimeFlg){
         loadTimeFlg = true;
         println("loadTimes()");
         loadTimes();
       }
-    NowTimes = (int)theEvent.getValue()-1;
+    NowTimes = (int)theEvent.getValue();
     println("NowTimes="+NowTimes);
     // loadUserData();
     }
   }
   if(theEvent.isFrom(r4)) {
-    if(theEvent.getValue()>0){
+    if(theEvent.getValue()>=0){
       ShowingType = (int)theEvent.getValue()-1;
       println("ShowingType="+ShowingType);
     }
   }
    if(theEvent.isFrom(r5)) {
-    if(theEvent.getValue()>0){
+    if(theEvent.getValue()>=0){
     InterpolateType = (int)theEvent.getValue()-1;
     println("InterpolateType="+InterpolateType);
     }
   }
    if(theEvent.isFrom(r6)) {
-    if(theEvent.getValue()>0){
+    if(theEvent.getValue()>=0){
     NowUser = (int)theEvent.getValue();
     // loadUserData();
     println("NowUser="+NowUser);
