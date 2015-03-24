@@ -7,7 +7,7 @@ public class GRTMgr implements SerialListener{
    //-----------------------------------GRT
     //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
     final int pipelineMode = GRT.CLASSIFICATION_MODE;
-    final int numInputs = 2;
+    final int numInputs = 19;
     final int numOutputs = 1;
     
    GRT grt = new GRT( pipelineMode, numInputs, numOutputs, "127.0.0.1", 5000, 5001, true );
@@ -35,8 +35,9 @@ public class GRTMgr implements SerialListener{
           grt.drawInfoText(floor(width*0.72),20);
         }
         //Grab the mouse data and send it to the GRT backend via OSC
-        data[0] = mouseX;
-        data[1] = mouseY;
+        for(int sgi=1; sgi<numInputs; sgi++){
+          data[sgi-1] = mainClass.sgManager.getOneElongationValsOfGauges(sgi);
+        }
         grt.sendData( data );
 //        fill(color(200));
         textSize(50);

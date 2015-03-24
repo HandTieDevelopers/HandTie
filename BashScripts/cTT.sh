@@ -7,7 +7,10 @@ usingTool='nonLinear'
 
 liblinearPath='/Users/kevinljw/Documents/SVM/liblinear-1.96'
 libSVMPath='/Users/kevinljw/Documents/SVM/libsvm-3.20'
-numsForIter=" 1 2 3 4 6 9 "
+numsForIter=" 0 1 2 3 4 5 6 7 8 9 "
+
+linearOrRBF="0"
+# linearOrRBF = "2"
 
 #--
 
@@ -52,7 +55,7 @@ for num in $numsForIter; do
     sScaleFile=${trainingFile%%.*}'.scale'
     $scale -s scale $trainingFile > $sScaleFile
     modelFile=${trainingFile%%.*}'.model'
-    $train -q $sScaleFile $modelFile
+    $train -q -t $linearOrRBF $sScaleFile $modelFile
     fileID=${trainingFile%%_*} #use this fileID to find its complementary testing file
     #echo $fileID
     for testingFile in $allTestingData; do
@@ -71,14 +74,33 @@ for num in $numsForIter; do
     done
   done
 done
-if [ -d $outputResultFolderPath ] && [ "$outputResultFolderPath" != "$inputDataFolderPath" ]; then 
-  mv *.accuracy *.result *.model $outputResultFolderPath
+
+
+#-- do cross validation
+
+if [ $3 == '-v' ]; then
+  numFold=$4
+else
+  numFold="10"
 fi
 
-# if [ $3 == '-v' ]; then
-#-- do cross validation
-#   numFold=$4.
-# fi
+  
+  for num in $numsForIter; do
+    allTrainingData=`ls . | grep 'User'"$num"'.*training.*.txt'`
+    accuracyFCVFile='FCV_User'"$num"'.accuracy'
+
+    for trainingFile in $allTrainingData; do
+        sScaleFile=${trainingFile%%.*}'.scale'
+        $scale -s scale $trainingFile > $sScaleFile
+        $train -q -t $linearOrRBF -v $numFold $sScaleFile  | awk '{print $5}' >>"$accuracyFCVFile"
+      
+    done
+  done
+
+if [ -d $outputResultFolderPath ] && [ "$outputResultFolderPath" != "$inputDataFolderPath" ]; then 
+  mv *.accuracy *.result *.model *.scale $outputResultFolderPath
+fi
+
 
 
 
