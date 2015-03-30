@@ -16,7 +16,7 @@
 #define READPIN A0
 
 // ---------   MCP4251 Macro Define --------- //
-#define POT_SS_PIN 53
+#define POT_SS_PIN 10
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
