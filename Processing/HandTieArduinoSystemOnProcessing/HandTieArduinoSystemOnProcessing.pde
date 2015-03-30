@@ -1,28 +1,53 @@
 import processing.serial.*;
 
-SerialManager serialManager = new SerialManager(this);
-SGManager sgManager = new SGManager();
-InteractionMgr interactionMgr = new InteractionMgr(this);
+SGManager sgManager;
+SerialManager serialManager;
+UIInteractionMgr uiInteractionMgr;
+StudyMgr studyMgr;
+ExperimentImageManager expImgManager;
 
 void setup() {
-   size(1280, 768);
+   size(900, 600);
+   expImgManager = new ExperimentImageManager(this, 0, 640, 480, 0);
+   sgManager = new SGManager();
+   serialManager = new SerialManager(this);
+   uiInteractionMgr = new UIInteractionMgr(this);
+   studyMgr = new StudyMgr(this);
+
+   listenerRegistrations();
 }
 
 void draw() {
    background(255, 255, 255, 0);
+   studyMgr.start();
    sgManager.draw();
+   expImgManager.draw();
+}
+
+void listenerRegistrations(){
+   sgManager.registerToSerialNotifier(serialManager);
+   uiInteractionMgr.registerToSerialNotifier(serialManager);
+   studyMgr.registerToSerialNotifier(serialManager);
 }
 
 void keyPressed(){
-   interactionMgr.performKeyPress(key);
+   uiInteractionMgr.performKeyPress(key);
+   studyMgr.performKeyPress(key);
+   serialManager.performKeyPress(key);
+   sgManager.performKeyPress(key);
+   expImgManager.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
    try {
-      int [] analogVals = serialManager.parseDataFromArduino(port);
-      sgManager.setValuesForGauges(analogVals);
-   }
-   catch (Exception e) {
+      serialManager.parseDataFromSerial(port);
+   } catch (Exception e) {
       println(e.getMessage());
    }
 }
+
+void captureEvent(Capture c) {
+   c.read();
+   expImgManager.updateUIText("camera ready");
+}
+

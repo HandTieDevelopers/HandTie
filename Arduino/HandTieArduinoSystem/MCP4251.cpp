@@ -14,6 +14,8 @@ MCP4251::MCP4251(uint8_t slave_select_pin, float rAB_ohms)
   setup_ss(slave_select_pin);
   setup_resistance(rAB_ohms, 0.0); //rW_ohms_typical);
   SPI.begin();
+  SPI.setClockDivider(SPI_CLOCK_DIV8);
+  write(kTCON_REGISTER, tcon_0on_1on); // Connect both wipers with TCON register
 }
 
 MCP4251::MCP4251(uint8_t slave_select_pin, float rAB_ohms, float rW_ohms)
@@ -21,6 +23,8 @@ MCP4251::MCP4251(uint8_t slave_select_pin, float rAB_ohms, float rW_ohms)
   setup_ss(slave_select_pin);
   setup_resistance(rAB_ohms, rW_ohms);
   SPI.begin();
+  SPI.setClockDivider(SPI_CLOCK_DIV8);
+  write(kTCON_REGISTER, tcon_0on_1on); // Connect both wipers with TCON register
 }
 
 //------------------ protected -----------------------------------------------

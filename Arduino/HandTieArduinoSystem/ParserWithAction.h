@@ -3,13 +3,7 @@
 
 #include <Arduino.h>
 #include "SGManager.h"
-
-enum{
-   ALL_CALIBRATION,
-
-   MANUAL_CHANGE_TO_ONE_GAUGE,
-   MANUAL_CHANGE_TO_ALL_GAUGES
-};
+#include "SerialProtocol.h"
 
 class ParserWithAction
 {
@@ -22,8 +16,19 @@ public:
 private:
    SGManager * sgManager;
 
-   void parseForManualChangeToOneGauge();
-   void parseForManualChangeToAllGauges();
+   void parseForManualChangeToOneGaugeTargetValMinAmp();
+   void parseForManualChangeToOneGaugeTargetValWithAmp();
+   void parseForManualChangeToOneGaugeTargetValAtConstAmp();
+
+   void parseForManualChangeToOneGaugeBridgePotPos();
+   void parseForManualChangeToOneGaugeAmpPotPos();
+
+   void parseForManualChangeToAllGaugesTargetValsMinAmp();
+   void parseForManualChangeToAllGaugesTargetValsWithAmp();
+   void parseForManualChangeToAllGaugesTargetValsAtConstAmp();
+
+   void parseForManualChangeToAllGaugesBridgePotPos();
+   void parseForManualChangeToAllGaugesAmpPotPos();
 };
 
 #endif

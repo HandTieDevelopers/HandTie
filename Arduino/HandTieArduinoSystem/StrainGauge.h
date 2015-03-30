@@ -16,8 +16,8 @@ public:
    void setBridgePotPos(uint8_t);
    uint8_t getBridgePotPos();
 
-   void setTargetValNoAmp(uint16_t);
-   uint16_t getTargetValNoAmp();
+   void setTargetValMinAmp(uint16_t);
+   uint16_t getTargetValMinAmp();
 
    void setTargetValWithAmp(uint16_t);
    uint16_t getTargetValWithAmp();
@@ -30,15 +30,28 @@ public:
    void setAmpCaliComplete();
    boolean isAmpCaliComplete();
 
+   void setBroken();
+   boolean isBroken();
+
+   uint16_t* getInputVals();
+   const static uint32_t numValsToCached = 9;
+
+   void updateInputVals(uint16_t val);
+
 private:
    uint8_t ampPotPos;
    uint8_t bridgePotPos;
 
-   uint16_t targetValNoAmp;
+   uint16_t targetValMinAmp;
    uint16_t targetValWithAmp;
 
    boolean bridgeCaliComplete;
    boolean ampCaliComplete;
+
+   boolean broken;
+
+   uint16_t inputVals[numValsToCached];
+   uint32_t currentIndexToUpdate;
 };
 
 #endif   //StrainGauge_h

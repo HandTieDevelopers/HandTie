@@ -1,2 +1,8 @@
 **/.DS_Store
 **/node_modules/*
+Processing/generateData/outputData
+Processing/generateData/config.json
+**/result
+**/libsvm-3.20
+**/liblinear-1.96
+
