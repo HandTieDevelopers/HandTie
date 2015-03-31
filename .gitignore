@@ -5,4 +5,5 @@ Processing/generateData/config.json
 **/result
 **/libsvm-3.20
 **/liblinear-1.96
-
+Arduino-SVM-master/Model_Examples/data*
+Arduino-SVM-master/Model_Examples/range
