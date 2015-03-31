@@ -1,10 +1,10 @@
 #include "SGManager.h"
 
 SGManager::SGManager(){
-   // uint16_t targetValMinAmp[] = {15,15,15,15,15,15,15,15,
-   //                              15,15,15,15,15,15,15,15};
-   // uint16_t targetValWithAmp[] = {300,300,300,300,300,300,300,300,
-   //                                300,300,300,300,300,300,300,300};
+   uint16_t targetValNoAmp[] = {20,20,20,20,20,20,20,20,
+                                20,20,20,20,20,20,20,20};
+   uint16_t targetValWithAmp[] = {700,700,700,700,700,700,700,700,
+                                  700,700,700,700,700,700,700,700,700,700,700};
 
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);

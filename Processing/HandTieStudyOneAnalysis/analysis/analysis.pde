@@ -9,10 +9,10 @@ public final static int NUM_OF_LEVELS = 3;
 public final static int NUM_OF_BEND = 2;
 public final static int NUM_OF_INTERPOLATION_TYPE = 2;
 // public final static int NUM_OF_Degree = 3;
-//public final static int ShowGauge_x = 350;   //350
-//public final static int ShowGauge_y = 220;   //220
-public final static int ShowGauge_x = 20;   //350
-public final static int ShowGauge_y = 20;   //220
+public final static int ShowGauge_x = 350;   //350
+public final static int ShowGauge_y = 220;   //220
+//public final static int ShowGauge_x = 20;   //350
+//public final static int ShowGauge_y = 20;   //220
 
 public final static int ShowGauge_dist_x = 40;
 public final static int ShowGauge_dist_y = 20;
@@ -43,8 +43,8 @@ ControlP5 cp5;
 RadioButton r1, r2, r3, r4, r5, r6;
 
 void setup() {
-//  size(800, 650);
-   size(480, 400);
+  size(800, 650);
+//   size(480, 400);
   cp5 = new ControlP5(this);
   
   r1 = cp5.addRadioButton("Finger")
