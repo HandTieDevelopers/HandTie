@@ -884,14 +884,14 @@ void batchTasks() {
     rowCombin.add(new Integer[]{i , i + 1});
   }
 
-//  usedTrials_checkBox.deactivateAll();
-//  for(int i = 0;i < 3;i++) {
-//    usedTrials_checkBox.activate(i);
-//  }
-    usedTrials_checkBox.deactivateAll();
-    usedTrials_checkBox.activate(0);
-    usedTrials_checkBox.activate(4);
-    usedTrials_checkBox.activate(9);
+  usedTrials_checkBox.deactivateAll();
+  for(int i = 0;i < 10;i++) {
+    usedTrials_checkBox.activate(i);
+  }
+//    usedTrials_checkBox.deactivateAll();
+//    usedTrials_checkBox.activate(0);
+//    usedTrials_checkBox.activate(4);
+//    usedTrials_checkBox.activate(9);
   
   for(Integer[] rowConfig : rowCombin) {
     usedRow_checkBox.deactivateAll();
