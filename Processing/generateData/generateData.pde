@@ -884,10 +884,16 @@ void batchTasks() {
     rowCombin.add(new Integer[]{i , i + 1});
   }
 
+
 //  usedTrials_checkBox.deactivateAll();
 //  for(int i = 0;i < 3;i++) {
 //    usedTrials_checkBox.activate(i);
 //  }
+
+  usedTrials_checkBox.deactivateAll();
+  for(int i = 0;i < 10;i++) {
+    usedTrials_checkBox.activate(i);
+  }
 
   
   for(Integer[] rowConfig : rowCombin) {
