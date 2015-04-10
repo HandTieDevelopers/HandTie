@@ -7,13 +7,13 @@ usingTool='nonLinear'
 
 liblinearPath='/Users/kevinljw/Documents/SVM/liblinear-1.96'
 libSVMPath='/Users/kevinljw/Documents/SVM/libsvm-3.20'
-numsForIter=" 0 1 2 4 5 6 7 8 9 10 "
+numsForIter=" 0 "
 
 # linearOrRBF="0"
 linearOrRBF="2"
 
-UsingGrid="1"
-# UsingGrid="0"
+# UsingGrid="1"
+UsingGrid="0"
 
 #--
 
@@ -62,7 +62,7 @@ for num in $numsForIter; do
   for trainingFile in $allTrainingData; do
     sScaleFile=${trainingFile%%.*}'.scale'
     rangeFile=${trainingFile%%.*}'.rfile'
-    $scale -l 0 -u 2 -s $rangeFile $trainingFile > $sScaleFile
+    $scale -l 0 -u 1 -s $rangeFile $trainingFile > $sScaleFile
     modelFile=${trainingFile%%.*}'.model'
 
     if [ $UsingGrid == "1" ]; then
