@@ -40,6 +40,11 @@ cd $inputDataFolderPath
 #testingOpts=''
 #accuracyFile=`date +"%Y-%m-%d_%k-%M-%S"`'.accuracy'
 
+rm *.accuracy
+rm *.zip
+rm *.model
+rm *.result
+
 for num in $numsForIter; do
   accuracyFile='User'"$num"'_10fold.accuracy'
   allRowsComb=`ls . | grep 'User'"$num"'_.*training.*.txt' | cut -d'_' -f4 | awk '!a[$0]++'` #awk is to remove duplication
@@ -53,8 +58,10 @@ for num in $numsForIter; do
       $train -q $trainingFile $modelFile
       fileID=${trainingFile%%_*} #use this fileID to find its complementary testing file
       #echo $fileID
+      echo 'train:'$trainingFile
       for testingFile in $allTestingData; do
         if [[ $testingFile =~ ^"$fileID"_.* ]]; then #matching the first one
+          echo 'test:'$testingFile
           pureTestFileName=${testingFile%%.*}
           resultFile=$pureTestFileName'.result'
           #echo $resultFile >>"$accuracyFile"
