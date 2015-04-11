@@ -2,8 +2,8 @@
 
 #-- config --
 
-usingTool='linear'
-#usingTool='nonLinear'
+#usingTool='linear'
+usingTool='nonLinear'
 
 foldNum="10"
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
@@ -39,7 +39,6 @@ cd $inputDataFolderPath
 #trainingOpts=''
 #testingOpts=''
 #accuracyFile=`date +"%Y-%m-%d_%k-%M-%S"`'.accuracy'
-
 
 for num in $numsForIter; do
   accuracyFile='User'"$num"'_10fold.accuracy'
