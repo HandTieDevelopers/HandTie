@@ -57,10 +57,10 @@ class DataParser {
     for(int i = 0;i < mNumGestures;i++) {
       for(int j = 0;j < mNumMaxTrialsPerGesture;j++) {
         for(int k = 0;k < mNumSamplesPerTrial;k++) {
-          vecNum[i][j][k] = 1;  
+          vecNum[i][j][k] = 1; //feature vector index for libsvm and liblinear format
           dataInstances[i][j][k].setLength(0);
-          dataInstances[i][j][k].append(i + 1);
-          dataInstances[i][j][k].append(delimeter); 
+          dataInstances[i][j][k].append(i + 1); //label
+          dataInstances[i][j][k].append(delimeter);  
         }
         for(int k = 0;k < mNumHalfTotalRows;k++) {
           sampleIdx[i][j][k] = 0;

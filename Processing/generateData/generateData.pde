@@ -29,6 +29,15 @@ final String[] fileNameToIgnore = new String[] {".DS_Store"};
 final String[] dataTypes = new String[] {"training" , "testing"};
 String currentSketchPath = null;
 
+int controlCheckBoxDataIndex = 0;
+String[] controlLabel = new String[]{"row", "trial", "gesture"};
+char keyControlSwitchKey = '`';
+String keyControlExplaination = "use " + keyControlSwitchKey + " to control "; 
+
+String getExplainationStr() {
+  return keyControlExplaination + controlLabel[controlCheckBoxDataIndex] + " checkbox";
+}
+
 //used to save where data should be placed.
 //default is [sketchPath]/outputData
 File outputDataDir = null;
@@ -64,7 +73,6 @@ void draw() {
 
 final int char0AsciiVal = (int)'0';
 final int char9AsciiVal = (int)'9';
-int controlCheckBoxDataIndex = 0;
 String statusTxt;
 
 void keyPressed() {
@@ -86,11 +94,13 @@ void keyPressed() {
   
   }
   else {
-    if(key == '`') {
+    if(key == keyControlSwitchKey) {
       controlCheckBoxDataIndex++;
       if(controlCheckBoxDataIndex == CheckBoxData.numDataType.ordinal()) {
         controlCheckBoxDataIndex = 0;
       }
+
+      keyControlLabel.setText(getExplainationStr());
     }
     //TO DO : we should use label to indicate which checkbox is under control.
     else if(key == 'q') {
@@ -109,7 +119,6 @@ void keyPressed() {
     else if(key == 'y') {
       statusTxt = systemStatus_textlabel.get().getText();
       if(statusTxt.equals(checkBatchingIntent)) {
-        systemStatus_textlabel.setText(SystemStatus.Do_Batching.toString());
         batchTasks();
       }
     }
@@ -138,6 +147,7 @@ Textlabel outputDataDirPath_textlabel;
 Textlabel inputDataDirPath_textlabel;
 Textlabel messageText = null;
 Textlabel systemStatus_textlabel;
+Textlabel keyControlLabel;
 
 //Textfield numTrialsToUse_textfield;
 Slider numTrialsToUse_slider;
@@ -251,6 +261,12 @@ void initView() {
      .setColorValue(color(49,171,47))
      .setFont(createFont("Georgia",20));
   
+  keyControlLabel = cp5.addTextlabel("key control")
+    .setText(getExplainationStr())
+    .setPosition(genDataBtnX + 300, genDataBtnY - 50)
+    .setColorValue(color(49,171,47))
+    .setFont(createFont("Georgia",20));
+
   //Buttons
   inputDataFileSelector = cp5.addButton("To_Select_Input_File")
      .setPosition(buttonAlignX,firstButtonY)
@@ -273,7 +289,6 @@ void initView() {
      .setValue(ButtonEventCode.OutputDataDirSelectorPressed.ordinal())
      .setBroadcast(true);
   
-  // TODO:generating data button
   generatingDataButton = cp5.addButton("Generating_Button")
      .setPosition(genDataBtnX,genDataBtnY)
      .setSize(buttonWidth,buttonHeight)
@@ -872,14 +887,18 @@ Set<Set<Integer>> powerSet(Set<Integer> originalSet) {
 
 
 void batchTasks() {
+  systemStatus_textlabel.setText(SystemStatus.Do_Batching.toString());
+  
   //CheckBox usedRow_checkBox;
   //CheckBox usedTrials_checkBox;
   ArrayList<Integer[]> rowCombin = new ArrayList<Integer[]>();
   
+  //0, 1, 2, ... , 7
   for(int i = 0;i < TotalNumRows;i++) {
     rowCombin.add(new Integer[]{i});
   }
   
+  //(0,1),(1,2),....(6,7)
   for(int i = 0;i < TotalNumRows - 1;i++) {
     rowCombin.add(new Integer[]{i , i + 1});
   }
@@ -890,20 +909,28 @@ void batchTasks() {
 //    usedTrials_checkBox.activate(i);
 //  }
 
-  usedTrials_checkBox.deactivateAll();
-  for(int i = 0;i < 10;i++) {
-    usedTrials_checkBox.activate(i);
-  }
+  //usedTrials_checkBox.deactivateAll();
+  //use all trials
+  // for(int i = 0;i < 10;i++) {
+  //   usedTrials_checkBox.activate(i);
+  // }
 
-  
-  for(Integer[] rowConfig : rowCombin) {
-    usedRow_checkBox.deactivateAll();
-    for(Integer rowNum : rowConfig) {
-      usedRow_checkBox.activate(rowNum);
+  //deactivate the rude gesture
+  usedGestures_checkBox.activateAll();
+  usedGestures_checkBox.deactivate(14);
+
+  for(int i = 0;i < TotalNumRows;i++) {
+    usedTrials_checkBox.activateAll();
+    usedTrials_checkBox.deactivate(i);
+    for(Integer[] rowConfig : rowCombin) {
+      usedRow_checkBox.deactivateAll();
+      for(Integer rowNum : rowConfig) {
+        usedRow_checkBox.activate(rowNum);
+      }
+      generateData();
     }
-    generateData();
+    usedTrials_checkBox.deactivateAll();
   }
-  
   //done
   systemStatus_textlabel.setText(SystemStatus.Idle.toString());
 }
