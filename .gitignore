@@ -1,3 +1,5 @@
+**/*.CM
+**/data_input
 **/.DS_Store
 **/node_modules/*
 Processing/generateData/outputData
