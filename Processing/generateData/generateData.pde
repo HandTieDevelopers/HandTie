@@ -919,7 +919,7 @@ void batchTasks() {
   usedGestures_checkBox.activateAll();
   usedGestures_checkBox.deactivate(14);
 
-  for(int i = 0;i < TotalNumRows;i++) {
+  for(int i = 0;i < NumTrialsPerGesture;i++) {
     usedTrials_checkBox.activateAll();
     usedTrials_checkBox.deactivate(i);
     for(Integer[] rowConfig : rowCombin) {
