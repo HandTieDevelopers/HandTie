@@ -2,8 +2,8 @@
 
 #-- config --
 
-#usingTool='linear'
-usingTool='nonLinear'
+usingTool='linear'
+#usingTool='nonLinear'
 
 foldNum="10"
 liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
@@ -48,7 +48,7 @@ rm *.result
 for num in $numsForIter; do
   accuracyFile='User'"$num"'_10fold.accuracy'
   allRowsComb=`ls . | grep 'User'"$num"'_.*training.*.txt' | cut -d'_' -f4 | awk '!a[$0]++'` #awk is to remove duplication
-  echo $allRowsComb >>"$accuracyFile"
+  #echo $allRowsComb >>"$accuracyFile"
   for rowNum in $allRowsComb; do 
     allTrainingData=`ls . | grep 'User'"$num"'_.*training.*'"$rowNum"'_.*.txt'` #select a user and a row
     allTestingData=`ls . | grep 'User'"$num"'_.*testing.*'"$rowNum"'_.*.txt'` 
@@ -69,12 +69,12 @@ for num in $numsForIter; do
           #rowNums=`echo $resultFile | cut -d'_' -f4`
           #$predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
           oneResult=`$predict $testingFile $modelFile $resultFile | awk '{print $3}'`
-          accuracySum=`bc <<< 'scale=2;'${oneResult//%}'+'$accuracySum`
+          accuracySum=`bc <<< 'scale=4;'${oneResult//%}'+'$accuracySum`
           break
         fi
       done
     done
-    avgAccuracy=`bc <<< 'scale=2;'$accuracySum'/'$foldNum`
+    avgAccuracy=`bc <<< 'scale=4;'$accuracySum'/'$foldNum`'%'
     echo $avgAccuracy >>"$accuracyFile"
   done
 done
