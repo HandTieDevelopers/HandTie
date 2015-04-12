@@ -2,16 +2,19 @@
 
 #-- config --
 
-usingTool='linear'
-#usingTool='nonLinear'
+# usingTool='linear'
+usingTool='nonLinear'
 
 foldNum="10"
-liblinearPath='/Users/lab430/Documents/SVM/liblinear-1.96'
-libSVMPath='/Users/lab430/Documents/SVM/libsvm-3.20'
+liblinearPath='/Users/kevinljw/Documents/SVM/liblinear-1.96'
+libSVMPath='/Users/kevinljw/Documents/SVM/libsvm-3.20'
 numsForIter=" 0 1 2 3 4 5 6 7 8 9 10 "
 
-UsingGrid="1"
-# UsingGrid="0"
+# linearOrRBF="0"
+linearOrRBF="2"
+
+# UsingGrid="1"
+UsingGrid="0"
 
 #--
 
@@ -23,6 +26,10 @@ fi
 inputDataFolderPath=$1
 outputResultFolderPath=$2
 
+outputResultFolderTmpPath=$2'/atmp'
+rm -r $outputResultFolderPath
+mkdir $outputResultFolderPath
+mkdir $outputResultFolderTmpPath
 # if [ "$emptyResultFolder" ==  true ]; then
 #   rm -d $outputResultFolderPath
 # fi
@@ -30,9 +37,12 @@ outputResultFolderPath=$2
 if [ $usingTool == 'linear' ]; then
   train=$liblinearPath'/train'
   predict=$liblinearPath'/predict'
+  scale=$liblinearPath'/scale'
 else
   train=$libSVMPath'/svm-train'
   predict=$libSVMPath'/svm-predict'
+  scale=$libSVMPath'/svm-scale'
+  grid=$libSVMPath'/tools/grid.py'
 fi
 
 
@@ -47,6 +57,8 @@ rm *.accuracy
 rm *.zip
 rm *.model
 rm *.result
+rm *.scale
+rm *.rfile
 
 for num in $numsForIter; do
   accuracyFile='User'"$num"'_10fold.accuracy'
@@ -57,8 +69,12 @@ for num in $numsForIter; do
     allTestingData=`ls . | grep 'User'"$num"'_.*testing.*'"$rowNum"'_.*.txt'` 
     accuracySum='0'
     for trainingFile in $allTrainingData; do
+      sScaleFile=${trainingFile%%.*}'.scale'
+      rangeFile=${trainingFile%%.*}'.rfile'
+      $scale -l 0 -u 2 -s $rangeFile $trainingFile > $sScaleFile
       modelFile=${trainingFile%%.*}'.model'
-      $train -q $trainingFile $modelFile
+
+      $train -q -t $linearOrRBF $sScaleFile $modelFile
       fileID=${trainingFile%%_*} #use this fileID to find its complementary testing file
       #echo $fileID
       echo 'train:'$trainingFile
@@ -66,12 +82,15 @@ for num in $numsForIter; do
         if [[ $testingFile =~ ^"$fileID"_.* ]]; then #matching the first one
           echo 'test:'$testingFile
           pureTestFileName=${testingFile%%.*}
+          rScaleFile=${testingFile%%.*}'.scale'
+          # rangeFile=${trainingFile%%.*}'.rfile'
+          $scale -r $rangeFile $testingFile > $rScaleFile
           resultFile=$pureTestFileName'.result'
           #echo $resultFile >>"$accuracyFile"
           #$predict $testingFile $modelFile $resultFile >>"$accuracyFile" 2>&1
           #rowNums=`echo $resultFile | cut -d'_' -f4`
           #$predict $testingFile $modelFile $resultFile | awk -v var="$rowNums" '{print var','$3}' >>"$accuracyFile"
-          oneResult=`$predict $testingFile $modelFile $resultFile | awk '{print $3}'`
+          oneResult=`$predict $rScaleFile $modelFile $resultFile | awk '{print $3}'`
           accuracySum=`bc <<< 'scale=4;'${oneResult//%}'+'$accuracySum`
           break
         fi
@@ -83,5 +102,8 @@ for num in $numsForIter; do
 done
 
 if [ -d $outputResultFolderPath ] && [ "$outputResultFolderPath" != "$inputDataFolderPath" ]; then 
-  mv *.accuracy *.result *.model $outputResultFolderPath
+  mv *.result *.model *.scale $outputResultFolderTmpPath
+  mv *.rfile $outputResultFolderTmpPath
+  mv *.accuracy $outputResultFolderPath
+
 fi
