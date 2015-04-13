@@ -103,6 +103,11 @@ void SGManager::allCalibration(){
    calibrateAmpAtConstBridge();
 }
 
+void SGManager::test(){
+  Serial.print(analogMux->AnalogRead(17));
+  Serial.println();
+}
+
 void SGManager::allCalibrationAtConstAmp(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       gauges[i]->setBridgeCaliNeeded();

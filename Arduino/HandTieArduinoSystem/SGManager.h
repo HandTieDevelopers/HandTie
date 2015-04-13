@@ -13,8 +13,8 @@
 #define SS1 3
 #define SS2 4
 #define MS0 5
-#define MS1 7
-#define MS2 8
+#define MS1 6
+#define MS2 7
 #define READPIN A0
 
 // ---------   MCP4251 Macro Define --------- //
@@ -31,7 +31,7 @@
 #define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
-#define NUM_OF_GAUGES 19
+#define NUM_OF_GAUGES 24
 #define CALI_TIMEOUT ((unsigned long)10000)
 // #define BROKEN_OMIT
 
@@ -53,6 +53,7 @@ public:
 
    void allCalibration();
    void allCalibrationAtConstAmp();
+   void test();
 
    void manualAssignBridgePotPosForOneGauge(uint8_t, uint8_t);
    void manualAssignAmpPotPosForOneGauge(uint8_t, uint8_t);

@@ -8,12 +8,13 @@ ParserWithAction parser(&sgManager);
 RecordButton recordButton;
 
 void setup(){
-   Serial.begin(115200);
+   Serial.begin(38400);
    sgManager.allCalibrationAtConstAmp();
 }
 
 void loop(){
-   sgManager.serialPrint();
+  sgManager.test();
+   //sgManager.serialPrint();
    recordButton.checkClick();
 }
 
