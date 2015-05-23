@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class SerialManager implements ControlListener, SerialNotifier{
 
-   final static int SERIAL_PORT_BAUD_RATE = 115200;
+   final static int SERIAL_PORT_BAUD_RATE = 38400;
 
    final static int SERIAL_PORT_NUM = 2;
 

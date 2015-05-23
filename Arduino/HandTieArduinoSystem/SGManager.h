@@ -13,8 +13,8 @@
 #define SS1 3
 #define SS2 4
 #define MS0 5
-#define MS1 7
-#define MS2 8
+#define MS1 6
+#define MS2 7
 #define READPIN A0
 
 // ---------   MCP4251 Macro Define --------- //

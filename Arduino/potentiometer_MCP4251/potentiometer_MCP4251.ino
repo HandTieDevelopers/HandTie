@@ -1,7 +1,7 @@
 #include <SPI.h>
 #include "MCP4251.h"
 
-#define SS_PIN 53
+#define SS_PIN 10
 #define OHM_AB 5040
 #define OHM_WIPER 102
 
@@ -14,7 +14,7 @@ void setup(){
    mcp4251.wiper0_pos(wiper0Pos);
    mcp4251.wiper1_pos(wiper1Pos);
    
-   Serial.begin(115200);
+   Serial.begin(38400);
 }
 
 void loop(){
