@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 38400;
 
-   final static int SERIAL_PORT_NUM = 2;
+   final static int SERIAL_PORT_NUM = 5;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -52,6 +52,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    private int [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
+      // print(buf);
       String [] bufSplitArr = buf.split(" ");
       int [] parsedDataArr = new int[bufSplitArr.length-1];
 

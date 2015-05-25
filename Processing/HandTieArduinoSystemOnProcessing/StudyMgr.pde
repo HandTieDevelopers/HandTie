@@ -62,7 +62,7 @@ public class StudyMgr implements SerialListener{
 
    public StudyMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
-      mainClass.expImgManager.setIndividualImageDirPath(StudyID);
+//      mainClass.expImgManager.setIndividualImageDirPath(StudyID);
 
       for(int i=0; i< NUM_OF_GESTURE_SET; i++){
             
@@ -643,7 +643,7 @@ public class StudyMgr implements SerialListener{
   @Override
   public void updateReceiveRecordSignal(){
     performKeyPress(' ');
-    mainClass.expImgManager.captureImage(getImageFileName());
+//    mainClass.expImgManager.captureImage(getImageFileName());
   }
 
 }

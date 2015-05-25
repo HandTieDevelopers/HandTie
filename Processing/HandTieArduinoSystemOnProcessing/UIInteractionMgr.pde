@@ -72,6 +72,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       for (i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          barOrigin = sgManager.getOneBarBaseCenterOfGauges(i);
          cp5.addSlider(SLIDERS_BRIDGE_TARGET_MIN_AMP+i)
+            .setBroadcast(false)
             .setPosition(barOrigin[0]-4, barOrigin[1]-65)
             .setSize(10,80)
             .setRange(0,30)
@@ -83,9 +84,11 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setDecimalPrecision(0)
             .showTickMarks(false)
             .setVisible(false)
+            .setBroadcast(true)
          ;
 
          cp5.addSlider(SLIDERS_AMP_TARGET_CONST_BRIDGE+i)
+            .setBroadcast(false)
             .setPosition(barOrigin[0]-4, barOrigin[1]-65)
             .setSize(10,80)
             .setRange(0,1000)
@@ -97,9 +100,11 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setDecimalPrecision(0)
             .showTickMarks(false)
             .setVisible(false)
+            .setBroadcast(true)
          ;
 
          cp5.addSlider(SLIDERS_BRIDGE_TARGET_CONST_AMP+i)
+            .setBroadcast(false)
             .setPosition(barOrigin[0]-4, barOrigin[1]-65)
             .setSize(10,80)
             .setRange(0,1000)
@@ -111,9 +116,11 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setDecimalPrecision(0)
             .showTickMarks(false)
             .setVisible(false)
+            .setBroadcast(true)
          ;
 
          cp5.addSlider(SLIDERS_BRIDGE_POT+i)
+            .setBroadcast(false)
             .setPosition(barOrigin[0]-4, barOrigin[1]-65)
             .setSize(10,80)
             .setRange(0,255)
@@ -125,9 +132,11 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setDecimalPrecision(0)
             .showTickMarks(false)
             .setVisible(false)
+            .setBroadcast(true)
          ;
 
          cp5.addSlider(SLIDERS_AMP_POT+i)
+            .setBroadcast(false)
             .setPosition(barOrigin[0]-4, barOrigin[1]-65)
             .setSize(10,80)
             .setRange(0,50)
@@ -139,11 +148,13 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setDecimalPrecision(0)
             .showTickMarks(false)
             .setVisible(false)
+            .setBroadcast(true)
          ;
       }
 
       barOrigin = sgManager.getOneBarBaseCenterOfGauges(i-1);
       cp5.addSlider(SLIDER_BRIDGE_TARGET_MIN_AMP_ALL)
+         .setBroadcast(false)
          .setPosition(barOrigin[0]+35, barOrigin[1]-65)
          .setSize(10,80)
          .setRange(0,30)
@@ -155,8 +166,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setDecimalPrecision(0)
          .showTickMarks(false)
          .setVisible(false)
+         .setBroadcast(true)
       ;
       cp5.addSlider(SLIDER_AMP_TARGET_CONST_BRIDGE_ALL)
+         .setBroadcast(false)
          .setPosition(barOrigin[0]+35, barOrigin[1]-65)
          .setSize(10,80)
          .setRange(0,1000)
@@ -168,8 +181,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setDecimalPrecision(0)
          .showTickMarks(false)
          .setVisible(false)
+         .setBroadcast(true)
       ;
       cp5.addSlider(SLIDER_BRIDGE_TARGET_CONST_AMP_ALL)
+         .setBroadcast(false)
          .setPosition(barOrigin[0]+35, barOrigin[1]-65)
          .setSize(10,80)
          .setRange(0,1000)
@@ -181,8 +196,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setDecimalPrecision(0)
          .showTickMarks(false)
          .setVisible(false)
+         .setBroadcast(true)
       ;
       cp5.addSlider(SLIDER_BRIDGE_POT_ALL)
+         .setBroadcast(false)
          .setPosition(barOrigin[0]+35, barOrigin[1]-65)
          .setSize(10,80)
          .setRange(0,255)
@@ -194,8 +211,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setDecimalPrecision(0)
          .showTickMarks(false)
          .setVisible(false)
+         .setBroadcast(true)
       ;
       cp5.addSlider(SLIDER_AMP_POT_ALL)
+         .setBroadcast(false)
          .setPosition(barOrigin[0]+35, barOrigin[1]-65)
          .setSize(10,80)
          .setRange(0,50)
@@ -207,16 +226,21 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setDecimalPrecision(0)
          .showTickMarks(false)
          .setVisible(false)
+         .setBroadcast(true)
       ;
       cp5.addButton(CALIBRATE)
+         .setBroadcast(false)
          .setValue(0)
          .setPosition(width*0.2, height*0.94)
          .setSize(100,20)
+         .setBroadcast(true)
       ;
       cp5.addButton(CALIBRATE_CONST_AMP)
+         .setBroadcast(false)
          .setValue(0)
          .setPosition(width*0.2 + 120, height*0.94)
          .setSize(100,20)
+         .setBroadcast(true)
       ;
       launchComplete = true;
    }
