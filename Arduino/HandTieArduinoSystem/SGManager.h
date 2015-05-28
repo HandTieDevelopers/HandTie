@@ -74,6 +74,12 @@ private:
    StrainGauge * gauges[NUM_OF_GAUGES];
    FilterConfig* config;
 
+   unsigned long startCaliTime;
+
+   boolean isCalibratingBridgeAtMinAmp;
+   boolean isCalibratingAmpAtConstBridge;
+   boolean isCalibratingBridgeAtConstAmp;
+
    void calibrateBridgeAtMinAmp();
    void calibrateAmpAtConstBridge();
    void calibrateBridgeAtConstAmp();
