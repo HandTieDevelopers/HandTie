@@ -1,0 +1,345 @@
+Peripheral MySer0 As ServoRunnerA @ 0 ' 設定模組編號為0，注意!使用Servo Commander
+Peripheral MySer1 As ServoRunnerA @ 1
+Peripheral Ps As GamePadPs @ 31    ' A 上的伺服機相關指令，一定要設定編號為0
+Dim RxPin As Byte
+Dim Baudmode As Word
+Dim Data As Byte
+Dim x As Byte
+
+Sub Main()
+
+	
+    
+    RunFrame(1)
+    Pause 700
+    
+#DEFINE Baudrate 38400                           '宣告 Baudrate 速率為 38400bps
+RxPin = 5                                        '設定 RxPin 為 5Pin
+Baudmode = (4096 - (2000000\Baudrate))           '設定傳輸模式為 38400bps x = 0
+
+Do
+     Serin RxPin,Baudmode,[Data]                 '將 RxPin 接收到的資料放入 Data
+     'Debug  Data                                '將 Data 值顯示於終端視窗
+     Select Case Data
+        Case"a"c
+        
+           RunFrame(1)
+           Pause 700 
+           
+        Case"b"c
+        
+           F()
+                
+        Case"c"c
+        
+           B()
+           
+        Case"d"c
+        
+           tr()
+           
+        Case"e"c
+        
+           tl()
+           
+        Case"f"c
+           
+           rfight()
+           
+        Case"g"c
+           
+           hello()
+        
+        Case"h"c
+        
+        Case"i"c
+        
+        Case"j"c
+        
+     
+     
+	End Select		
+Loop
+    
+End Sub
+'=======================
+Sub RunFrame(ID As Byte)
+	Myser0.LoadFrame(ID)
+	Myser0.Runallservo()
+	Myser1.LoadFrame(ID)
+	Myser1.Runallservo()	
+End Sub
+
+
+
+
+'===========================================
+Sub F()'前走	
+
+'Do
+For x=0 To 3
+	RunFrame(2)
+	Pause 30
+	RunFrame(3)
+	Pause 30
+	RunFrame(4)
+	Pause 30
+	RunFrame(5)
+	Pause 30
+'	Loop Until wKeyStatus <> 32768
+Next
+	RunFrame(2)
+	Pause 30
+	RunFrame(1)
+	Pause 100
+End Sub
+'===========================================
+Sub B()'後走	
+    
+'Do
+For x=0 To 3
+	RunFrame(6)
+	Pause 30
+	RunFrame(7)
+	Pause 25
+	RunFrame(8)
+	Pause 30
+	RunFrame(9)
+	Pause 25
+'	Loop Until wKeyStatus <> 8192
+Next
+	RunFrame(6)
+	Pause 30
+	RunFrame(1)
+	Pause 100
+End Sub
+'=================================
+Sub L()'左移
+RunFrame(14)
+Pause 150
+RunFrame(15)
+Pause 300
+
+End Sub	
+	
+
+'================================
+Sub R()'右移	
+RunFrame(16)
+Pause 150
+RunFrame(17)
+Pause 300
+
+End Sub	
+	
+
+'===============================
+Sub down()'蹲下
+	RunFrame(18)
+	Pause 500	
+End Sub
+'===============================
+Sub up()'起立
+	RunFrame(1)
+	Pause 400	
+End Sub
+'===============================
+Sub tl()'左轉
+RunFrame(10)
+Pause 200
+RunFrame(11)
+Pause 350
+End Sub
+'===============================
+Sub tr()'右轉
+RunFrame(12)
+Pause 200
+RunFrame(13)
+Pause 350
+End Sub
+'===============================
+Sub fup()'前爬起
+RunFrame(19)
+Pause 300
+RunFrame(20)
+Pause 300
+RunFrame(21)
+Pause 300
+RunFrame(22)
+Pause 300
+RunFrame(23)
+Pause 300
+RunFrame(24)
+Pause 300
+RunFrame(25)
+Pause 300
+RunFrame(26)
+Pause 300
+RunFrame(27)
+Pause 300
+RunFrame(28)
+Pause 400
+End Sub
+'===============================
+Sub bup()'後爬起
+RunFrame(29)
+Pause 300
+RunFrame(30)
+Pause 400
+RunFrame(31)
+Pause 300
+RunFrame(32)
+Pause 300
+RunFrame(33)
+Pause 300
+RunFrame(34)
+Pause 300
+RunFrame(35)
+Pause 400
+End Sub
+'===============================
+Sub rfight()'右勾拳
+
+'Do
+For x=0 To 3
+RunFrame(36)
+Pause 300   
+RunFrame(37)
+Pause 350
+'Loop Until wKeyStatus <> 32
+Next
+RunFrame(1)
+Pause 300	
+
+End Sub
+'===============================
+Sub lfight()'左勾拳
+
+'Do
+For x=0 To 3
+RunFrame(38)
+Pause 300   
+RunFrame(39)
+Pause 350
+'Loop Until wKeyStatus <> 16
+Next
+RunFrame(1)
+Pause 300	
+
+End Sub
+'===============================
+Sub rrfight()'右側打
+RunFrame(40)
+Pause 350   
+RunFrame(1)
+Pause 350	
+End Sub
+'===============================
+Sub llfight()'左側打
+RunFrame(41)
+Pause 350   
+RunFrame(1)
+Pause 350	
+End Sub
+'===============================
+Sub downfight()'蹲打
+RunFrame(60)
+Pause 350   
+'Do
+For x=0 To 3
+RunFrame(61)
+Pause 300	
+RunFrame(62)
+Pause 300  
+'Loop Until wKeyStatus <> 4
+Next
+RunFrame(60)
+Pause 300  
+RunFrame(1)
+Pause 300	
+End Sub
+'===============================
+Sub upfight()'上勾
+RunFrame(63)
+Pause 300   
+RunFrame(64)
+Pause 300
+RunFrame(65)
+Pause 350 	
+RunFrame(1)
+Pause 300
+End Sub
+'===============================
+Sub rshoot()'右踢球
+RunFrame(42)
+Pause 500   
+RunFrame(43)
+Pause 500
+RunFrame(44)
+Pause 400	
+RunFrame(45)
+Pause 500
+End Sub
+'===============================
+Sub lshoot()'左踢球
+RunFrame(46)
+Pause 500   
+RunFrame(47)
+Pause 500
+RunFrame(48)
+Pause 400
+RunFrame(49)
+Pause 500	
+End Sub
+'================================
+Sub hello()'左踢球
+For x= 0 To 2
+RunFrame(66)
+Pause 200   
+RunFrame(67)
+Pause 200
+Next
+RunFrame(1)
+Pause 300
+End Sub
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
