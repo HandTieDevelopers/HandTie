@@ -1,18 +1,21 @@
+import java.util.ArrayList;
 
-public class GRTMgr implements SerialListener{
+public class GRTMgr implements SerialListener, GRTNotifier{
 
    //-----------------------------------GRT
-    //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
-    final int pipelineMode = GRT.CLASSIFICATION_MODE;
-    final int numInputs = SGManager.NUM_OF_GAUGES + AccelMgr.NUM_OF_AXIS;
-    final int numOutputs = 1;
+   //Set the pipeline mode (CLASSIFICATION_MODE or REGRESSION_MODE), the number of inputs and the number of outputs
+   final int pipelineMode = GRT.CLASSIFICATION_MODE;
+   final int numInputs = SGManager.NUM_OF_GAUGES + AccelMgr.NUM_OF_AXIS;
+   final int numOutputs = 1;
     
-   GRT grt = new GRT( pipelineMode, numInputs, numOutputs, "127.0.0.1", 5000, 5001, true );
+   public GRT grt = new GRT( pipelineMode, numInputs, numOutputs, "127.0.0.1", 5000, 5001, true );
    float[] data = new float[ numInputs ];
    float[] targetVector = new float[ numOutputs ];
    
    boolean showGETmsgFlg = true;
    
+   ArrayList<GRTListener> grtListeners = new ArrayList<GRTListener>();
+
    public GRTMgr () {}
 
    public void draw(){
@@ -36,6 +39,9 @@ public class GRTMgr implements SerialListener{
 //        fill(color(200));
         textSize(50);
         text(grt.getPredictedClassLabel(),width*0.4,height*0.2);
+
+        notifyAllWithGRTResults(grt.getPredictedClassLabel(),
+                                (float)grt.getMaximumLikelihood());
    }
 
    public void performKeyPress(char k){
@@ -103,19 +109,21 @@ public class GRTMgr implements SerialListener{
    public void updateCalibratingValsMinAmp(float [] values){}
    @Override
    public void updateCalibratingValsWithAmp(float [] values){}
-
-  // StringBuffer strBuffer = new StringBuffer();
-
- // private String getImageFileName() {
- //   strBuffer.setLength(0);
- //   strBuffer.append(StudyID);
- //   strBuffer.append("_");
- //   strBuffer.append(NowGesture);
- //   strBuffer.append("_");
- //   strBuffer.append(NowRow);
- //   return strBuffer.toString();
- // }
    @Override
-  public void updateReceiveRecordSignal(){}
+   public void updateReceiveRecordSignal(){}
 
+   @Override
+   public void registerForGRTListener(GRTListener listener){
+      grtListeners.add(listener);
+   }
+   @Override
+   public void removeGRTListener(GRTListener listener){
+      grtListeners.remove(listener);
+   }
+   @Override
+   public void notifyAllWithGRTResults(int label, float likelihood){
+      for (GRTListener grtListener : grtListeners) {
+         grtListener.updateGRTResults(label, likelihood);
+      }
+   }
 }

@@ -578,7 +578,7 @@ class GRT{
   /**
    @return returns the most recent predictedClassLabel, received from the GRT GUI
   */
-  int getPredictedClassLabel(){
+  public int getPredictedClassLabel(){
     return predictedClassLabel;
   }
   
@@ -592,7 +592,7 @@ class GRT{
   /**
    @return returns the most recent maximumLikelihood, received from the GRT GUI
   */
-  double getMaximumLikelihood(){
+  public double getMaximumLikelihood(){
     return maximumLikelihood; 
   }
   

@@ -31,6 +31,8 @@ void listenerRegistrations(){
    uiInteractionMgr.registerToSerialNotifier(serialManager);
    accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
+
+   robotControl.registerToGRTNotifier(grtMgr);
 }
 
 void keyPressed(){

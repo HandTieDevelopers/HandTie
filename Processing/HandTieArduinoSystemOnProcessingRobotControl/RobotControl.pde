@@ -1,6 +1,8 @@
-public class RobotControl{
+public class RobotControl implements GRTListener{
    final static int SERIAL_PORT_BAUD_RATE = 38400;
    final static int SERIAL_PORT_NUM = 7;
+
+   final static float likelihoodThreshold = 0.7f;
 
    Serial robotPort;
 
@@ -19,5 +21,20 @@ public class RobotControl{
 
    public void performKeyPress(char k){
       sendToRobot(String.valueOf(k));
+   }
+
+   @Override
+   public void registerToGRTNotifier(GRTNotifier notifier){
+      notifier.registerForGRTListener(this);
+   }
+   @Override
+   public void removeToGRTNotifier(GRTNotifier notifier){
+      notifier.removeGRTListener(this);
+   }
+   @Override
+   public void updateGRTResults(int label, float likelihood){
+      if (likelihood > likelihoodThreshold) {
+         sendToRobot(String.valueOf((char)(label+96)));
+      }
    }
 }
