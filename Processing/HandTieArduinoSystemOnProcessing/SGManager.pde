@@ -30,12 +30,12 @@ public class SGManager implements ControlListener, SerialListener{
       }
    }
 
-   public int getOneCaliValForGauges(int index){
+   public float getOneCaliValForGauges(int index){
       return gauges[index].getCalibrationValue();
    }
 
-   public int [] getAnalogValsOfGauges(){
-      int [] analogVals = new int[gauges.length];
+   public float [] getAnalogValsOfGauges(){
+      float[] analogVals = new float[gauges.length];
       for (int i = 0; i < gauges.length; ++i) {
          analogVals[i] = gauges[i].getNewValue();
       }
@@ -100,14 +100,14 @@ public class SGManager implements ControlListener, SerialListener{
    }
    
    @Override
-   public void updateAnalogVals(int [] values){
+   public void updateAnalogVals(float [] values){
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setNewValue(values[i]);
       }
    }
 
    @Override
-   public void updateCaliVals(int [] values){
+   public void updateCaliVals(float [] values){
       hideCalibratingText = true;
       for (int i = 0; i < gauges.length; ++i) {
          gauges[i].setCalibrationValue(values[i]);
@@ -115,22 +115,22 @@ public class SGManager implements ControlListener, SerialListener{
    }
 
    @Override
-   public void updateTargetAnalogValsMinAmp(int [] values){}
+   public void updateTargetAnalogValsMinAmp(float [] values){}
    @Override
-   public void updateTargetAnalogValsWithAmp(int [] values){}
+   public void updateTargetAnalogValsWithAmp(float [] values){}
    @Override
-   public void updateBridgePotPosVals(int [] values){}
+   public void updateBridgePotPosVals(float [] values){}
    @Override
-   public void updateAmpPotPosVals(int [] values){}
+   public void updateAmpPotPosVals(float [] values){}
    @Override
-   public void updateCalibratingValsMinAmp(int [] values){
+   public void updateCalibratingValsMinAmp(float [] values){
       hideCalibratingText = hideBar;
       for (int i = 0; i < NUM_OF_GAUGES; ++i) {
          gauges[i].setCalibratingValue(values[i]);
       }
    }
    @Override
-   public void updateCalibratingValsWithAmp(int [] values){
+   public void updateCalibratingValsWithAmp(float [] values){
       hideCalibratingText = hideBar;
       for (int i = 0; i < NUM_OF_GAUGES; ++i) {
          gauges[i].setCalibratingValue(values[i]);

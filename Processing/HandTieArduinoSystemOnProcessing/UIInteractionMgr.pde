@@ -367,19 +367,19 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    }
    
    @Override
-   public void updateAnalogVals(int [] values){}
+   public void updateAnalogVals(float [] values){}
    @Override
-   public void updateCaliVals(int [] values){}
+   public void updateCaliVals(float [] values){}
 
    @Override
-   public void updateTargetAnalogValsMinAmp(int [] values){
+   public void updateTargetAnalogValsMinAmp(float [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          cp5.controller(SLIDERS_BRIDGE_TARGET_MIN_AMP+i).setValue((float)values[i]);
       }
    }
 
    @Override
-   public void updateTargetAnalogValsWithAmp(int [] values){
+   public void updateTargetAnalogValsWithAmp(float [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          cp5.controller(SLIDERS_AMP_TARGET_CONST_BRIDGE+i).setValue((float)values[i]);
          cp5.controller(SLIDERS_BRIDGE_TARGET_CONST_AMP+i).setValue((float)values[i]);
@@ -387,23 +387,23 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    }
 
    @Override
-   public void updateBridgePotPosVals(int [] values){
+   public void updateBridgePotPosVals(float [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          cp5.controller(SLIDERS_BRIDGE_POT+i).setValue((float)values[i]);
       }
    }
 
    @Override
-   public void updateAmpPotPosVals(int [] values){
+   public void updateAmpPotPosVals(float [] values){
       for (int i = 0; i < SGManager.NUM_OF_GAUGES; ++i) {
          cp5.controller(SLIDERS_AMP_POT+i).setValue((float)values[i]);
       }
    }
 
    @Override
-   public void updateCalibratingValsMinAmp(int [] values){}
+   public void updateCalibratingValsMinAmp(float [] values){}
    @Override
-   public void updateCalibratingValsWithAmp(int [] values){}
+   public void updateCalibratingValsWithAmp(float [] values){}
    @Override
    public void updateReceiveRecordSignal(){}
 }

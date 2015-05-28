@@ -612,21 +612,21 @@ public class StudyMgr implements SerialListener{
   }
   
   @Override
-  public void updateAnalogVals(int [] values){}
+  public void updateAnalogVals(float [] values){}
   @Override
-  public void updateCaliVals(int [] values){}
+  public void updateCaliVals(float [] values){}
   @Override
-  public void updateTargetAnalogValsMinAmp(int [] values){}
+  public void updateTargetAnalogValsMinAmp(float [] values){}
   @Override
-  public void updateTargetAnalogValsWithAmp(int [] values){}
+  public void updateTargetAnalogValsWithAmp(float [] values){}
   @Override
-  public void updateBridgePotPosVals(int [] values){}
+  public void updateBridgePotPosVals(float [] values){}
   @Override
-  public void updateAmpPotPosVals(int [] values){}
+  public void updateAmpPotPosVals(float [] values){}
   @Override
-  public void updateCalibratingValsMinAmp(int [] values){}
+  public void updateCalibratingValsMinAmp(float [] values){}
   @Override
-  public void updateCalibratingValsWithAmp(int [] values){}
+  public void updateCalibratingValsWithAmp(float [] values){}
 
   StringBuffer strBuffer = new StringBuffer();
 

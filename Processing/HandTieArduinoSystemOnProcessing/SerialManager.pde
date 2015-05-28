@@ -6,7 +6,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
 
    final static int SERIAL_PORT_BAUD_RATE = 38400;
 
-   final static int SERIAL_PORT_NUM = 5;
+   final static int SERIAL_PORT_NUM = 0;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -50,14 +50,14 @@ public class SerialManager implements ControlListener, SerialNotifier{
       arduinoPort.bufferUntil(10);    //newline
    }
 
-   private int [] parseSpaceSeparatedData(Serial port) throws Exception{
+   private float [] parseSpaceSeparatedData(Serial port) throws Exception{
       String buf = port.readString();
       // print(buf);
       String [] bufSplitArr = buf.split(" ");
-      int [] parsedDataArr = new int[bufSplitArr.length-1];
+      float [] parsedDataArr = new float[bufSplitArr.length-1];
 
       for (int i = 0; i < bufSplitArr.length-1; ++i)
-         parsedDataArr[i] = Integer.parseInt(bufSplitArr[i]);
+         parsedDataArr[i] = Float.parseFloat(bufSplitArr[i]);
 
       return parsedDataArr;
    }
@@ -69,9 +69,9 @@ public class SerialManager implements ControlListener, SerialNotifier{
    }
 
    private void parseDataFromArduino(Serial port) throws Exception{
-      int [] parsedData = parseSpaceSeparatedData(port);
-      int [] values = Arrays.copyOfRange(parsedData,1,parsedData.length);
-      switch (parsedData[0]) {
+      float [] parsedData = parseSpaceSeparatedData(port);
+      float [] values = Arrays.copyOfRange(parsedData,1,parsedData.length);
+      switch ((int)parsedData[0]) {
          case RECEIVE_NORMAL_VALS:
             notifyAllWithAnalogVals(values);
             break;
@@ -125,56 +125,56 @@ public class SerialManager implements ControlListener, SerialNotifier{
    }
 
    @Override
-   public void notifyAllWithAnalogVals(int [] values){
+   public void notifyAllWithAnalogVals(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateAnalogVals(values);
       }
    }
 
    @Override
-   public void notifyAllWithCaliVals(int [] values){
+   public void notifyAllWithCaliVals(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCaliVals(values);
       }
    }
 
    @Override
-   public void notifyAllWithTargetAnalogValsMinAmp(int [] values){
+   public void notifyAllWithTargetAnalogValsMinAmp(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateTargetAnalogValsMinAmp(values);
       }
    }
 
    @Override
-   public void notifyAllWithTargetAnalogValsWithAmp(int [] values){
+   public void notifyAllWithTargetAnalogValsWithAmp(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateTargetAnalogValsWithAmp(values);
       }
    }
 
    @Override
-   public void notifyAllWithBridgePotPosVals(int [] values){
+   public void notifyAllWithBridgePotPosVals(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateBridgePotPosVals(values);
       }
    }
 
    @Override
-   public void notifyAllWithAmpPotPosVals(int [] values){
+   public void notifyAllWithAmpPotPosVals(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateAmpPotPosVals(values);
       }
    }
 
    @Override
-   public void notifyAllWithCalibratingValsMinAmp(int [] values){
+   public void notifyAllWithCalibratingValsMinAmp(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCalibratingValsMinAmp(values);
       }
    }
 
    @Override
-   public void notifyAllWithCalibratingValsWithAmp(int [] values){
+   public void notifyAllWithCalibratingValsWithAmp(float [] values){
       for (SerialListener listener : serialListeners) {
          listener.updateCalibratingValsWithAmp(values);
       }

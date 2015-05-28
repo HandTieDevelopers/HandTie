@@ -2,9 +2,9 @@ public class StrainGauge{
    
    //Value data member
    private int gaugeIdx;
-   private int calibrationValue;
-   private int newValue;
-   private int calibratingValue;
+   private float calibrationValue;
+   private float newValue;
+   private float calibratingValue;
 
    //Bar Display data member
    private float barXOrigin;
@@ -30,18 +30,18 @@ public class StrainGauge{
    }
 
    //Value methods
-   public int getNewValue(){
+   public float getNewValue(){
       return newValue;
    }
-   public void setNewValue(int newValue){
+   public void setNewValue(float newValue){
       this.newValue = newValue;
    }
 
-   public void setCalibrationValue(int calibrationValue){
+   public void setCalibrationValue(float calibrationValue){
       this.calibrationValue = calibrationValue;
    }
 
-   public int getCalibrationValue(){
+   public float getCalibrationValue(){
       return calibrationValue;
    }
 
@@ -49,15 +49,15 @@ public class StrainGauge{
       return (float)newValue/calibrationValue;
    }
 
-   public void setCalibratingValue(int calibratingValue){
+   public void setCalibratingValue(float calibratingValue){
       this.calibratingValue = calibratingValue;
    }
 
-   public int getCalibratingValue(){
+   public float getCalibratingValue(){
       return calibratingValue;
    }
 
-   //Bar Display data member
+   //Bar Display methods
    public void setBarDisplayProperties(float barXOrigin, float barYOrigin,
                                        float barWidth){
       this.barXOrigin = barXOrigin;
@@ -94,7 +94,7 @@ public class StrainGauge{
       rect(barXOrigin, barYOrigin, barWidth, (1-elongRatio)*barElongRatio);
    }
 
-   //Text Display
+   //Text Display methods
    public void setTextDisplayPropertiesForElong(float elongTextXOrigin,
                                                 float elongTextYOrigin,
                                                 float elongTextSize){
@@ -137,6 +137,6 @@ public class StrainGauge{
    public void drawCalibratingText(){
       fill(0,0,30,255);
       textSize(10);
-      text(calibratingValue, barXOrigin, barYOrigin+20);
+      text((int)calibratingValue, barXOrigin, barYOrigin+20);
    }
 }

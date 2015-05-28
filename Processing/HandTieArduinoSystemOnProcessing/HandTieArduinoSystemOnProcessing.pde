@@ -5,6 +5,7 @@ SerialManager serialManager;
 UIInteractionMgr uiInteractionMgr;
 //StudyMgr studyMgr;
 //ExperimentImageManager expImgManager;
+AccelMgr accelMgr;
 
 void setup() {
    size(900, 600);
@@ -13,6 +14,7 @@ void setup() {
    serialManager = new SerialManager(this);
    uiInteractionMgr = new UIInteractionMgr(this);
 //   studyMgr = new StudyMgr(this);
+   accelMgr = new AccelMgr();
 
    listenerRegistrations();
 }
@@ -22,12 +24,14 @@ void draw() {
 //   studyMgr.start();
    sgManager.draw();
 //   expImgManager.draw();
+   accelMgr.draw();
 }
 
 void listenerRegistrations(){
    sgManager.registerToSerialNotifier(serialManager);
    uiInteractionMgr.registerToSerialNotifier(serialManager);
 //   studyMgr.registerToSerialNotifier(serialManager);
+   accelMgr.registerToSerialNotifier(serialManager);
 }
 
 void keyPressed(){
@@ -36,6 +40,7 @@ void keyPressed(){
    serialManager.performKeyPress(key);
    sgManager.performKeyPress(key);
 //   expImgManager.performKeyPress(key);
+   accelMgr.performKeyPress(key);
 }
 
 void serialEvent(Serial port){
