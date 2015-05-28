@@ -20,11 +20,11 @@ public class AccelMgr implements ControlListener, SerialListener{
          axis[i].setTextDisplayPropertiesForDifferenceVal(width*(i+1+SGManager.NUM_OF_GAUGES+1)*0.04-5,
                                                           // height*((i%2==1)?0.84:0.82),
                                                           height*0.82,
-                                                          12);
+                                                          8);
          axis[i].setTextDisplayPropertiesForNewVal(width*(i+1+SGManager.NUM_OF_GAUGES+1)*0.04-5,
                                                    // height*((i%2==1)?0.87:0.85),
                                                    height*0.85,
-                                                   12);
+                                                   8);
       }
    }
 
@@ -50,6 +50,12 @@ public class AccelMgr implements ControlListener, SerialListener{
 
    public float getOneAxisDifference(char idx){
       return getOneAxisDifference((int)idx-120);
+   }
+
+   public void calibrateUsingNewValues(){
+      for (int i = 0; i < axis.length; ++i) {
+         axis[i].calibrateUsingNewValue();
+      }
    }
 
    public void draw(){
@@ -85,16 +91,16 @@ public class AccelMgr implements ControlListener, SerialListener{
    
    @Override
    public void updateAnalogVals(float [] values){
-      for (int i = SGManager.NUM_OF_GAUGES; i < axis.length; ++i) {
-         axis[i].setNewValue(values[i]);
+      for (int i = 0; i < axis.length; ++i) {
+         axis[i].setNewValue(values[i+SGManager.NUM_OF_GAUGES]);
       }
    }
 
    @Override
    public void updateCaliVals(float [] values){
       hideCalibratingText = true;
-      for (int i = SGManager.NUM_OF_GAUGES; i < axis.length; ++i) {
-         axis[i].setCalibrationValue(values[i]);
+      for (int i = 0; i < axis.length; ++i) {
+         axis[i].setCalibrationValue(values[i+SGManager.NUM_OF_GAUGES]);
       }
    }
 
@@ -120,6 +126,8 @@ public class AccelMgr implements ControlListener, SerialListener{
       
       if (theEvent.getName().equals(UIInteractionMgr.RADIO_DISPLAY)) {
          changeDisplay(theEvent.getValue());
+      } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE_ACCEL)){
+         calibrateUsingNewValues();
       }
    }
 

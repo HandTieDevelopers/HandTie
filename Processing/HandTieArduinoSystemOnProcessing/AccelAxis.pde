@@ -4,7 +4,7 @@ public class AccelAxis{
    private float newValue;
 
    // Bar Display data member
-   private final static float barChangeRatio = 1.0f;
+   private final static float barChangeRatio = 0.4f;
    private float barXOrigin;
    private float barYOrigin;
    private float barWidth;
@@ -35,6 +35,10 @@ public class AccelAxis{
 
    public void setCalibrationValue(float calibrationValue){
       this.calibrationValue = calibrationValue;
+   }
+
+   public void calibrateUsingNewValue(){
+      calibrationValue = newValue;
    }
 
    public float getCalibrationValue(){
@@ -79,7 +83,7 @@ public class AccelAxis{
       // color compress = color(255, 145, 158);
 
       fill(getHeatmapRGB(difference));
-      rect(barXOrigin, barYOrigin, barWidth, difference*barChangeRatio);
+      rect(barXOrigin, barYOrigin, barWidth, -difference*barChangeRatio);
    }
 
    //Text Display methods

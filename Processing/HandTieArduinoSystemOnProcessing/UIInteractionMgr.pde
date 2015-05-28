@@ -37,6 +37,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    // buttons
    public final static String CALIBRATE = "calibrate";
    public final static String CALIBRATE_CONST_AMP = "calibrate (const amp)";
+   public final static String CALIBRATE_ACCEL = "calibrate (accel)";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessing mainClass) {
       this.mainClass = mainClass;
@@ -46,7 +47,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(this);
       cp5.addListener(mainClass.sgManager);
       cp5.addListener(mainClass.serialManager);
-
+      cp5.addListener(mainClass.accelMgr);
       createUIForSerial();
    }
 
@@ -231,14 +232,21 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addButton(CALIBRATE)
          .setBroadcast(false)
          .setValue(0)
-         .setPosition(width*0.2, height*0.94)
+         .setPosition(width*0.12, height*0.94)
          .setSize(100,20)
          .setBroadcast(true)
       ;
       cp5.addButton(CALIBRATE_CONST_AMP)
          .setBroadcast(false)
          .setValue(0)
-         .setPosition(width*0.2 + 120, height*0.94)
+         .setPosition(width*0.12 + 120, height*0.94)
+         .setSize(100,20)
+         .setBroadcast(true)
+      ;
+      cp5.addButton(CALIBRATE_ACCEL)
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.12 + 240, height*0.94)
          .setSize(100,20)
          .setBroadcast(true)
       ;

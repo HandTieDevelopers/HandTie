@@ -12,9 +12,9 @@ void setup() {
 //   expImgManager = new ExperimentImageManager(this, 0, 640, 480, 0);
    sgManager = new SGManager();
    serialManager = new SerialManager(this);
+   accelMgr = new AccelMgr();
    uiInteractionMgr = new UIInteractionMgr(this);
 //   studyMgr = new StudyMgr(this);
-   accelMgr = new AccelMgr();
 
    listenerRegistrations();
 }
