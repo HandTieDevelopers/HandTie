@@ -3,9 +3,11 @@
 
 // ------------- Send to Processing ------------ //
 enum{
+   // -------- Common Protocol -------- //
    SEND_NORMAL_VALS,
    SEND_CALI_VALS,
 
+   // ------Strain Gauge Protocol ----- //
    SEND_TARGET_MIN_AMP_VALS,
    SEND_TARGET_AMP_VALS,
 
@@ -15,14 +17,17 @@ enum{
    SEND_CALIBRATING_MIN_AMP_VALS,
    SEND_CALIBRATING_AMP_VALS,
 
+   // ------- Button Protocol --------- //
    SEND_RECORD_SIGNAL
 };
 
 // ---------- Receive from Processing ----------- //
 enum{
+   // -------- Common Protocol -------- //
    ALL_CALIBRATION,
    ALL_CALIBRATION_CONST_AMP,
 
+   // ------Strain Gauge Protocol ----- //
    MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_MIN_AMP,
    MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_WITH_AMP,
    MANUAL_CHANGE_TO_ONE_GAUGE_TARGET_VAL_AT_CONST_AMP,
