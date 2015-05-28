@@ -31,7 +31,7 @@
 #define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
-#define NUM_OF_GAUGES 19
+#define NUM_OF_GAUGES 15
 #define CALI_TIMEOUT ((unsigned long)10000)
 // #define BROKEN_OMIT
 
