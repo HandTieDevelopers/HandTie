@@ -38,6 +38,8 @@
 #define TARGET_VAL_MIN_AMP 15
 #define TARGET_VAL_WITH_AMP 300
 
+#define NUM_OF_CALI_INFO 5
+
 // ------------- SGManager class ------------ //
 
 class SGManager{
@@ -75,6 +77,7 @@ private:
    FilterConfig* config;
 
    unsigned long startCaliTime;
+   uint8_t caliInfoIdx;
 
    boolean isCalibratingBridgeAtMinAmp;
    boolean isCalibratingAmpAtConstBridge;
@@ -87,6 +90,10 @@ private:
    boolean calibrateBridgePotMinAmp(int);
    boolean calibrateAmpPotAtConstBridge(int);
    boolean calibrateBridgePotAtConstAmp(int);
+
+   boolean isPrintingCaliInfo();
+   void deactivatePrintingCaliInfoIdx();
+   void activatePrintingCaliInfoIdx();
 
    void sendCalibratedInfo();
 
