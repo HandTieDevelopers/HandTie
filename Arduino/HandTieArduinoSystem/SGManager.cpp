@@ -325,19 +325,19 @@ void SGManager::manualAssignAmpPotPosForAllGauges(uint8_t ampPotPos){
 void SGManager::manualAssignTargetValMinAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValMinAmp(targetVal);
    gauges[gaugeIdx]->setBridgeCaliNeeded();
-   calibrateBridgeAtMinAmp();
+   isCalibratingBridgeAtMinAmp = true;
 }
 
 void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
    gauges[gaugeIdx]->setAmpCaliNeeded();
-   calibrateAmpAtConstBridge();
+   isCalibratingAmpAtConstBridge = true;
 }
 
 void SGManager::manualAssignTargetValAtConstAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
    gauges[gaugeIdx]->setBridgeCaliNeeded();
-   calibrateBridgeAtConstAmp();
+   isCalibratingBridgeAtConstAmp = true;
 }
 
 void SGManager::manualAssignTargetValMinAmpForAllGauges(uint16_t targetVal){
@@ -345,7 +345,7 @@ void SGManager::manualAssignTargetValMinAmpForAllGauges(uint16_t targetVal){
       gauges[i]->setTargetValMinAmp(targetVal);
       gauges[i]->setBridgeCaliNeeded();
    }
-   calibrateBridgeAtMinAmp();
+   isCalibratingBridgeAtMinAmp = true;
 }
 
 void SGManager::manualAssignTargetValWithAmpForAllGauges(uint16_t targetVal){
@@ -353,7 +353,7 @@ void SGManager::manualAssignTargetValWithAmpForAllGauges(uint16_t targetVal){
       gauges[i]->setTargetValWithAmp(targetVal);
       gauges[i]->setAmpCaliNeeded();
    }
-   calibrateAmpAtConstBridge();
+   isCalibratingAmpAtConstBridge = true;
 }
 
 void SGManager::manualAssignTargetValAtConstAmpForAllGauges(uint16_t targetVal){
