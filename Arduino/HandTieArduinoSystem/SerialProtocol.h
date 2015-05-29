@@ -2,23 +2,33 @@
 #define Serial_Protocol_h
 
 // ------------- Send to Processing ------------ //
+
+// Strain Gauge Protocol and State Machine
 enum{
-   // -------- Common Protocol -------- //
+   // --- State Machine and Protocol ----- //
    SEND_NORMAL_VALS,
    SEND_CALI_VALS,
 
-   // ------Strain Gauge Protocol ----- //
    SEND_TARGET_MIN_AMP_VALS,
    SEND_TARGET_AMP_VALS,
 
    SEND_BRIDGE_POT_POS_VALS,
    SEND_AMP_POT_POS_VALS,
 
+   // ----------- Pure Protocol ---------- //
    SEND_CALIBRATING_MIN_AMP_VALS,
    SEND_CALIBRATING_AMP_VALS,
 
-   // ------- Button Protocol --------- //
-   SEND_RECORD_SIGNAL
+   // ------- Pure State Machine --------- //
+   STATE_CALIBRATING_BRIDGE_AT_MIN_AMP,
+   STATE_CALIBRATING_BRIDGE_AT_CONST_AMP,
+   STATE_CALIBRATING_AMP_AT_CONST_BRIDGE,
+   STATE_CALIBRATING_BRIDGE_AT_MIN_AMP_THEN_AMP_VALS
+};
+
+// Button Protocol
+enum{
+   SEND_RECORD_SIGNAL = 8,
 };
 
 // ---------- Receive from Processing ----------- //

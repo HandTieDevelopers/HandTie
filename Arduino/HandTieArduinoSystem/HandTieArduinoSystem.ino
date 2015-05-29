@@ -2,12 +2,12 @@
 #include <Wire.h>
 #include "SGManager.h"
 #include "ParserWithAction.h"
-#include "RecordButton.h"
+// #include "RecordButton.h"
 #include "ADXL345.h"
 
 SGManager sgManager;
 ParserWithAction parser(&sgManager);
-RecordButton recordButton;
+// RecordButton recordButton;
 ADXL345 * accel;
 
 void setup(){
@@ -19,7 +19,7 @@ void setup(){
 void loop(){
    sgManager.serialPrint();
    accel->serialPrintRaw();
-   recordButton.checkClick();
+   // recordButton.checkClick();
    
    Serial.println();
 }

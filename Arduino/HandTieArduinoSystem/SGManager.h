@@ -77,11 +77,8 @@ private:
    FilterConfig* config;
 
    unsigned long startCaliTime;
-   uint8_t caliInfoIdx;
 
-   boolean isCalibratingBridgeAtMinAmp;
-   boolean isCalibratingAmpAtConstBridge;
-   boolean isCalibratingBridgeAtConstAmp;
+   uint8_t stateMachine;
 
    void calibrateBridgeAtMinAmp();
    void calibrateAmpAtConstBridge();
@@ -90,12 +87,6 @@ private:
    boolean calibrateBridgePotMinAmp(int);
    boolean calibrateAmpPotAtConstBridge(int);
    boolean calibrateBridgePotAtConstAmp(int);
-
-   boolean isPrintingCaliInfo();
-   void deactivatePrintingCaliInfoIdx();
-   void activatePrintingCaliInfoIdx();
-
-   void sendCalibratedInfo();
 
 };
 

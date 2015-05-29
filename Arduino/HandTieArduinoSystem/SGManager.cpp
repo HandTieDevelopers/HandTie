@@ -6,10 +6,7 @@ SGManager::SGManager(){
    uint16_t targetValWithAmp[] = {700,700,700,700,700,700,700,700,
                                   700,700,700,700,700,700,700,700,700,700,700};
 
-   isCalibratingBridgeAtMinAmp = false;
-   isCalibratingAmpAtConstBridge = false;
-   isCalibratingBridgeAtConstAmp = false;
-   deactivatePrintingCaliInfoIdx();
+   stateMachine = SEND_NORMAL_VALS;
 
    analogMux = new AnalogMux(MS0, MS1, MS2, SS0, SS1, SS2, READPIN);
    mcp4251 = new MCP4251(POT_SS_PIN, OHM_AB, OHM_WIPER);
@@ -39,16 +36,31 @@ SGManager::~SGManager(){
 }
 
 void SGManager::serialPrint(){
-   if (isCalibratingBridgeAtMinAmp){
-      calibrateBridgeAtMinAmp();
-   } else if (isCalibratingAmpAtConstBridge){
-      calibrateAmpAtConstBridge();
-   } else if (isCalibratingBridgeAtConstAmp){
-      calibrateBridgeAtConstAmp();
-   } else if (isPrintingCaliInfo()){
-      sendCalibratedInfo();
-   } else{
-      serialPrint(SEND_NORMAL_VALS);
+   switch(stateMachine){
+      case SEND_NORMAL_VALS:
+         serialPrint(stateMachine);
+         break;
+
+      case SEND_CALI_VALS:
+         serialPrint(stateMachine++);
+         break;
+      case SEND_TARGET_MIN_AMP_VALS:
+      case SEND_TARGET_AMP_VALS:
+      case SEND_BRIDGE_POT_POS_VALS:
+      case SEND_AMP_POT_POS_VALS:
+         sendStoredValues(stateMachine);
+         break;
+
+      case STATE_CALIBRATING_BRIDGE_AT_MIN_AMP:
+      case STATE_CALIBRATING_BRIDGE_AT_MIN_AMP_THEN_AMP_VALS:
+         calibrateBridgeAtMinAmp();
+         break;
+      case STATE_CALIBRATING_AMP_AT_CONST_BRIDGE:
+         calibrateAmpAtConstBridge();
+         break;
+      case STATE_CALIBRATING_BRIDGE_AT_CONST_AMP:
+         calibrateBridgeAtConstAmp();
+         break;
    }
 }
 
@@ -105,6 +117,9 @@ void SGManager::sendStoredValues(int protocol){
       }
       Serial.print(" ");
    }
+   if (++stateMachine > SEND_AMP_POT_POS_VALS){
+      stateMachine = SEND_NORMAL_VALS;
+   }
 }
 
 void SGManager::allCalibration(){
@@ -112,8 +127,7 @@ void SGManager::allCalibration(){
       gauges[i]->setBridgeCaliNeeded();
       gauges[i]->setAmpCaliNeeded();
    }
-   isCalibratingBridgeAtMinAmp = true;
-   isCalibratingAmpAtConstBridge = true;
+   stateMachine = STATE_CALIBRATING_BRIDGE_AT_MIN_AMP_THEN_AMP_VALS;
    startCaliTime = millis();
 }
 
@@ -121,57 +135,55 @@ void SGManager::allCalibrationAtConstAmp(){
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       gauges[i]->setBridgeCaliNeeded();
    }
-   isCalibratingBridgeAtConstAmp = true;
+   stateMachine = STATE_CALIBRATING_AMP_AT_CONST_BRIDGE;
    startCaliTime = millis();
 }
 
 void SGManager::calibrateBridgeAtMinAmp(){
-   isCalibratingBridgeAtMinAmp = false;
+   boolean complete = true;
 
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       if (!calibrateBridgePotMinAmp(i))
-         isCalibratingBridgeAtMinAmp = true;
+         complete = false;
    }
    serialPrint(SEND_CALIBRATING_MIN_AMP_VALS);
 
-   if (!isCalibratingBridgeAtMinAmp ||
-       (millis() - startCaliTime) > CALI_TIMEOUT){
-      isCalibratingBridgeAtMinAmp = false;
-      activatePrintingCaliInfoIdx();
+   if (complete || (millis() - startCaliTime) > CALI_TIMEOUT){
+      if (stateMachine == STATE_CALIBRATING_BRIDGE_AT_MIN_AMP_THEN_AMP_VALS){
+         stateMachine = STATE_CALIBRATING_AMP_AT_CONST_BRIDGE;
+      } else{
+         stateMachine = SEND_CALI_VALS;
+      }
       startCaliTime = millis();
    }
 }
 
 void SGManager::calibrateAmpAtConstBridge(){
-   isCalibratingAmpAtConstBridge = false;
+   boolean complete = true;
 
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       if (!calibrateAmpPotAtConstBridge(i))
-         isCalibratingAmpAtConstBridge = true;
+         complete = false;
    }
    serialPrint(SEND_CALIBRATING_AMP_VALS);
 
-   if (!isCalibratingAmpAtConstBridge ||
-       (millis() - startCaliTime) > CALI_TIMEOUT){
-      isCalibratingAmpAtConstBridge = false;
-      activatePrintingCaliInfoIdx();
+   if (complete || (millis() - startCaliTime) > CALI_TIMEOUT){
+      stateMachine = SEND_CALI_VALS;
       startCaliTime = millis();  
    }
 }
 
 void SGManager::calibrateBridgeAtConstAmp(){
-   isCalibratingBridgeAtConstAmp = false;
+   boolean complete = true;
 
    for (int i = 0; i < NUM_OF_GAUGES; ++i){
       if (!calibrateBridgePotAtConstAmp(i))
-         isCalibratingBridgeAtConstAmp = true;
+         complete = false;
    }
    serialPrint(SEND_CALIBRATING_AMP_VALS);
 
-   if (!isCalibratingBridgeAtConstAmp ||
-       (millis() - startCaliTime) > CALI_TIMEOUT){
-      isCalibratingBridgeAtConstAmp = false;
-      activatePrintingCaliInfoIdx();
+   if (complete || (millis() - startCaliTime) > CALI_TIMEOUT){
+      stateMachine = SEND_CALI_VALS;
       startCaliTime = millis();
    }
    
@@ -270,38 +282,6 @@ boolean SGManager::calibrateBridgePotAtConstAmp(int i){
    return gauges[i]->isBridgeCaliComplete();
 }
 
-boolean SGManager::isPrintingCaliInfo(){
-   return (caliInfoIdx < NUM_OF_CALI_INFO);
-}
-
-void SGManager::deactivatePrintingCaliInfoIdx(){
-   caliInfoIdx = NUM_OF_CALI_INFO;
-}
-
-void SGManager::activatePrintingCaliInfoIdx(){
-   caliInfoIdx = 0;
-}
-
-void SGManager::sendCalibratedInfo(){
-   switch(caliInfoIdx++){
-      case 0:
-         serialPrint(SEND_CALI_VALS);
-         break;
-      case 1:
-         sendStoredValues(SEND_TARGET_MIN_AMP_VALS);
-         break;
-      case 2:
-         sendStoredValues(SEND_TARGET_AMP_VALS);
-         break;
-      case 3:
-         sendStoredValues(SEND_BRIDGE_POT_POS_VALS);
-         break;
-      case 4:
-         sendStoredValues(SEND_AMP_POT_POS_VALS);
-         break;
-   }
-}
-
 void SGManager::manualAssignBridgePotPosForOneGauge(uint8_t gaugeIdx, uint8_t bridgePotPos){
    gauges[gaugeIdx]->setBridgePotPos(bridgePotPos);
 }
@@ -325,19 +305,19 @@ void SGManager::manualAssignAmpPotPosForAllGauges(uint8_t ampPotPos){
 void SGManager::manualAssignTargetValMinAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValMinAmp(targetVal);
    gauges[gaugeIdx]->setBridgeCaliNeeded();
-   isCalibratingBridgeAtMinAmp = true;
+   stateMachine = STATE_CALIBRATING_BRIDGE_AT_MIN_AMP;
 }
 
 void SGManager::manualAssignTargetValWithAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
    gauges[gaugeIdx]->setAmpCaliNeeded();
-   isCalibratingAmpAtConstBridge = true;
+   stateMachine = STATE_CALIBRATING_AMP_AT_CONST_BRIDGE;
 }
 
 void SGManager::manualAssignTargetValAtConstAmpForOneGauge(uint8_t gaugeIdx, uint16_t targetVal){
    gauges[gaugeIdx]->setTargetValWithAmp(targetVal);
    gauges[gaugeIdx]->setBridgeCaliNeeded();
-   isCalibratingBridgeAtConstAmp = true;
+   stateMachine = STATE_CALIBRATING_BRIDGE_AT_CONST_AMP;
 }
 
 void SGManager::manualAssignTargetValMinAmpForAllGauges(uint16_t targetVal){
@@ -345,7 +325,7 @@ void SGManager::manualAssignTargetValMinAmpForAllGauges(uint16_t targetVal){
       gauges[i]->setTargetValMinAmp(targetVal);
       gauges[i]->setBridgeCaliNeeded();
    }
-   isCalibratingBridgeAtMinAmp = true;
+   stateMachine = STATE_CALIBRATING_BRIDGE_AT_MIN_AMP;
 }
 
 void SGManager::manualAssignTargetValWithAmpForAllGauges(uint16_t targetVal){
@@ -353,7 +333,7 @@ void SGManager::manualAssignTargetValWithAmpForAllGauges(uint16_t targetVal){
       gauges[i]->setTargetValWithAmp(targetVal);
       gauges[i]->setAmpCaliNeeded();
    }
-   isCalibratingAmpAtConstBridge = true;
+   stateMachine = STATE_CALIBRATING_AMP_AT_CONST_BRIDGE;
 }
 
 void SGManager::manualAssignTargetValAtConstAmpForAllGauges(uint16_t targetVal){
