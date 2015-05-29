@@ -18,6 +18,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static float RADIO_SHOW_BRIDGE_TARGET_CONST_AMP_ITEM = 3.0f;
    public final static float RADIO_SHOW_BRIDGE_POT_POS_ITEM = 4.0f;
    public final static float RADIO_SHOW_AMP_POT_POS_ITEM = 5.0f;
+   public final static float RADIO_ENABLE_STRAIN_GAUGE_ITEM = 6.0f;
 
    // sliders
    public final static String SLIDER_BRIDGE_TARGET_MIN_AMP_ALL = "brdg\nmin\namp\nall";
@@ -40,6 +41,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String CALIBRATE_ACCEL = "calibrate (accel)";
 
    // toggles
+   public final static String ENABLE_STRAIN_GAUGE = "enable\nsg";
    public final static String ENABLE_SIGNAL_TO_ROBOT = "send to robot\n(on/off)";
 
 
@@ -68,9 +70,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
                        .addItem("bridge target (min amp)", RADIO_SHOW_BRIDGE_TARGET_MIN_AMP_ITEM)
                        .addItem("amp target (const bridge)", RADIO_SHOW_AMP_TARGET_CONST_BRIDGE_ITEM)
                        .addItem("bridge target (const amp)", RADIO_SHOW_BRIDGE_TARGET_CONST_AMP_ITEM)
+                       .addItem("enable strain gauge", RADIO_ENABLE_STRAIN_GAUGE_ITEM)
                        .setColorLabel(color(0))
                        .activate(0)
-                       .setItemsPerRow(3)
+                       .setItemsPerRow(4)
                        .setSpacingColumn((int)(width*0.15))
                     ;
 
@@ -153,6 +156,15 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .snapToTickMarks(true)
             .setDecimalPrecision(0)
             .showTickMarks(false)
+            .setVisible(false)
+            .setBroadcast(true)
+         ;
+         cp5.addToggle(ENABLE_STRAIN_GAUGE+i)
+            .setColorLabel(color(0))
+            .setBroadcast(false)
+            .setValue(1.0f)
+            .setPosition(barOrigin[0]-8, barOrigin[1]-65)
+            .setSize(20,20)
             .setVisible(false)
             .setBroadcast(true)
          ;
@@ -263,6 +275,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setSize(50,30)
          .setBroadcast(true)
       ;
+
       launchComplete = true;
    }
 
@@ -334,6 +347,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       } else if (eventValue == RADIO_SHOW_BRIDGE_TARGET_CONST_AMP_ITEM){
          showUISliders(SLIDERS_BRIDGE_TARGET_CONST_AMP);
          cp5.controller(SLIDER_BRIDGE_TARGET_CONST_AMP_ALL).setVisible(true);
+      } else if (eventValue == RADIO_ENABLE_STRAIN_GAUGE_ITEM){
+         showUISliders(ENABLE_STRAIN_GAUGE);
       }
    }
 
@@ -350,6 +365,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          cp5.controller(SLIDERS_BRIDGE_POT+i).setVisible(false);
          cp5.controller(SLIDERS_AMP_POT+i).setVisible(false);
          cp5.controller(SLIDERS_BRIDGE_TARGET_CONST_AMP+i).setVisible(false);
+         cp5.controller(ENABLE_STRAIN_GAUGE+i).setVisible(false);
       }
       cp5.controller(SLIDER_BRIDGE_TARGET_MIN_AMP_ALL).setVisible(false);
       cp5.controller(SLIDER_AMP_TARGET_CONST_BRIDGE_ALL).setVisible(false);
@@ -366,6 +382,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
                .setVisible(!cp5.controller(CALIBRATE).isVisible());
             cp5.controller(CALIBRATE_CONST_AMP)
                .setVisible(!cp5.controller(CALIBRATE_CONST_AMP).isVisible());
+            cp5.controller(CALIBRATE_ACCEL)
+               .setVisible(!cp5.controller(CALIBRATE_ACCEL).isVisible());
             radioButton.setVisible(!radioButton.isVisible());
             radioButton.setValue(RADIO_SHOW_BAR_ITEM);
             uiHidden = !uiHidden;

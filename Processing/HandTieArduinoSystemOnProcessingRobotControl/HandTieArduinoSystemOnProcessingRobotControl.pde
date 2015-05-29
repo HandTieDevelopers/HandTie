@@ -13,7 +13,7 @@ void setup() {
    serialManager = new SerialManager(this);
    accelMgr = new AccelMgr();
    robotControl = new RobotControl(this);
-   grtMgr = new GRTMgr();
+   grtMgr = new GRTMgr(this);
    uiInteractionMgr = new UIInteractionMgr(this);
 
    listenerRegistrations();

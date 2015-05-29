@@ -5,6 +5,7 @@ public class StrainGauge{
    private float calibrationValue;
    private float newValue;
    private float calibratingValue;
+   public boolean enable = true;
 
    //Bar Display data member
    private float barXOrigin;
@@ -31,7 +32,7 @@ public class StrainGauge{
 
    //Value methods
    public float getNewValue(){
-      return newValue;
+      return enable ? newValue : 0.0f;
    }
    public void setNewValue(float newValue){
       this.newValue = newValue;
@@ -46,7 +47,7 @@ public class StrainGauge{
    }
 
    public float getElongationValue(){
-      return (float)newValue/calibrationValue;
+      return enable ? (float)newValue/calibrationValue : 0.0f;
    }
 
    public void setCalibratingValue(float calibratingValue){
@@ -85,6 +86,7 @@ public class StrainGauge{
    }
 
    public void drawBar(){
+      if (!enable) return;
       float elongRatio = getElongationValue();
 
       // color stretch = color(4, 79, 111);
@@ -125,8 +127,9 @@ public class StrainGauge{
       text("SG"+(int)gaugeIdx, gaugeIdxTextXOrigin, gaugeIdxTextYOrigin);
 
       fill(0, 102, 10);
-      textSize(elongTextSize);
-      text(String.format("%.2f",getElongationValue()), elongTextXOrigin,
+      textSize(enable ? elongTextSize : 7);
+      text(enable ? String.format("%.2f",getElongationValue()) : "Disabled",
+           elongTextXOrigin,
            elongTextYOrigin);
 
       fill(150,150,150);
