@@ -4,11 +4,13 @@
 #include "ParserWithAction.h"
 // #include "RecordButton.h"
 #include "ADXL345.h"
+#include "RGBLED.h"
 
 SGManager sgManager;
 ParserWithAction parser(&sgManager);
 // RecordButton recordButton;
 ADXL345 * accel;
+RGBLED rgbLED;
 
 void setup(){
    Serial.begin(38400);
@@ -20,7 +22,8 @@ void loop(){
    sgManager.serialPrint();
    accel->serialPrintRaw();
    // recordButton.checkClick();
-   
+   rgbLED.ledAction();
+
    Serial.println();
 }
 
