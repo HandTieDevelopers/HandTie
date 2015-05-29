@@ -1,7 +1,8 @@
 #include "ParserWithAction.h"
 
-ParserWithAction::ParserWithAction(SGManager * sgManager){
+ParserWithAction::ParserWithAction(SGManager * sgManager, RGBLED * rgbLED){
    this->sgManager = sgManager;
+   this->rgbLED = rgbLED;
 }
 
 ParserWithAction::~ParserWithAction(){
@@ -53,6 +54,9 @@ void ParserWithAction::parse(){
          parseForManualChangeToAllGaugesAmpPotPos();
          break;
       
+      case RECEIVE_LED_SIGNAL:
+         parseReceiveLedSignal();
+         break;
    }
 }
 
@@ -122,4 +126,17 @@ void ParserWithAction::parseForManualChangeToAllGaugesAmpPotPos(){
    uint8_t ampPotPos = Serial.parseInt();
 
    sgManager->manualAssignAmpPotPosForAllGauges(ampPotPos);
+}
+
+void ParserWithAction::parseReceiveLedSignal(){
+   uint16_t onSpanTime = Serial.parseInt();
+   uint16_t offSpanTime = Serial.parseInt();
+   uint16_t onToOffTransition = Serial.parseInt();
+   uint16_t offToOnTransition = Serial.parseInt();
+   uint8_t r_color = Serial.parseInt();
+   uint8_t g_color = Serial.parseInt();
+   uint8_t b_color = Serial,parseInt();
+   uint8_t repeat = Serial.parseInt();
+
+   rgbLED->setLED(onSpanTime, offSpanTime, onToOffTransition, offToOnTransition, r_color, g_color, b_color, repeat);
 }
