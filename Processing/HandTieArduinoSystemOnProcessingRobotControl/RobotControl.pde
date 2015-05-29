@@ -1,8 +1,10 @@
-public class RobotControl implements GRTListener{
+public class RobotControl implements GRTListener, ControlListener{
    final static int SERIAL_PORT_BAUD_RATE = 38400;
-   final static int SERIAL_PORT_NUM = 7;
+   final static int SERIAL_PORT_NUM = 6;
 
    final static float likelihoodThreshold = 0.7f;
+
+   boolean sendEnable = false;
 
    Serial robotPort;
 
@@ -33,8 +35,17 @@ public class RobotControl implements GRTListener{
    }
    @Override
    public void updateGRTResults(int label, float likelihood){
-      if (likelihood > likelihoodThreshold) {
+      if (likelihood > likelihoodThreshold && sendEnable) {
          sendToRobot(String.valueOf((char)(label+96)));
+      }
+   }
+
+   @Override
+   public void controlEvent(ControlEvent theEvent){
+      if (millis() < 1000) return;
+
+      if (theEvent.getName().equals(UIInteractionMgr.ENABLE_SIGNAL_TO_ROBOT)) {
+         sendEnable = (theEvent.getValue() == 1.0f)? true : false;
       }
    }
 }

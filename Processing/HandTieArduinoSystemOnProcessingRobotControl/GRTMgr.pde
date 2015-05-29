@@ -38,7 +38,7 @@ public class GRTMgr implements SerialListener, GRTNotifier{
         grt.sendData( data );
 //        fill(color(200));
         textSize(50);
-        text(grt.getPredictedClassLabel(),width*0.4,height*0.2);
+        text((char)(grt.getPredictedClassLabel()+96),width*0.4,height*0.2);
 
         notifyAllWithGRTResults(grt.getPredictedClassLabel(),
                                 (float)grt.getMaximumLikelihood());

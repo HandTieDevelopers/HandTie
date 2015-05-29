@@ -39,6 +39,10 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String CALIBRATE_CONST_AMP = "calibrate (const amp)";
    public final static String CALIBRATE_ACCEL = "calibrate (accel)";
 
+   // toggles
+   public final static String ENABLE_SIGNAL_TO_ROBOT = "send to robot\n(on/off)";
+
+
    public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
 
@@ -48,6 +52,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.addListener(mainClass.sgManager);
       cp5.addListener(mainClass.serialManager);
       cp5.addListener(mainClass.accelMgr);
+      cp5.addListener(mainClass.robotControl);
       createUIForSerial();
    }
 
@@ -248,6 +253,14 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setValue(0)
          .setPosition(width*0.12 + 240, height*0.94)
          .setSize(100,20)
+         .setBroadcast(true)
+      ;
+      cp5.addToggle(ENABLE_SIGNAL_TO_ROBOT)
+         .setColorLabel(color(0))
+         .setBroadcast(false)
+         .setValue(0)
+         .setPosition(width*0.85, height*0.5)
+         .setSize(50,30)
          .setBroadcast(true)
       ;
       launchComplete = true;
