@@ -135,8 +135,24 @@ void ParserWithAction::parseReceiveLedSignal(){
    uint16_t offToOnTransition = Serial.parseInt();
    uint8_t r_color = Serial.parseInt();
    uint8_t g_color = Serial.parseInt();
-   uint8_t b_color = Serial,parseInt();
+   uint8_t b_color = Serial.parseInt();
    uint8_t repeat = Serial.parseInt();
 
+   Serial.print(onSpanTime);
+   Serial.print(" ");
+   Serial.print(offSpanTime);
+   Serial.print(" ");
+   Serial.print(onToOffTransition);
+   Serial.print(" ");
+   Serial.print(offToOnTransition);
+   Serial.print(" ");
+   Serial.print(r_color);
+   Serial.print(" ");
+   Serial.print(g_color);
+   Serial.print(" ");
+   Serial.print(b_color);
+   Serial.print(" ");
+   Serial.print(repeat);
+   Serial.println();
    rgbLED->setLED(onSpanTime, offSpanTime, onToOffTransition, offToOnTransition, r_color, g_color, b_color, repeat);
 }

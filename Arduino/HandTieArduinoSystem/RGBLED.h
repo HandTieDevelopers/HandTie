@@ -7,9 +7,9 @@
 #define GREEN_PIN 9
 #define BLUE_PIN  9
 
-#define RED_ORIGINAL_COLOR 10
-#define GREEN_ORIGINAL_COLOR 10
-#define BLUE_ORIGINAL_COLOR 10
+#define RED_ORIGINAL_COLOR 255
+#define GREEN_ORIGINAL_COLOR 255
+#define BLUE_ORIGINAL_COLOR 255
 
 #if ( RED_PIN == 3 || RED_PIN == 5 || RED_PIN == 6 || RED_PIN ==  9 || RED_PIN ==  10 ||  RED_PIN ==  11 )
    #define RED_PIN_HAS_ANALOG 1

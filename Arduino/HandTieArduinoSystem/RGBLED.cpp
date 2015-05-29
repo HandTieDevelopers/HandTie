@@ -4,6 +4,10 @@ RGBLED::RGBLED(){
    pinMode(RED_PIN, INPUT_PULLUP);
    pinMode(GREEN_PIN, INPUT_PULLUP);
    pinMode(BLUE_PIN, INPUT_PULLUP);
+   
+   r_color = RED_ORIGINAL_COLOR;
+   g_color = GREEN_ORIGINAL_COLOR;
+   b_color = BLUE_ORIGINAL_COLOR;
 }
 
 void RGBLED::ledAction(){
@@ -33,15 +37,15 @@ void RGBLED::setLED(uint16_t onSpanTime, uint16_t offSpanTime,               //f
 
 void RGBLED::eval_state(){
     if((lastMillis - actionstart_Millis)/period > repeat )
-      led_state = 4;
+      led_state = LED_ORIGINAL;
     else if((lastMillis - actionstart_Millis)%period < offToOnTransition)
-      led_state = 0;
+      led_state = LED_OFFTOON;
     else if((lastMillis - actionstart_Millis)%period >= offToOnTransition && (lastMillis - actionstart_Millis)%period < (offToOnTransition + onSpanTime))
-      led_state = 1;
+      led_state = LED_ON;
     else if ((lastMillis - actionstart_Millis)%period >= (offToOnTransition + onSpanTime) && (lastMillis - actionstart_Millis)%period < (offToOnTransition + onSpanTime + onToOffTransition) )
-      led_state = 2;
+      led_state = LED_ONTOOFF;
     else
-      led_state = 3;
+      led_state = LED_OFF;
 }
 
 void RGBLED::createColor(){
@@ -136,19 +140,20 @@ void RGBLED::off_color(){
 }
 
 void RGBLED::original_color(){
-    if(RED_PIN_HAS_ANALOG)
+    setLED(2,2,2,2,0,20,20,10000);
+    /*if(RED_PIN_HAS_ANALOG)
       analogWrite(RED_PIN, RED_ORIGINAL_COLOR);
     else
-      digitalWrite(RED_PIN, RED_ORIGINAL_COLOR);
+      digitalWrite(RED_PIN, RED_ORIGINAL_COLOR/122);
 
     if(GREEN_PIN_HAS_ANALOG)
       analogWrite(GREEN_PIN, GREEN_ORIGINAL_COLOR);
     else
-      digitalWrite(GREEN_PIN, GREEN_ORIGINAL_COLOR);
+      digitalWrite(GREEN_PIN, GREEN_ORIGINAL_COLOR/122);
 
     if(BLUE_PIN_HAS_ANALOG)
       analogWrite(BLUE_PIN, BLUE_ORIGINAL_COLOR);
     else
-      digitalWrite(BLUE_PIN, BLUE_ORIGINAL_COLOR);
+      digitalWrite(BLUE_PIN, BLUE_ORIGINAL_COLOR/122);*/
 
 }

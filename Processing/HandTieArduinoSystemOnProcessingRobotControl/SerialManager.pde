@@ -269,10 +269,11 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
    }
    @Override
    public void updateGRTResults(int label, float likelihood){
-      String sendMessage = new String(SEND_LED_SIGNAL + " " + 1000 + " "
-                                      + 1000 + " " + 0 + " " + 0 + " " + 0 + " "
-                                      + 255 + " " + 255 + " " + 5);
       if (likelihood > likelihoodThreshold && lastClassLabel != label) {
+         String sendMessage = new String(SEND_LED_SIGNAL + " " + 1 + " "
+                                          + 1 + " " + 0 + " " + 0 + " " + 255 + " "
+                                          + 0 + " " + 0 + " " + 5);
+         println("sendMessage is " + sendMessage);
          sendToArduino(sendMessage);
       }
       lastClassLabel = label;
