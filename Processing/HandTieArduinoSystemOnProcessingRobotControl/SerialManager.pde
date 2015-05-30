@@ -41,10 +41,12 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
 
 
    Serial arduinoPort;
+   PApplet parent;
 
    ArrayList<SerialListener> serialListeners = new ArrayList<SerialListener>();
 
    public SerialManager(PApplet mainClass){
+      parent = mainClass;
       // Setup serial port I/O
       println("AVAILABLE SERIAL PORTS:");
       println(Serial.list());
@@ -52,8 +54,18 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
       println();
       println("LOOK AT THE LIST ABOVE AND SET THE RIGHT SERIAL PORT NUMBER IN THE CODE!");
       println("  -> Using port " + SERIAL_PORT_NUM + ": " + portName);
-      arduinoPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
-      arduinoPort.bufferUntil(10);    //newline
+      try{
+        arduinoPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
+      }catch(Exception e){
+        println(e.getMessage());
+        System.exit(0);
+      }
+      try {
+        arduinoPort.bufferUntil(10);    //newline
+      }
+      catch(Exception e) {
+        println(e.getMessage());
+      }
    }
 
    private float [] parseSpaceSeparatedData(Serial port) throws Exception{
@@ -111,13 +123,26 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
    }
 
    public void sendToArduino(String str){
-      arduinoPort.write(str);
+     try {
+       arduinoPort.write(str);
+     }
+     catch(Exception e) {
+       println(e.getMessage());
+     }
    }
 
    public void performKeyPress(char k){
       switch (k) {
          case 'c' :
             sendToArduino(Integer.toString(ALL_CALIBRATION_CONST_AMP));
+            break;
+         case 'x' :
+            String portName = Serial.list()[SERIAL_PORT_NUM];
+            try{
+              arduinoPort = new Serial(parent, portName, SERIAL_PORT_BAUD_RATE);
+            }catch(Exception e){
+              println(e.getMessage());
+            }
             break;
       }
    }

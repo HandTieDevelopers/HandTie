@@ -7,22 +7,46 @@ public class RobotControl implements GRTListener, ControlListener{
    boolean sendEnable = false;
 
    Serial robotPort;
-
+   PApplet parent; 
+    
    public RobotControl(PApplet mainClass){
+      parent = mainClass;
       println(Serial.list());
       String portName = Serial.list()[SERIAL_PORT_NUM];
-      robotPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
+      try{
+        robotPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
+      }catch(Exception e){
+        println(e.getMessage());
+        System.exit(0);
+      }
       println("  -> Using port " + SERIAL_PORT_NUM + ": " + portName);
       
       robotPort.bufferUntil(10);    //newline
    }
-
+  
    public void sendToRobot(String str){
-      robotPort.write(str);
+     try{ 
+       robotPort.write(str);
+     }
+     catch(Exception e) {
+       println(e.getMessage());
+     }
    }
 
    public void performKeyPress(char k){
-      sendToRobot(String.valueOf(k));
+     if(k == 'z') {
+       String portName = Serial.list()[SERIAL_PORT_NUM];
+       //while(true) {
+         try{
+           robotPort = new Serial(parent, portName, SERIAL_PORT_BAUD_RATE);
+         }catch(Exception e){
+           println(e.getMessage()); 
+         }
+       //}
+     }
+     else { 
+       sendToRobot(String.valueOf(k));
+     }
    }
 
    @Override
