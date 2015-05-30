@@ -3,7 +3,7 @@ import controlP5.*;
 public boolean uiHidden = false;
 
 public class UIInteractionMgr implements ControlListener, SerialListener{
-   HandTieArduinoSystemOnProcessing mainClass;
+   HandTieArduinoSystemOnProcessingRobotControl mainClass;
 
    ControlP5 cp5;
    boolean launchComplete = false;
@@ -39,7 +39,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public final static String CALIBRATE_CONST_AMP = "calibrate (const amp)";
    public final static String CALIBRATE_ACCEL = "calibrate (accel)";
 
-   public UIInteractionMgr (HandTieArduinoSystemOnProcessing mainClass) {
+   public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
 
       cp5 = new ControlP5(mainClass);

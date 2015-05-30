@@ -31,14 +31,12 @@
 #define TARGET_TOLERANCE_WITH_AMP 5
 
 // -------- StrainGauge Macro Define -------- //
-#define NUM_OF_GAUGES 15
+#define NUM_OF_GAUGES 1
 #define CALI_TIMEOUT ((unsigned long)10000)
 // #define BROKEN_OMIT
 
 #define TARGET_VAL_MIN_AMP 15
 #define TARGET_VAL_WITH_AMP 300
-
-#define NUM_OF_CALI_INFO 5
 
 // ------------- SGManager class ------------ //
 
@@ -76,10 +74,6 @@ private:
    StrainGauge * gauges[NUM_OF_GAUGES];
    FilterConfig* config;
 
-   unsigned long startCaliTime;
-
-   uint8_t stateMachine;
-
    void calibrateBridgeAtMinAmp();
    void calibrateAmpAtConstBridge();
    void calibrateBridgeAtConstAmp();
@@ -87,6 +81,8 @@ private:
    boolean calibrateBridgePotMinAmp(int);
    boolean calibrateAmpPotAtConstBridge(int);
    boolean calibrateBridgePotAtConstAmp(int);
+
+   void sendCalibratedInfo();
 
 };
 
