@@ -95,7 +95,8 @@ public class GRTMgr implements SerialListener, GRTNotifier{
    public void removeToSerialNotifier(SerialNotifier notifier){
       notifier.removeSerialListener(this);
    }
-
+   @Override
+   public void updateDiscoveredSerialPorts(String [] portNames){}
    @Override
    public void updateAnalogVals(float [] values){
       // for (int i = 0; i < values.length; ++i) {

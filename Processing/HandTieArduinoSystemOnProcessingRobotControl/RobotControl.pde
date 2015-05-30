@@ -7,23 +7,48 @@ public class RobotControl implements GRTListener, ControlListener{
    boolean sendEnable = false;
 
    Serial robotPort;
-   PApplet parent; 
+   PApplet mainClass; 
     
    public RobotControl(PApplet mainClass){
-      parent = mainClass;
-      println(Serial.list());
-      String portName = Serial.list()[SERIAL_PORT_NUM];
-      try{
-        robotPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
-      }catch(Exception e){
-        println(e.getMessage());
-        System.exit(0);
-      }
-      println("  -> Using port " + SERIAL_PORT_NUM + ": " + portName);
-      
-      robotPort.bufferUntil(10);    //newline
+      this.mainClass = mainClass;
    }
   
+   private void connectToSerial(){
+      // Setup serial port I/O
+      println("AVAILABLE SERIAL PORTS:");
+      println(Serial.list());
+      String portName = Serial.list()[SERIAL_PORT_NUM];
+      connectToSerial(portName);
+   }
+
+   private void connectToSerial(int portNumber){
+      String portName = Serial.list()[portNumber];
+      connectToSerial(portName);
+   }
+
+   private void connectToSerial(String portName){
+      println();
+      println("LOOK AT THE LIST ABOVE AND SET THE RIGHT SERIAL PORT NUMBER IN THE CODE!");
+      println("  -> Using port : " + portName);
+      disconnectSerial();
+
+      try {
+         robotPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
+         robotPort.bufferUntil(10);    //newline
+      } catch (Exception e) {
+         println("connectToSerial : " + e.getMessage());
+      }
+   }
+
+   private void disconnectSerial(){
+      try {
+         robotPort.clear();
+         robotPort.stop();
+      } catch (Exception e) {
+         println("disconnectSerial : " + e.getMessage());
+      }
+   }
+
    public void sendToRobot(String str){
      try{ 
        robotPort.write(str);
@@ -34,19 +59,7 @@ public class RobotControl implements GRTListener, ControlListener{
    }
 
    public void performKeyPress(char k){
-     if(k == 'z') {
-       String portName = Serial.list()[SERIAL_PORT_NUM];
-       //while(true) {
-         try{
-           robotPort = new Serial(parent, portName, SERIAL_PORT_BAUD_RATE);
-         }catch(Exception e){
-           println(e.getMessage()); 
-         }
-       //}
-     }
-     else { 
-       sendToRobot(String.valueOf(k));
-     }
+      sendToRobot(String.valueOf(k));
    }
 
    @Override
@@ -70,6 +83,8 @@ public class RobotControl implements GRTListener, ControlListener{
 
       if (theEvent.getName().equals(UIInteractionMgr.ENABLE_SIGNAL_TO_ROBOT)) {
          sendEnable = (theEvent.getValue() == 1.0f)? true : false;
+      } else if (theEvent.getName().equals(UIInteractionMgr.DROPDOWN_ROBOT_SERIAL_LIST)){
+         connectToSerial((int)(theEvent.getValue()));
       }
    }
 }

@@ -1,8 +1,10 @@
 public class AccelMgr implements ControlListener, SerialListener{
    public static final int NUM_OF_AXIS = 3;
-   public boolean hideBar = false;
-   public boolean hideNormalText = false;
-   public boolean hideCalibratingText = true;
+
+   private boolean hideBar = false;
+   private boolean hideNormalText = false;
+   private boolean hideCalibratingText = true;
+   private boolean enable = true;
 
    private AccelAxis [] axis = new AccelAxis[NUM_OF_AXIS];
    
@@ -37,7 +39,7 @@ public class AccelMgr implements ControlListener, SerialListener{
    }
 
    public float getOneAxisNewVal(int idx){
-      return axis[idx].getNewValue();
+      return enable ? axis[idx].getNewValue() : 0.0f;
    }
 
    public float getOneAxisNewVal(char idx){
@@ -45,7 +47,7 @@ public class AccelMgr implements ControlListener, SerialListener{
    }
 
    public float getOneAxisDifference(int idx){
-      return axis[idx].getDifferenceVal();
+      return enable ? axis[idx].getDifferenceVal() : 0.0f;
    }
 
    public float getOneAxisDifference(char idx){
@@ -60,7 +62,7 @@ public class AccelMgr implements ControlListener, SerialListener{
 
    public void draw(){
       for (int i = 0; i < axis.length; ++i) {
-         if (!hideBar) axis[i].drawBar();
+         if (!hideBar && enable) axis[i].drawBar();
          if (!hideNormalText) axis[i].drawText(); 
       }
    }
@@ -88,7 +90,10 @@ public class AccelMgr implements ControlListener, SerialListener{
       notifier.removeSerialListener(this);
       serialNotifier = null;
    }
-   
+
+   @Override
+   public void updateDiscoveredSerialPorts(String [] portNames){}
+
    @Override
    public void updateAnalogVals(float [] values){
       for (int i = 0; i < axis.length; ++i) {
@@ -128,6 +133,8 @@ public class AccelMgr implements ControlListener, SerialListener{
          changeDisplay(theEvent.getValue());
       } else if (theEvent.getName().equals(UIInteractionMgr.CALIBRATE_ACCEL)){
          calibrateUsingNewValues();
+      } else if (theEvent.getName().equals(UIInteractionMgr.ENABLE_ACCEL)){
+         enable = (theEvent.getValue() == 1.0f) ? true : false;
       }
    }
 

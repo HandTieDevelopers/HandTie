@@ -1,9 +1,10 @@
 public class SGManager implements ControlListener, SerialListener{
    
    public final static int NUM_OF_GAUGES = 15;
-   public boolean hideBar = false;
-   public boolean hideNormalText = false;
-   public boolean hideCalibratingText = true;
+   
+   private boolean hideBar = false;
+   private boolean hideNormalText = false;
+   private boolean hideCalibratingText = true;
 
    private StrainGauge [] gauges = new StrainGauge[NUM_OF_GAUGES];
 
@@ -99,6 +100,9 @@ public class SGManager implements ControlListener, SerialListener{
       serialNotifier = null;
    }
    
+   @Override
+   public void updateDiscoveredSerialPorts(String [] portNames){}
+
    @Override
    public void updateAnalogVals(float [] values){
       for (int i = 0; i < gauges.length; ++i) {

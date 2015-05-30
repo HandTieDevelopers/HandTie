@@ -17,6 +17,8 @@ void setup() {
    uiInteractionMgr = new UIInteractionMgr(this);
 
    listenerRegistrations();
+   
+   serialManager.notifyAllWithDiscoveredSerialPorts();
 }
 
 void draw() {

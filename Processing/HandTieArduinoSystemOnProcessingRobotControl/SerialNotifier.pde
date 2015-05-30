@@ -2,6 +2,8 @@ public interface SerialNotifier{
    public void registerForSerialListener(SerialListener listener);
    public void removeSerialListener(SerialListener listener);
    
+   public void notifyAllWithDiscoveredSerialPorts();
+
    public void notifyAllWithAnalogVals(float [] values);
    public void notifyAllWithCaliVals(float [] values);
    public void notifyAllWithTargetAnalogValsMinAmp(float [] values);

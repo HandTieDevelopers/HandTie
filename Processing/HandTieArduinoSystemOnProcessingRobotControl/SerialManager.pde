@@ -41,30 +41,47 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
 
 
    Serial arduinoPort;
-   PApplet parent;
+   PApplet mainClass;
 
    ArrayList<SerialListener> serialListeners = new ArrayList<SerialListener>();
 
    public SerialManager(PApplet mainClass){
-      parent = mainClass;
+      this.mainClass = mainClass;
+   }
+
+   private void connectToSerial(){
       // Setup serial port I/O
       println("AVAILABLE SERIAL PORTS:");
       println(Serial.list());
       String portName = Serial.list()[SERIAL_PORT_NUM];
+      connectToSerial(portName);
+   }
+
+   private void connectToSerial(int portNumber){
+      String portName = Serial.list()[portNumber];
+      connectToSerial(portName);
+   }
+
+   private void connectToSerial(String portName){
       println();
       println("LOOK AT THE LIST ABOVE AND SET THE RIGHT SERIAL PORT NUMBER IN THE CODE!");
-      println("  -> Using port " + SERIAL_PORT_NUM + ": " + portName);
-      try{
-        arduinoPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
-      }catch(Exception e){
-        println(e.getMessage());
-        System.exit(0);
-      }
+      println("  -> Using port : " + portName);
+      disconnectSerial();
+
       try {
-        arduinoPort.bufferUntil(10);    //newline
+         arduinoPort = new Serial(mainClass, portName, SERIAL_PORT_BAUD_RATE);
+         arduinoPort.bufferUntil(10);    //newline
+      } catch (Exception e) {
+         println("connectToSerial : " + e.getMessage());
       }
-      catch(Exception e) {
-        println(e.getMessage());
+   }
+
+   private void disconnectSerial(){
+      try {
+         arduinoPort.clear();
+         arduinoPort.stop();
+      } catch (Exception e) {
+         println("disconnectSerial : " + e.getMessage());
       }
    }
 
@@ -136,14 +153,6 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
          case 'c' :
             sendToArduino(Integer.toString(ALL_CALIBRATION_CONST_AMP));
             break;
-         case 'x' :
-            String portName = Serial.list()[SERIAL_PORT_NUM];
-            try{
-              arduinoPort = new Serial(parent, portName, SERIAL_PORT_BAUD_RATE);
-            }catch(Exception e){
-              println(e.getMessage());
-            }
-            break;
       }
    }
 
@@ -155,6 +164,14 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
    @Override
    public void removeSerialListener(SerialListener listener){
       serialListeners.remove(listener);
+   }
+
+   @Override
+   public void notifyAllWithDiscoveredSerialPorts(){
+      String [] portNames = Serial.list();
+      for (SerialListener listener : serialListeners) {
+         listener.updateDiscoveredSerialPorts(portNames);
+      }
    }
 
    @Override
@@ -265,6 +282,9 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
          manualChangeOneGauge(MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS, theEvent,
                               UIInteractionMgr.SLIDERS_AMP_POT);
       }
+      else if (theEvent.getName().equals(UIInteractionMgr.DROPDOWN_ARDUINO_SERIAL_LIST)){
+         connectToSerial((int)(theEvent.getValue()));
+      }
    }
 
    private void manualChangeAllGauges(int protocol, ControlEvent theEvent){
@@ -294,13 +314,13 @@ public class SerialManager implements ControlListener, SerialNotifier, GRTListen
    }
    @Override
    public void updateGRTResults(int label, float likelihood){
-      if (likelihood > likelihoodThreshold && lastClassLabel != label) {
-         String sendMessage = new String(SEND_LED_SIGNAL + " " + 1 + " "
-                                          + 1 + " " + 0 + " " + 0 + " " + 255 + " "
-                                          + 0 + " " + 0 + " " + 5);
-         println("sendMessage is " + sendMessage);
-         sendToArduino(sendMessage);
-      }
-      lastClassLabel = label;
+      // if (likelihood > likelihoodThreshold && lastClassLabel != label) {
+      //    String sendMessage = new String(SEND_LED_SIGNAL + " " + 1 + " "
+      //                                     + 1 + " " + 0 + " " + 0 + " " + 255 + " "
+      //                                     + 0 + " " + 0 + " " + 5);
+      //    println("sendMessage is " + sendMessage);
+      //    sendToArduino(sendMessage);
+      // }
+      // lastClassLabel = label;
    }
 }

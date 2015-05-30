@@ -10,6 +10,8 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
 
    // RadioButton properties
    RadioButton radioButton;
+   DropdownList arduinoPortNamesDropdownList;
+   DropdownList robotPortNamesDropdownList;
    public final static String RADIO_DISPLAY = "display";
    public final static float RADIO_HIDE_ITEMS = -1.0f;
    public final static float RADIO_SHOW_BAR_ITEM = 0.0f;
@@ -42,8 +44,12 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
 
    // toggles
    public final static String ENABLE_STRAIN_GAUGE = "enable\nsg";
+   public final static String ENABLE_ACCEL = "enable\nacc";
    public final static String ENABLE_SIGNAL_TO_ROBOT = "send to robot\n(on/off)";
 
+   // dropdown list
+   public final static String DROPDOWN_ARDUINO_SERIAL_LIST = "Arduino Serial";
+   public final static String DROPDOWN_ROBOT_SERIAL_LIST = "Robot Serial";
 
    public UIInteractionMgr (HandTieArduinoSystemOnProcessingRobotControl mainClass) {
       this.mainClass = mainClass;
@@ -163,12 +169,22 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
             .setColorLabel(color(0))
             .setBroadcast(false)
             .setValue(1.0f)
-            .setPosition(barOrigin[0]-8, barOrigin[1]-65)
+            .setPosition(barOrigin[0]-12, barOrigin[1])
             .setSize(20,20)
             .setVisible(false)
             .setBroadcast(true)
          ;
       }
+
+      cp5.addToggle(ENABLE_ACCEL)
+         .setColorLabel(color(0))
+         .setBroadcast(false)
+         .setValue(1.0f)
+         .setPosition(barOrigin[0]+57, barOrigin[1])
+         .setSize(20,20)
+         .setVisible(false)
+         .setBroadcast(true)
+      ;
 
       barOrigin = sgManager.getOneBarBaseCenterOfGauges(i-1);
       cp5.addSlider(SLIDER_BRIDGE_TARGET_MIN_AMP_ALL)
@@ -276,6 +292,19 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setBroadcast(true)
       ;
 
+      arduinoPortNamesDropdownList = cp5.addDropdownList(DROPDOWN_ARDUINO_SERIAL_LIST)
+                                        .setPosition(width*0.05, height*0.07)
+                                        .setSize(200,200)
+                                        .setBackgroundColor(color(190))
+                                        .setItemHeight(20)
+                                    ;
+      robotPortNamesDropdownList = cp5.addDropdownList(DROPDOWN_ROBOT_SERIAL_LIST)
+                                        .setPosition(width*0.3, height*0.07)
+                                        .setSize(200,200)
+                                        .setBackgroundColor(color(190))
+                                        .setItemHeight(20)
+                                    ;
+
       launchComplete = true;
    }
 
@@ -349,6 +378,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          cp5.controller(SLIDER_BRIDGE_TARGET_CONST_AMP_ALL).setVisible(true);
       } else if (eventValue == RADIO_ENABLE_STRAIN_GAUGE_ITEM){
          showUISliders(ENABLE_STRAIN_GAUGE);
+         cp5.controller(ENABLE_ACCEL).setVisible(true);
       }
    }
 
@@ -372,6 +402,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
       cp5.controller(SLIDER_BRIDGE_POT_ALL).setVisible(false);
       cp5.controller(SLIDER_AMP_POT_ALL).setVisible(false);
       cp5.controller(SLIDER_BRIDGE_TARGET_CONST_AMP_ALL).setVisible(false);
+      cp5.controller(ENABLE_ACCEL).setVisible(false);
    }
 
    public void performKeyPress(char k){
@@ -404,7 +435,13 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
    public void removeToSerialNotifier(SerialNotifier notifier){
       notifier.removeSerialListener(this);
    }
-   
+   @Override
+   public void updateDiscoveredSerialPorts(String [] portNames){
+      for (int i = 0; i < portNames.length; ++i) {
+         arduinoPortNamesDropdownList.addItem(portNames[i], i);
+         robotPortNamesDropdownList.addItem(portNames[i], i);
+      }
+   }
    @Override
    public void updateAnalogVals(float [] values){}
    @Override
