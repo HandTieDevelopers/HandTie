@@ -13,7 +13,7 @@ void setup() {
    serialManager = new SerialManager(this);
    accelMgr = new AccelMgr();
    robotControl = new RobotControl(this);
-   grtMgr = new GRTMgr();
+   grtMgr = new GRTMgr(this);
    uiInteractionMgr = new UIInteractionMgr(this);
 
    listenerRegistrations();
@@ -32,6 +32,7 @@ void listenerRegistrations(){
    accelMgr.registerToSerialNotifier(serialManager);
    grtMgr.registerToSerialNotifier(serialManager);
 
+   serialManager.registerToGRTNotifier(grtMgr);
    robotControl.registerToGRTNotifier(grtMgr);
 }
 

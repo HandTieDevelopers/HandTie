@@ -146,6 +146,8 @@ public class SGManager implements ControlListener, SerialListener{
       
       if (theEvent.getName().equals(UIInteractionMgr.RADIO_DISPLAY)) {
          changeDisplay(theEvent.getValue());
+      } else if (theEvent.getName().contains(UIInteractionMgr.ENABLE_STRAIN_GAUGE)){
+         enableOrDisableStrainGauge(theEvent,UIInteractionMgr.ENABLE_STRAIN_GAUGE);
       }
    }
 
@@ -160,5 +162,12 @@ public class SGManager implements ControlListener, SerialListener{
          hideNormalText = false;
          hideBar = true;
       }
+   }
+
+   private void enableOrDisableStrainGauge(ControlEvent theEvent, String splitStr){
+      String [] nameSplit = theEvent.getName().split(splitStr);
+
+      int index = Integer.parseInt(nameSplit[1]);
+      gauges[index].enable = (theEvent.getValue() == 1.0f) ? true : false;
    }
 }

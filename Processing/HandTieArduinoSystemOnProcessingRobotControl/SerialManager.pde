@@ -2,11 +2,11 @@ import processing.serial.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SerialManager implements ControlListener, SerialNotifier{
+public class SerialManager implements ControlListener, SerialNotifier, GRTListener{
 
    final static int SERIAL_PORT_BAUD_RATE = 38400;
 
-   final static int SERIAL_PORT_NUM = 9;
+   final static int SERIAL_PORT_NUM = 7;
 
    //send to arduino protocol
    public final static int ALL_CALIBRATION = 0;
@@ -21,6 +21,7 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int MANUAL_CHANGE_TO_ONE_GAUGE_AMP_POT_POS = 9;
    public final static int MANUAL_CHANGE_TO_ALL_GAUGE_BRIDGE_POT_POS = 10;
    public final static int MANUAL_CHANGE_TO_ALL_GAUGE_AMP_POT_POS = 11;
+   public final static int SEND_LED_SIGNAL = 12;
 
 
    //receive from arduino protocol
@@ -33,6 +34,11 @@ public class SerialManager implements ControlListener, SerialNotifier{
    public final static int RECEIVE_CALIBRATING_MIN_AMP_VALS = 6;
    public final static int RECEIVE_CALIBRATING_AMP_VALS = 7;
    public final static int RECEIVE_RECORD_SIGNAL = 8;
+
+   //GRT
+   public final float likelihoodThreshold = RobotControl.likelihoodThreshold;
+   int lastClassLabel;
+
 
    Serial arduinoPort;
 
@@ -251,5 +257,25 @@ public class SerialManager implements ControlListener, SerialNotifier{
       String sendMessage = new String(protocol + " " + index + " "
                                       + (int)(theEvent.getValue()));
       sendToArduino(sendMessage);
+   }
+
+   @Override
+   public void registerToGRTNotifier(GRTNotifier notifier){
+      notifier.registerForGRTListener(this);
+   }
+   @Override
+   public void removeToGRTNotifier(GRTNotifier notifier){
+      notifier.removeGRTListener(this);
+   }
+   @Override
+   public void updateGRTResults(int label, float likelihood){
+      if (likelihood > likelihoodThreshold && lastClassLabel != label) {
+         String sendMessage = new String(SEND_LED_SIGNAL + " " + 1 + " "
+                                          + 1 + " " + 0 + " " + 0 + " " + 255 + " "
+                                          + 0 + " " + 0 + " " + 5);
+         println("sendMessage is " + sendMessage);
+         sendToArduino(sendMessage);
+      }
+      lastClassLabel = label;
    }
 }

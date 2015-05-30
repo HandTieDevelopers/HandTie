@@ -250,6 +250,7 @@ public class UIInteractionMgr implements ControlListener, SerialListener{
          .setSize(100,20)
          .setBroadcast(true)
       ;
+
       launchComplete = true;
    }
 

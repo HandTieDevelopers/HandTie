@@ -65,8 +65,8 @@ public class AccelAxis{
    }
 
    public color getHeatmapRGB(float value){
-     float minimum=0.6;
-     float maximum=1.4;
+     float minimum=-300;
+     float maximum=300;
      float ratio = 2 * (value-minimum) / (maximum - minimum);
      
      color heatmapRGB = color((int)max(0, 255*(ratio - 1)),

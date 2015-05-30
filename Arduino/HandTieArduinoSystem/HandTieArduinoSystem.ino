@@ -7,15 +7,16 @@
 #include "RGBLED.h"
 
 SGManager sgManager;
-ParserWithAction parser(&sgManager);
+RGBLED rgbLED;
+ParserWithAction parser(&sgManager, &rgbLED);
 // RecordButton recordButton;
 ADXL345 * accel;
-RGBLED rgbLED;
 
 void setup(){
    Serial.begin(38400);
    sgManager.allCalibrationAtConstAmp();
    accel = new ADXL345();
+   //rgbLED.setLED(5,5,5,5,10,10,10,2);
 }
 
 void loop(){
